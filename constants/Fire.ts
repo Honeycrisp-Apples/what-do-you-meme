@@ -1,14 +1,13 @@
 import firebase from 'firebase'
 import React from 'react'
 
-interface Props {
-  navigation: { navigate: (arg0: string) => void }
-}
+// interface Props {
+//   navigation: { navigate: (arg0: string) => void }
+// }
 
-export default class Fire extends React.Component<Props> {
+export default class Fire {
   static shared: Fire
-  constructor(props: Props){
-    super(props)
+  constructor(){
     this.init()
     this.observerauth()
   }
@@ -74,8 +73,8 @@ export default class Fire extends React.Component<Props> {
     firebase.auth().signOut()
   }
 
-  getUser = () => {
-    let user = firebase.auth().currentUser
+  getUser = async () => {
+    let user = await firebase.auth().currentUser
     if(user){
     console.log("CURRENT USER: ", user)
     return user.displayName

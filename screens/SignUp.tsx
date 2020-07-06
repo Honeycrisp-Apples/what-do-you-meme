@@ -42,14 +42,14 @@ export default class SingUp extends React.Component<Props, TheState>{
     Fire.shared.createUser(this.state.email, this.state.password, this.state.username)
   }
 
-  handleChange = (evt: { target: { name: any; value: any } }) => {
-    this.setState({
-      username: evt.target.value
-    })
-  }
-  handleUsername(e: React.ChangeEvent<HTMLInputElement>) {this.setState({username: e.target.value});}
-  handleEmail(e: React.ChangeEvent<HTMLInputElement>) {this.setState({email: e.target.value});}
-  handlePassword(e: React.ChangeEvent<HTMLInputElement>) {this.setState({password: e.target.value});}
+  // handleChange = (evt: { target: { name: any; value: any } }) => {
+  //   this.setState({
+  //     username: evt.target.value
+  //   })
+  // }
+  // handleUsername(e: React.ChangeEvent<HTMLInputElement>) {this.setState({username: e.target.value});}
+  // handleEmail(e: React.ChangeEvent<HTMLInputElement>) {this.setState({email: e.target.value});}
+  // handlePassword(e: React.ChangeEvent<HTMLInputElement>) {this.setState({password: e.target.value});}
 
   // onChangeText = (key: string) => (val: string) => this.setState({[key] : val})
   render(){

@@ -2,14 +2,18 @@ import React from 'react'
 import {View, SafeAreaView, Text, StyleSheet, Button, TextInput} from 'react-native'
 import {Card} from 'react-native-paper'
 import Fire from "../constants/Fire"
-
-export default class Login extends React.Component<{navigation: { navigate: (arg0: string, arg1: { username: any }) => void }}>{
-  // constructor(props){
+import firebase from 'firebase'
+interface Props {
+  navigation: { navigate: (arg0: string, arg1: { username: any }) => void }
+}
+export default class Login extends React.Component<Props>{
+  // constructor(props: Props){
   //   super(props)
-  //   this.state = {
-  //     email: "",
-  //     password: ""
-  //   }
+  //   // this.state = {
+  //   //   email: "",
+  //   //   password: ""
+  //   // }
+  //   // firebase.auth().onAuthStateChanged(this.obAuth)
   // }
 
   state = {
@@ -22,9 +26,16 @@ export default class Login extends React.Component<{navigation: { navigate: (arg
     console.log("PASS: ", this.state.password)
     Fire.shared.login(this.state.email, this.state.password).then((user)=> {
       console.log("The logged in user is: ", user)
-      this.props.navigation.navigate('Welcome', {username: user})
+      // this.props.navigation.navigate('Welcome', {username: user})
     })
+    .then(()=> this.props.navigation.navigate('Welcome', {username: "nope"}))
   }
+
+  // obAuth = (user: any) => {
+  //   if(user){
+  //     this.props.navigation.navigate('Welcome', {username: "nope"})
+  //   }
+  // }
 
   render(){
     return (

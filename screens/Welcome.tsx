@@ -2,6 +2,9 @@ import React from 'react'
 
 import {SafeAreaView, Text, Button} from 'react-native'
 import Fire from "../constants/Fire"
+import { useAuthState } from 'react-firebase-hooks/auth';
+import firebase from 'firebase'
+
 
 
 type Props = {
@@ -9,34 +12,51 @@ type Props = {
   username?: string
 }
 interface AState {
-  user: any
+  user: any,
+  ready: boolean
 }
 
-export default class Welcome extends React.Component<Props, AState> {
-  state = {
-    // user: this.props.navigation.state.params.username
-    user: Fire.shared.getUser()
-  }
-  componentDidMount(){
-    this.setState({
-      user: Fire.shared.getUser()
-    })
-  }
-  getout = () => {
+export default function Welcome (props: Props){
+  // state = {
+  //   // user: this.props.navigation.state.params.username
+  //   user: Fire.shared.getUser(),
+  //   ready: false
+  // }
+  // componentDidMount(){
+  //   this.setState({
+  //     user: Fire.shared.getUser()
+  //   })
+  // }
+  // componentWillUpdate(){
+  //   this.setState({ready:true})
+  // }
+  const getout = () => {
     Fire.shared.logout()
-    this.props.navigation.navigate("Login")
+    props.navigation.navigate("Login")
     // this.props.navigation.navigate("TabOneNavigator")
-    console.log(this.state.user)
+    // console.log(this.state.user)
     console.log('logged out. Did navigation happen?')
   }
-  render(){
-    return(
-      <SafeAreaView>
-        <Text>{`Hello there, ${this.state.user}`}</Text>
-        <Button title={'LOGOUT'}
-        onPress={()=> this.getout()}
-        ></Button>
-      </SafeAreaView>
-    )
-  }
+  // render(){
+      const [user, loading, error] = useAuthState(firebase.auth());
+        if(loading){
+          return(
+            <Text>I'm loading</Text>
+          )
+        }
+        if(error){
+          return <Text>You Messed Up!!</Text>
+        }
+        if(user){
+          return (
+            <SafeAreaView>
+              <Text>{`Hello there, ${user.displayName}`}</Text>
+              <Button title={'LOGOUT'}
+              onPress={()=> getout()}
+              ></Button>
+            </SafeAreaView>
+          )
+        }
+        return <Text>Umm... how?</Text>
+  // }
 }
