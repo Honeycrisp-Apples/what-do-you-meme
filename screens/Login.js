@@ -1,8 +1,12 @@
 import React from 'react'
-import {View, SafeAreaView, Text, StyleSheet, Button, TextInput} from 'react-native'
+import {ScrollView, View, Keyboard, SafeAreaView, Text, StyleSheet, Button, TextInput, Alert} from 'react-native'
 import {Card} from 'react-native-paper'
 import Fire from "../constants/Fire"
 import firebase from 'firebase'
+
+import {navigationOptions} from 'react-navigation'
+
+import {FormButton, FormInput} from '../components/Reusables'
 // interface Props {
 //   navigation: { navigate: (arg0: string, arg1: { username: any }) => void }
 // }
@@ -15,20 +19,34 @@ export default class Login extends React.Component{
   //   // }
   //   // firebase.auth().onAuthStateChanged(this.obAuth)
   // }
+    state = {
+      email: "",
+      password: ""
+    }
 
-  state = {
-    email: "",
-    password: ""
+  componentDidMount(){
+    this.setState({
+      email: "",
+      password: ""
+    })
   }
+
+  static navigationOptions =  {
+    // title: 'Create Your Character',
+    headerShown: false
+    // title: "tester2"
+  };
+
 
   loggin = async () => {
     console.log("EMAIL: ", this.state.email)
     console.log("PASS: ", this.state.password)
     Fire.shared.login(this.state.email, this.state.password).then((user)=> {
       console.log("The logged in user is: ", user)
-      // this.props.navigation.navigate('Welcome', {username: user})
+      this.props.navigation.navigate('Welcome', {username: user})
     })
-    .then(()=> this.props.navigation.navigate('Welcome', {username: "nope"}))
+    // .then(()=> this.props.navigation.navigate('Welcome', {username: "nope"}))
+    .catch((err)=> alert(err.message))
   }
 
   // obAuth = (user: any) => {
@@ -40,33 +58,49 @@ export default class Login extends React.Component{
   render(){
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.card}>
-          <TextInput style={styles.inputs}
-          placeholder={'EMAIL'}
-          placeholderTextColor= 'green'
+        <ScrollView onPress={Keyboard.dismiss} contentContainerStyle={{height: '100%', flexGrow: 1, justifyContent: 'center',
+      }}>
+          <Text style={{fontSize: 24, color: 'white', alignSelf: 'center'}}>Welcome Back!</Text>
+          <FormInput
+          // style={styles.inputs}
+          labelName={'EMAIL'}
+          // placeholder={'EMAIL'}
+          // placeholderTextColor= 'green'
           // label={'email'}
           // name='email'
+          // borderColor={'blue'}
           value={this.state.email}
           onChangeText={(email)=> this.setState({email})}
           />
-          <TextInput style={styles.inputs}
-          placeholder={'PASSWORD'}
-          placeholderTextColor= 'green'
-          // label={'password'}
-          // name='password'
+          <FormInput
+          // style={styles.inputs}
+          labelName={'PASSWORD'}
+          secureTextEntry={true}
           value={this.state.password}
           onChangeText={(password)=> this.setState({password})}
           />
-          <Button title="Login"
+          <FormButton
+          title="Login"
+          modeValue='contained'
+          // disabled
+          uppercase={true}
           onPress={() => this.loggin()}
           />
-          <Button title="SIGNUP"
+          <FormButton
+          title="Signup Here"
+          modeValue='text'
+          colorValue={'white'}
+          uppercase={true}
           onPress={() => this.props.navigation.navigate("SignUp")}
           />
-          <Button title="Meme API"
+          <FormButton
+          title="Meme API"
+          modeValue='contained'
+          theme={{colors: {primary: 'red'}}}
+          uppercase={true}
           onPress={() => this.props.navigation.navigate("Memes")}
           />
-        </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -75,17 +109,23 @@ export default class Login extends React.Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: 'grey',
+    justifyContent: 'center'
   },
   card: {
+    // backgroundColor: 'blue',
+    height: '100%',
     margin: 10,
-    flex: 1,
-    justifyContent: "center"
+    // flex: 1,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "flex-end"
   },
   inputs: {
     backgroundColor: "white",
     marginBottom: 10,
-    paddingVertical: 10,
+    // paddingVertical: 10,
+    // borderColor: 'darkred',
     color: 'blue'
   }
 })

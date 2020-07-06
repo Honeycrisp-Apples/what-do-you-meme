@@ -1,7 +1,7 @@
 import React from 'react'
 import {ScrollView, Keyboard, SafeAreaView, Text, StyleSheet, Button, TextInput} from 'react-native'
 import {Card} from 'react-native-paper'
-
+import {FormButton, FormInput} from '../components/Reusables'
 import Fire from '../constants/Fire'
 // type Props = {
 //   nothing?: string
@@ -21,13 +21,20 @@ export default class SignUp extends React.Component{
   //   }
   // }
 
-  // componentDidMount(){
-  //   this.setState({
-  //     username: "",
-  //     email: "",
-  //     password: ""
-  //   })
-  // }
+  componentDidMount(){
+    this.setState({
+      username: "",
+      email: "",
+      password: "",
+      passConfirm:""
+    })
+  }
+
+  static navigationOptions =  {
+    // title: 'Create Your Character',
+    headerShown: false
+    // title: "tester2"
+  };
 
   state = {
     username: '',
@@ -36,10 +43,36 @@ export default class SignUp extends React.Component{
   }
 
   signin = () => {
+    if(this.state.username.length === 0){
+      alert('Must have a username.')
+      //maybe think of how to find unique
+      return
+    }
+    if(this.state.passConfirm !== this.state.password){
+      alert("Passwords do not match.")
+      return;
+    }
+
     console.log("EMAIL:", this.state.email)
     console.log("PASS:",this.state.password)
     console.log("USERNAME:",this.state.username)
     Fire.shared.createUser(this.state.email, this.state.password, this.state.username)
+    .then((cred) => {
+      console.log("success")
+      if (cred.user){
+        cred.user.updateProfile({displayName: this.state.username})
+        .then(() => {
+          console.log("CRED DISPLAYNAME: ", cred.user?.displayName)
+          this.props.navigation.navigate("Welcome")
+        })
+      }
+      console.log("The new cred: ", cred)
+    })
+    // .then(() => {
+    //   console.log('made an account!!')
+    //   this.props.navigation.navigate("Welcome")
+    // })
+    .catch((err) => alert(err.message))
   }
 
   // handleChange = (evt: { target: { name: any; value: any } }) => {
@@ -58,7 +91,10 @@ export default class SignUp extends React.Component{
         <ScrollView  contentContainerStyle={styles.card}
         // onPress={Keyboard.dismiss}
         >
-          <TextInput style={styles.inputs}
+        <Text style={{fontSize: 24, color: 'white', alignSelf: 'center'}}>Create An Account</Text>
+          <FormInput
+          // style={styles.inputs}
+          modeValue="outlined"
           placeholder={'USERNAME'}
           placeholderTextColor= 'green'
           // label='username'
@@ -66,7 +102,8 @@ export default class SignUp extends React.Component{
           value={this.state.username}
           onChangeText={(username) => this.setState({username})}
           />
-          <TextInput style={styles.inputs}
+          <FormInput
+          // style={styles.inputs}
              placeholder={'EMAIL'}
              placeholderTextColor= 'green'
           // label='email'
@@ -74,16 +111,36 @@ export default class SignUp extends React.Component{
           value={this.state.email}
           onChangeText={(email)=> this.setState({email})}
           />
-          <TextInput style={styles.inputs}
-             placeholder={'PASSWORD'}
-             placeholderTextColor= 'green'
+          <FormInput
+          // style={styles.inputs}
+          placeholder={'PASSWORD'}
+          // placeholderTextColor= 'green'
           // label='password'
           // name='password'
+          secureTextEntry={true}
           value={this.state.password}
           onChangeText={(password)=> this.setState({password})}
           />
-          <Button title="SIGNUP"
+          <FormInput
+          // style={styles.inputs}
+          placeholder={'CONFIRM PASSWORD'}
+          // placeholderTextColor= 'green'
+          // label='password'
+          // name='password'
+          secureTextEntry={true}
+          value={this.state.passConfirm}
+          onChangeText={(passConfirm)=> this.setState({passConfirm})}
+          />
+          <FormButton
+          title="SIGNUP"
+          modeValue="contained"
           onPress={() => this.signin()}
+          />
+           <FormButton
+          title="login here"
+          uppercase={true}
+          modeValue="text"
+          onPress={() => this.props.navigation.navigate('Login')}
           />
         </ScrollView>
       </SafeAreaView>
