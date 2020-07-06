@@ -3,7 +3,7 @@ import {View, SafeAreaView, Text, StyleSheet, Button, TextInput} from 'react-nat
 import {Card} from 'react-native-paper'
 import Fire from "../constants/Fire"
 
-export default class Login extends React.Component{
+export default class Login extends React.Component<{navigation: { navigate: (arg0: string, arg1: { username: any }) => void }}>{
   // constructor(props){
   //   super(props)
   //   this.state = {
@@ -17,10 +17,13 @@ export default class Login extends React.Component{
     password: ""
   }
 
-  loggin = () => {
-    console.log(this.state.email)
-    console.log(this.state.password)
-    Fire.shared.login(this.state.email, this.state.password)
+  loggin = async () => {
+    console.log("EMAIL: ", this.state.email)
+    console.log("PASS: ", this.state.password)
+    Fire.shared.login(this.state.email, this.state.password).then((user)=> {
+      console.log("The logged in user is: ", user)
+      this.props.navigation.navigate('Welcome', {username: user})
+    })
   }
 
   render(){
@@ -32,18 +35,23 @@ export default class Login extends React.Component{
           placeholderTextColor= 'green'
           // label={'email'}
           // name='email'
-          onChange={(email)=> this.setState({email})}
+          value={this.state.email}
+          onChangeText={(email)=> this.setState({email})}
           />
           <TextInput style={styles.inputs}
           placeholder={'PASSWORD'}
           placeholderTextColor= 'green'
           // label={'password'}
           // name='password'
-          onChange={(password)=> this.setState({password})}
+          value={this.state.password}
+          onChangeText={(password)=> this.setState({password})}
           />
           <Button title="Login"
           onPress={() => this.loggin()}
           />
+          {/* <Button title="SignUp"
+          onPress={() => this.loggin()}
+          /> */}
         </View>
       </SafeAreaView>
     )

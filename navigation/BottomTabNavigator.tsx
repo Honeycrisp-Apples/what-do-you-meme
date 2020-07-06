@@ -11,6 +11,7 @@ import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 
 import Login from '../screens/Login'
 import SignUp from '../screens/SignUp'
+import Welcome from '../screens/Welcome'
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -53,10 +54,17 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
+        name="Login"
         // name="Login"
         // component={TabOneScreen}
         component={Login}
+        options={{ headerTitle: 'Tab One Title' }}
+      />
+      <TabOneStack.Screen
+        name="Welcome"
+        // name="Login"
+        // component={TabOneScreen}
+        component={Welcome}
         options={{ headerTitle: 'Tab One Title' }}
       />
     </TabOneStack.Navigator>

@@ -28,6 +28,7 @@ export default class SingUp extends React.Component<Props, TheState>{
   //     password: ""
   //   })
   // }
+
   state = {
     username: '',
     email: "",

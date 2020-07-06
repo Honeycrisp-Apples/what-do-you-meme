@@ -1,49 +1,61 @@
 import firebase from 'firebase'
+import React from 'react'
 
-export default class Fire {
+interface Props {
+  navigation: { navigate: (arg0: string) => void }
+}
+
+export default class Fire extends React.Component<Props> {
   static shared: Fire
-  constructor(){
+  constructor(props: Props){
+    super(props)
     this.init()
     this.observerauth()
   }
 
   init = () => {
     //api keys to firebase database
-    const firebaseConfig = {
-      apiKey: "AIzaSyCdFHZ-nU0tLz2lythaZPaqK3qTG83JH4I",
-      authDomain: "memer-365.firebaseapp.com",
-      databaseURL: "https://memer-365.firebaseio.com",
-      projectId: "memer-365",
-      storageBucket: "memer-365.appspot.com",
-      messagingSenderId: "754909736770",
-      appId: "1:754909736770:web:362d8496dc4c1fae5b22db",
-      measurementId: "G-5T5T6J15VF"
+    if(!firebase.apps.length){
+      const firebaseConfig = {
+        apiKey: "AIzaSyCdFHZ-nU0tLz2lythaZPaqK3qTG83JH4I",
+        authDomain: "memer-365.firebaseapp.com",
+        databaseURL: "https://memer-365.firebaseio.com",
+        projectId: "memer-365",
+        storageBucket: "memer-365.appspot.com",
+        messagingSenderId: "754909736770",
+        appId: "1:754909736770:web:362d8496dc4c1fae5b22db",
+        measurementId: "G-5T5T6J15VF"
+      }
+      firebase.initializeApp(firebaseConfig);
     }
-    firebase.initializeApp(firebaseConfig);
   }
 
   observerauth = () => {
     //calls auth situations
-    // firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged2);
   }
 
-  // onAuthStateChanged = (user) => {
-  //   if (!user) {
-  //     try {
-  //       // firebase.auth().signInAnonymously();
-  //       console.log('Maybe navigate to correct screen')
-  //     } catch ({ message }) {
-  //       //if something goes wrong basically
-  //       alert(message);
-  //     }
-  //   }
-  // };
+  onAuthStateChanged2 = (user: any) => {
+    if (!user) {
+      try {
+        // firebase.auth().signInAnonymously();
+        console.log('Maybe navigate to correct screen?')
+      } catch ({ message }) {
+        //if something goes wrong basically
+        alert(message);
+      }
+    } else {
+      console.log('there is a user!!')
+      // this.props.navigation.navigate("Welcome")
+    }
+  };
 
   createUser = (email: string, pass: string, username: string) => {
     firebase.auth().createUserWithEmailAndPassword(email, pass)
     .then((cred) => {
       if (cred.user){
         cred.user.updateProfile({displayName: username})
+        .then(() => console.log("CRED DISPLAYNAME: ", cred.user?.displayName))
       }
       console.log("The new cred: ", cred)
     })
@@ -51,14 +63,24 @@ export default class Fire {
     .catch((err) => console.log("Error MAKING USER: ", err))
   }
 
-  login = (email: string, pass: string) => {
+  login = async (email: string, pass: string) => {
     firebase.auth().signInWithEmailAndPassword(email, pass)
+    .then(() => firebase.auth().currentUser)
     .catch((err)=> console.log("Error SIGNING IN: ", err))
+
+    return await firebase.auth().currentUser
   }
   logout = () => {
     firebase.auth().signOut()
   }
 
+  getUser = () => {
+    let user = firebase.auth().currentUser
+    if(user){
+    console.log("CURRENT USER: ", user)
+    return user.displayName
+    }
+  }
   // shared = () => new Fire()
 }
 
