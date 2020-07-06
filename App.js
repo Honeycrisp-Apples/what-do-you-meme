@@ -14,6 +14,7 @@ import { createAppContainer } from 'react-navigation';
 import Login from './screens/Login'
 import SignUp from './screens/SignUp'
 import Welcome from './screens/Welcome'
+import Memes from './screens/Memes'
 
 export default function App() {
   // const isLoadingComplete = useCachedResources();
@@ -23,6 +24,7 @@ export default function App() {
     Login: {screen: Login},
     SignUp: {screen: SignUp},
     Welcome: {screen: Welcome},
+    Memes: {screen: Memes}
   }, {mode:'modal'})
 
   // if (!isLoadingComplete) {

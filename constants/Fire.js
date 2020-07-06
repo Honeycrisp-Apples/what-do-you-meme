@@ -6,7 +6,7 @@ import firebase from 'firebase'
 // }
 
 export default class Fire {
-  static shared: Fire
+  // static shared: Fire
   constructor(){
     this.init()
     this.observerauth()
@@ -34,7 +34,7 @@ export default class Fire {
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged2);
   }
 
-  onAuthStateChanged2 = (user: any) => {
+  onAuthStateChanged2 = (user) => {
     if (!user) {
       try {
         // firebase.auth().signInAnonymously();
@@ -49,7 +49,7 @@ export default class Fire {
     }
   };
 
-  createUser = (email: string, pass: string, username: string) => {
+  createUser = (email, pass, username) => {
     firebase.auth().createUserWithEmailAndPassword(email, pass)
     .then((cred) => {
       if (cred.user){
@@ -62,7 +62,7 @@ export default class Fire {
     .catch((err) => console.log("Error MAKING USER: ", err))
   }
 
-  login = async (email: string, pass: string) => {
+  login = async (email, pass) => {
     firebase.auth().signInWithEmailAndPassword(email, pass)
     .then(() => firebase.auth().currentUser)
     .catch((err)=> console.log("Error SIGNING IN: ", err))

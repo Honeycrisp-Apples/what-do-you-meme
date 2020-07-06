@@ -60,9 +60,12 @@ export default class Login extends React.Component{
           <Button title="Login"
           onPress={() => this.loggin()}
           />
-          {/* <Button title="SignUp"
-          onPress={() => this.loggin()}
-          /> */}
+          <Button title="SIGNUP"
+          onPress={() => this.props.navigation.navigate("SignUp")}
+          />
+          <Button title="Meme API"
+          onPress={() => this.props.navigation.navigate("Memes")}
+          />
         </View>
       </SafeAreaView>
     )
