@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import React from 'react'
+
 
 // interface Props {
 //   navigation: { navigate: (arg0: string) => void }

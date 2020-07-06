@@ -3,10 +3,10 @@ import {View, SafeAreaView, Text, StyleSheet, Button, TextInput} from 'react-nat
 import {Card} from 'react-native-paper'
 import Fire from "../constants/Fire"
 import firebase from 'firebase'
-interface Props {
-  navigation: { navigate: (arg0: string, arg1: { username: any }) => void }
-}
-export default class Login extends React.Component<Props>{
+// interface Props {
+//   navigation: { navigate: (arg0: string, arg1: { username: any }) => void }
+// }
+export default class Login extends React.Component{
   // constructor(props: Props){
   //   super(props)
   //   // this.state = {

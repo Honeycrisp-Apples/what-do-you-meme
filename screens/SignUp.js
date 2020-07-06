@@ -3,15 +3,15 @@ import {ScrollView, Keyboard, SafeAreaView, Text, StyleSheet, Button, TextInput}
 import {Card} from 'react-native-paper'
 
 import Fire from '../constants/Fire'
-type Props = {
-  nothing?: string
-}
-interface TheState {
-  username: string,
-  email: string,
-  password: string
-}
-export default class SingUp extends React.Component<Props, TheState>{
+// type Props = {
+//   nothing?: string
+// }
+// interface TheState {
+//   username: string,
+//   email: string,
+//   password: string
+// }
+export default class SignUp extends React.Component{
   // constructor(){
   //   super()
   //   this.state = {

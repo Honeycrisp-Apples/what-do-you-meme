@@ -7,16 +7,16 @@ import firebase from 'firebase'
 
 
 
-type Props = {
-  navigation: { navigate: (arg0: string) => void, state: {params: {username? : string}} },
-  username?: string
-}
-interface AState {
-  user: any,
-  ready: boolean
-}
+// type Props = {
+//   navigation: { navigate: (arg0: string) => void, state: {params: {username? : string}} },
+//   username?: string
+// }
+// interface AState {
+//   user: any,
+//   ready: boolean
+// }
 
-export default function Welcome (props: Props){
+export default function Welcome (props){
   // state = {
   //   // user: this.props.navigation.state.params.username
   //   user: Fire.shared.getUser(),
