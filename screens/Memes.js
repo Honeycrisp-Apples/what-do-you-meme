@@ -25,14 +25,22 @@ export default class Memes extends React.Component {
         <ScrollView>
           {
             this.state.shuffledData && this.state.shuffledData[0] && (
-              <View key={this.state.shuffledData[0].id}>
+              <View
+                key={this.state.shuffledData[0].id}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <Image
                   source={{ uri: this.state.shuffledData[0].url }}
                   style={{
-                    width: this.state.shuffledData[0].width * 0.3,
-                    height: this.state.shuffledData[0].height * 0.3,
+                    flex: 1,
+                    width: 370,
+                    height: 550,
+                    resizeMode: 'contain',
                   }}
-                  resizeMode="contain"
                 />
               </View>
             )
