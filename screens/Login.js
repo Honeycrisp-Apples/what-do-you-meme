@@ -1,10 +1,12 @@
 import React from 'react'
-import {ScrollView, View, Keyboard, SafeAreaView, Text, StyleSheet, Button, TextInput, Alert} from 'react-native'
+import {ScrollView, View, Keyboard, SafeAreaView, Text, StyleSheet, Button, TextInput, Dimensions} from 'react-native'
 import {Card} from 'react-native-paper'
 import Fire from "../constants/Fire"
 import firebase from 'firebase'
 
-import {navigationOptions} from 'react-navigation'
+// import Video from "react-native-video";
+import { Video } from 'expo-av';
+const { width, height } = Dimensions.get("window");
 
 import {FormButton, FormInput} from '../components/Reusables'
 // interface Props {
@@ -58,7 +60,20 @@ export default class Login extends React.Component{
   render(){
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView onPress={Keyboard.dismiss} contentContainerStyle={{height: '100%', flexGrow: 1, justifyContent: 'center',
+        <Video
+          source={require("../assets/video/video-1.mp4")}
+          // source={{uri: 'https://www.youtube.com/watch?v=9J6EB-KPc2o'}}
+          style={styles.backgroundVideo}
+          isMuted={true}
+          repeat={true}
+          resizeMode={"cover"}
+          rate={1.0}
+          shouldPlay
+          isLooping
+          // ignoreSilentSwitch={"obey"}
+        />
+        <View style={styles.overlay}></View>
+        <ScrollView onPress={Keyboard.dismiss} contentContainerStyle={{height: '100%', flexGrow: 1, justifyContent: 'center', zIndex: 5
       }}>
           <Text style={{fontSize: 24, color: 'white', alignSelf: 'center'}}>Welcome Back!</Text>
           <FormInput
@@ -83,6 +98,7 @@ export default class Login extends React.Component{
           title="Login"
           modeValue='contained'
           // disabled
+          // colorValue={'orange'}
           uppercase={true}
           onPress={() => this.loggin()}
           />
@@ -96,7 +112,8 @@ export default class Login extends React.Component{
           <FormButton
           title="Meme API"
           modeValue='contained'
-          theme={{colors: {primary: 'red'}}}
+          // colorValue={''}
+          // theme={{colors: {text: 'white', primary: 'darkred'}}}
           uppercase={true}
           onPress={() => this.props.navigation.navigate("Memes")}
           />
@@ -107,9 +124,28 @@ export default class Login extends React.Component{
 }
 
 const styles = StyleSheet.create({
+  backgroundVideo: {
+    height: height,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    alignItems: "stretch",
+    bottom: 0,
+    right: 0
+  },
+  overlay: {
+    // zIndex: 7,
+    backgroundColor: 'rgba(255,0,0,0.3)',
+    height: height,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+  },
   container: {
     flex: 1,
-    backgroundColor: 'grey',
+    // backgroundColor: 'grey',
     justifyContent: 'center'
   },
   card: {
