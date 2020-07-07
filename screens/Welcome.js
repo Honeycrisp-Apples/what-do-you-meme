@@ -54,6 +54,9 @@ export default function Welcome (props){
               <Button title={'LOGOUT'}
               onPress={()=> getout()}
               ></Button>
+              <Button title={'To User'}
+              onPress={()=> props.navigation.navigate("UserMain")}
+              ></Button>
             </SafeAreaView>
           )
         }

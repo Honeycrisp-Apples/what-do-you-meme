@@ -15,6 +15,10 @@ import Login from './screens/Login'
 import SignUp from './screens/SignUp'
 import Welcome from './screens/Welcome'
 import Memes from './screens/Memes'
+import UserMain from './screens/UserMain'
+import UserAwards from './screens/UserAwards'
+import UserFriends from './screens/UserFriends'
+
 
 import {decode, encode} from 'base-64'
 
@@ -30,7 +34,10 @@ export default function App() {
     Login: {screen: Login},
     SignUp: {screen: SignUp},
     Welcome: {screen: Welcome},
-    Memes: {screen: Memes}
+    Memes: {screen: Memes},
+    UserMain: {screen: UserMain},
+    UserAwards: {screen: UserAwards},
+    UserFriends: {screen: UserFriends}
   }, {mode:'modal'})
 
   // if (!isLoadingComplete) {
