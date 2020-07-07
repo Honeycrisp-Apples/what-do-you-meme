@@ -50,24 +50,24 @@ export default class Fire {
   };
 
   createUser = (email, pass, username) => {
-    firebase.auth().createUserWithEmailAndPassword(email, pass)
-    .then((cred) => {
-      if (cred.user){
-        cred.user.updateProfile({displayName: username})
-        .then(() => console.log("CRED DISPLAYNAME: ", cred.user?.displayName))
-      }
-      console.log("The new cred: ", cred)
-    })
-    .then(() => console.log('made an account!!'))
-    .catch((err) => console.log("Error MAKING USER: ", err))
+    return firebase.auth().createUserWithEmailAndPassword(email, pass)
+    // .then((cred) => {
+    //   if (cred.user){
+    //     cred.user.updateProfile({displayName: username})
+    //     .then(() => console.log("CRED DISPLAYNAME: ", cred.user?.displayName))
+    //   }
+    //   console.log("The new cred: ", cred)
+    // })
+    // .then(() => console.log('made an account!!'))
+    // .catch((err) => console.log("Error MAKING USER: ", err))
   }
 
   login = async (email, pass) => {
-    firebase.auth().signInWithEmailAndPassword(email, pass)
-    .then(() => firebase.auth().currentUser)
-    .catch((err)=> console.log("Error SIGNING IN: ", err))
+    return firebase.auth().signInWithEmailAndPassword(email, pass)
+    // .then(() => firebase.auth().currentUser)
+    // .catch((err)=> alert("Error SIGNING IN: ", err))
 
-    return await firebase.auth().currentUser
+    // return await firebase.auth().currentUser
   }
   logout = () => {
     firebase.auth().signOut()
