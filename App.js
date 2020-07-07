@@ -16,6 +16,12 @@ import SignUp from './screens/SignUp'
 import Welcome from './screens/Welcome'
 import Memes from './screens/Memes'
 
+import {decode, encode} from 'base-64'
+
+if (!global.btoa) {  global.btoa = encode }
+
+if (!global.atob) { global.atob = decode }
+
 export default function App() {
   // const isLoadingComplete = useCachedResources();
   // const colorScheme = useColorScheme();

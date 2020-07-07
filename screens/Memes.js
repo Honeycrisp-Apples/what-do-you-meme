@@ -14,7 +14,7 @@ export default class Memes extends React.Component {
     axios
       .get('https://api.imgflip.com/get_memes')
       .then((data) => {
-        console.log('memes', data.data.data.memes);
+        // console.log('memes', data.data.data.memes);
         this.setState({ shuffledData: shuffle(data.data.data.memes) });
       })
       .catch((error) => console.log(error));

@@ -60,10 +60,14 @@ export default class SignUp extends React.Component{
     .then((cred) => {
       console.log("success")
       if (cred.user){
-        cred.user.updateProfile({displayName: this.state.username})
+        let user = cred.user
+        console.log("NEW USER:", user)
+        user.updateProfile({displayName: this.state.username})
         .then(() => {
           console.log("CRED DISPLAYNAME: ", cred.user?.displayName)
-          this.props.navigation.navigate("Welcome")
+          Fire.shared.makeUser(user)
+          .then(()=> this.props.navigation.navigate("Welcome"))
+          .catch((err)=> console.log("Error making user object: ", err))
         })
       }
       console.log("The new cred: ", cred)
