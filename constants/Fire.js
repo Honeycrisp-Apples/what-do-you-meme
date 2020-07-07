@@ -1,4 +1,6 @@
-import firebase from 'firebase'
+import * as firebase from 'firebase'
+import 'firebase/firestore';
+
 
 
 // interface Props {
@@ -81,6 +83,51 @@ export default class Fire {
     }
   }
   // shared = () => new Fire()
+
+  //MAKING USERS!!!
+  getUsers = () => {
+    return firebase.firestore().collection('users')
+  }
+  //transefer this to the database
+  //eventually get wild with the award unlock logic. ==> split up the award data (points, earned memes, etc.)
+  initAwards = () => {
+    return (
+      [
+        {
+          title: "Baby Memer",
+          icon: "",
+          points: 100,
+          descrip: "Look at you. Earning that first meme.",
+          unlocked: false
+        },
+        {
+          title: "Just keep meming...",
+          icon: "",
+          points: 200,
+          descrip: "You're getting the hand of this.",
+          unlocked: false
+        },
+        {
+          title: "Can't touch this!",
+          icon: "",
+          points: 300,
+          descrip: "Bro... how many points do you have again?",
+          unlocked: false
+        },
+      ]
+    )
+  }
+  makeUser = (user, awards = this.initAwards) => {
+    return this.getUsers().doc(`${user.displayName}`).set({
+      // _id: user._id,
+      // displayName: user.displayName,
+      points: 0,
+      earnedMemes: [],
+      awards: awards()
+    }, {merge: true})
+
+  }
+
 }
 
 Fire.shared = new Fire()
