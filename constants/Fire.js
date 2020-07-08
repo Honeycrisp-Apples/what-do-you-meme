@@ -92,14 +92,14 @@ export default class Fire {
     return [
       {
         title: 'Baby Memer',
-        icon: 'https://image.flaticon.com/icons/svg/3135/3135093.svg',
+        icon: 'https://image.flaticon.com/icons/png/512/3151/3151068.png',
         points: 100,
         descrip: 'Look at you. Earning that first meme.',
         unlocked: false,
       },
       {
         title: 'Just keep meming...',
-        icon: 'https://image.flaticon.com/icons/svg/2935/2935174.svg',
+        icon: 'https://image.flaticon.com/icons/png/512/3132/3132034.png',
         points: 200,
         descrip: "You're getting the hand of this.",
         unlocked: false,

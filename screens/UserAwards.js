@@ -22,7 +22,7 @@ export default class UserAwards extends React.Component {
         `https://firestore.googleapis.com/v1/projects/memer-365/databases/(default)/documents/users/Luigi`
       )
       .then((data) => {
-        console.log('data', data.data.fields.awards.arrayValue.values);
+        console.log('data', data);
         this.setState({ awards: data.data.fields.awards.arrayValue.values });
       });
   }
@@ -44,7 +44,7 @@ export default class UserAwards extends React.Component {
                     borderColor: '#8B0000',
                     borderStyle: 'solid',
                     shadowColor: '#000000',
-                    shadowOpacity: 0.8,
+                    shadowOpacity: 0.5,
                     shadowRadius: 2,
                     shadowOffset: {
                       height: 1,
@@ -52,7 +52,7 @@ export default class UserAwards extends React.Component {
                     },
                   }}
                 >
-                  <Text>Award: {award.mapValue.fields.title.stringValue}</Text>
+                  <Text>{award.mapValue.fields.title.stringValue}</Text>
                   <Image
                     source={{ uri: award.mapValue.fields.icon.stringValue }}
                     style={{
