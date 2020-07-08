@@ -1,22 +1,30 @@
 import React from 'react'
 import {Text, SafeAreaView, Button, StyleSheet, ScrollView, Image, View, Dimensions} from 'react-native'
 import {Card, IconButton} from 'react-native-paper'
-// import Hr from 'react-native-hr-component'
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import firebase from 'firebase'
 import {FormButton, FormInut} from '../components/Reusables'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('screen');
-export default class UserMain extends React.Component{
-  static navigationOptions = ({navigation}) => {
-    return({
-      // title: 'Create Your Character',
-      headerShown: false
-      // title: "tester2"
-    })
-  };
 
-  render(){
+
+export default function UserMain({navigation}){
+  //we need to refactor the doc.id to be the user _id
+  //USER NEEDS DISPLAY NAME
+  //that user_id should be passed in via navigation from the welcom screen
+  const [value, loading, error] = useDocument(
+    firebase.firestore().collection('users').doc(`Luigi`)
+  );
+
+    if(error){
+      return <Text>Error: {JSON.stringify(error)}</Text>
+    } else if (loading){
+      return <Text>Collection: Loading...</Text>
+    } else if (value){
     return (
     <SafeAreaView style={styles.background}>
+      <ScrollView contentContainerStyle={{flex: 1}}>
+        <Card style={styles.card}>
       <IconButton
         style={{marginLeft: 'auto', position: 'absolute',
         top: 10,
@@ -27,12 +35,11 @@ export default class UserMain extends React.Component{
         color='orange'
         onPress={() => this.props.navigation.goBack(this.props.navigation.state.key)}
       />
-      <ScrollView contentContainerStyle={{flex: 1}}>
-        <Card style={styles.card}>
           <View style={styles.topPart}>
             <View style={styles.imgCont}>
               <Image
               style={styles.img}
+              //NEEDS TO BE USER IMAGE!!!
               source={require('../assets/images/icon.png')}
               />
               <TouchableOpacity style={{marginTop: 5}}>
@@ -42,8 +49,9 @@ export default class UserMain extends React.Component{
 
             <View style={styles.nameCont}>
               {/* <Text>Hi there!!!</Text> */}
-              <Text style={{fontSize: 24, fontWeight: 'bold'}}>DISPLAYNAME</Text>
-              <Text style={{fontSize: 16}}>Memer Points: </Text>
+              {/* NEEDS TO BE CHANGED TO VALUE.DATA().DISPLAYNAME */}
+    <Text style={{fontSize: 24, fontWeight: 'bold'}}>{value.id.toUpperCase()}</Text>
+              <Text style={{fontSize: 16}}>{`Memer Points: ${value.data().points}`}</Text>
             </View>
           </View>
 
@@ -110,8 +118,15 @@ export default class UserMain extends React.Component{
       </ScrollView>
     </SafeAreaView>
     )
-  }
+        }
 }
+//might need to change for version 5 react-navigaiton
+UserMain.navigationOptions = (screenProps) => {
+  return({
+    // title: screenProps.navigation.getParam("yourParam"),
+    headerShown: false
+  })
+};
 
 const styles = StyleSheet.create({
   background:{
@@ -119,7 +134,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   card: {
-    marginTop: 50,
+    marginTop: 20,
+    // marginTop: 50,
     marginHorizontal:5,
     // borderTopEndRadius: 10,
     flex:1,
