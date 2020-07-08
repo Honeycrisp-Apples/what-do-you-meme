@@ -58,11 +58,31 @@ export default function App() {
     <NavigationContainer>
       {/* <Navigation colorScheme={colorScheme} /> */}
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Memes" component={Memes} />
-        <Stack.Screen name="UserPages" component={UserTabs} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={Login}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SignUp"
+          component={SignUp}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Welcome"
+          component={Welcome}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Memes"
+          component={Memes}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="UserPages"
+          component={UserTabs}
+        />
       </Stack.Navigator>
 
       {/* <StatusBar /> */}
