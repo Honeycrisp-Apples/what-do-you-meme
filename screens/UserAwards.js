@@ -8,33 +8,22 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import firebase from 'firebase';
 
-export default class UserAwards extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      awards: [],
-    };
-  }
-  componentDidMount() {
-    axios
-      .get(
-        `https://firestore.googleapis.com/v1/projects/memer-365/databases/(default)/documents/users/Luigi`
-      )
-      .then((data) => {
-        console.log('data', data);
-        this.setState({ awards: data.data.fields.awards.arrayValue.values });
-      });
-  }
-  render() {
-    return (
-      <SafeAreaView>
-        <ScrollView>
-          <View>
-            {this.state.awards.map((award) => (
-              <View key={award.mapValue + 'view'}>
+export default function UserAwards() {
+  // refactor using object id
+  const [value, loading, error] = useDocument(
+    firebase.firestore().collection('users').doc('Luigi')
+  );
+  return (
+    <SafeAreaView>
+      <ScrollView>
+        <View>
+          {value &&
+            value.data().awards.map((award) => (
+              <View key={award + 'view'}>
                 <View
-                  key={award.mapValue + 'text'}
                   style={{
                     margin: 10,
                     padding: 10,
@@ -52,9 +41,9 @@ export default class UserAwards extends React.Component {
                     },
                   }}
                 >
-                  <Text>{award.mapValue.fields.title.stringValue}</Text>
+                  <Text>{award.title}</Text>
                   <Image
-                    source={{ uri: award.mapValue.fields.icon.stringValue }}
+                    source={{ uri: award.icon }}
                     style={{
                       flex: 1,
                       width: 150,
@@ -62,30 +51,27 @@ export default class UserAwards extends React.Component {
                       resizeMode: 'contain',
                     }}
                   />
-                  <Text>{award.mapValue.fields.descrip.stringValue}</Text>
-                  <Text>
-                    {award.mapValue.fields.points.integerValue} points needed
-                  </Text>
+                  <Text>{award.descrip}</Text>
+                  <Text>{award.points} points needed</Text>
                 </View>
               </View>
             ))}
-          </View>
+        </View>
 
-          {/* <Text>Hi there!!!</Text> */}
-          <Button
-            title={'To UserMain'}
-            onPress={() => this.props.navigation.navigate('UserMain')}
-          ></Button>
-          <Button
-            title={'To Friends'}
-            onPress={() => this.props.navigation.navigate('UserFriends')}
-          ></Button>
-          {/* <Button
+        {/* <Text>Hi there!!!</Text> */}
+        <Button
+          title={'To UserMain'}
+          onPress={() => this.props.navigation.navigate('UserMain')}
+        ></Button>
+        <Button
+          title={'To Friends'}
+          onPress={() => this.props.navigation.navigate('UserFriends')}
+        ></Button>
+        {/* <Button
         title={'To Friends'}
         onPress={()=> this.props.navigation.navigate("UserFriends")}
         ></Button> */}
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
