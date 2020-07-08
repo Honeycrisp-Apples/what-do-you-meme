@@ -46,8 +46,7 @@
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.4.0",
     "react-navigation-stack": "^2.8.2",
-    "styled-components": "^5.1.1",
-    "undefined": "react-firebase-hooks/firestore"
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

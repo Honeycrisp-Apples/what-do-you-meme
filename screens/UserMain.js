@@ -6,15 +6,16 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase'
 import {FormButton, FormInut} from '../components/Reusables'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Fire from "../constants/Fire"
 const { width, height } = Dimensions.get('screen');
 
 
 export default function UserMain({navigation}){
   //we need to refactor the doc.id to be the user _id
   //USER NEEDS DISPLAY NAME
-  //that user_id should be passed in via navigation from the welcom screen
+  //that user_id should be passed in via navigation from the welcome screen
   const [value, loading, error] = useDocument(
-    firebase.firestore().collection('users').doc(`Luigi`)
+    firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`)
   );
 
     if(error){
@@ -34,14 +35,13 @@ export default function UserMain({navigation}){
         icon='close-circle'
         size={36}
         color='orange'
-        onPress={() => this.props.navigation.goBack(this.props.navigation.state.key)}
+        onPress={() => navigation.goBack(navigation.state.key)}
       />
           <View style={styles.topPart}>
             <View style={styles.imgCont}>
               <Image
               style={styles.img}
-              //NEEDS TO BE USER IMAGE!!!
-              source={require('../assets/images/icon.png')}
+              source={{ uri: `${value.data().imageURL}`}}
               />
               <TouchableOpacity style={{marginTop: 5}}>
                 <Text style={{fontSize: 10, textAlign: 'center', color: 'darkred'}}>Change Picture</Text>
@@ -49,9 +49,7 @@ export default function UserMain({navigation}){
             </View>
 
             <View style={styles.nameCont}>
-              {/* <Text>Hi there!!!</Text> */}
-              {/* NEEDS TO BE CHANGED TO VALUE.DATA().DISPLAYNAME */}
-    <Text style={{fontSize: 24, fontWeight: 'bold'}}>{value.id.toUpperCase()}</Text>
+    <Text style={{fontSize: 24, fontWeight: 'bold'}}>{value.data().displayName.toUpperCase()}</Text>
               <Text style={{fontSize: 16}}>{`Memer Points: ${value.data().points}`}</Text>
             </View>
           </View>
@@ -76,7 +74,18 @@ export default function UserMain({navigation}){
             </View>
 
             <View style={styles.memeCont}>
-              <Image
+              {
+                value.data().earnedMemes.length
+                  ? ( value.data().earnedMemes.map((meme, index) => (
+                        <Image
+                          key={index}
+                          style={styles.memes}
+                          source={meme}
+                        />
+                      ))
+                  ) : (<Text>You gotta start playing some games!</Text>)
+              }
+              {/* <Image
                 style={styles.memes}
                 source={require('../assets/images/icon.png')}
               />
@@ -91,11 +100,7 @@ export default function UserMain({navigation}){
               <Image
                 style={styles.memes}
                 source={require('../assets/images/icon.png')}
-              />
-              <Image
-                style={styles.memes}
-                source={require('../assets/images/icon.png')}
-              />
+              /> */}
             </View>
 
           </View>
