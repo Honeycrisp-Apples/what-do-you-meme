@@ -72,7 +72,11 @@ export default class Fire {
   logout = () => {
     firebase.auth().signOut();
   };
-
+  getUID() {
+    let me = (firebase.auth().currentUser || {}).uid;
+    console.log("me: ", me);
+    return me;
+  }
   getUser = async () => {
     let user = await firebase.auth().currentUser;
     if (user) {
@@ -114,17 +118,20 @@ export default class Fire {
     ];
   };
   makeUser = (user, awards = this.initAwards) => {
-    return this.getUsers().doc(`${user.displayName}`).set(
+    return this.getUsers().doc(`${this.getUID()}`).set(
       {
         // _id: user._id,
-        // displayName: user.displayName,
+        displayName: user.displayName,
+        imageURL: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg",
         points: 0,
         earnedMemes: [],
         awards: awards(),
+        friends: []
       },
       { merge: true }
     );
   };
+  // getFriendPic
 }
 
 Fire.shared = new Fire();

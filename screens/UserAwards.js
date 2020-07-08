@@ -10,12 +10,18 @@ import {
 import axios from 'axios';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase';
+import Fire from '../constants/Fire'
 
 export default function UserAwards() {
   // refactor using object id
   const [value, loading, error] = useDocument(
-    firebase.firestore().collection('users').doc('Luigi')
+    firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`)
   );
+  if(error){
+    return <Text>Error: {JSON.stringify(error)}</Text>
+  } else if (loading){
+    return <Text>Collection: Loading...</Text>
+  } else if (value){
   return (
     <SafeAreaView>
       <ScrollView>
@@ -73,5 +79,6 @@ export default function UserAwards() {
         ></Button> */}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
+      }
 }
