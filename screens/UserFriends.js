@@ -52,6 +52,7 @@ export default function UserFriends(){
             {
               value.data().friends.length && valueC
               ? (value.data().friends.map((friend, index)=>{
+                //find cleaner way to do this... maybe useEffect?
                   const found = valueC.docs.filter(doc => doc.id === friend)[0]
                   console.log("Found?:",found?.data().imageURL)
                   return (
@@ -112,7 +113,7 @@ export default function UserFriends(){
           title={'Add Friend'}
           onPress={()=> alert('Page not made yet!')}
           />
-          <FormButton
+          {/* <FormButton
           modeValue={'contained'}
           title={'To UserMain'}
           onPress={()=> this.props.navigation.navigate("UserMain")}
@@ -121,7 +122,7 @@ export default function UserFriends(){
           modeValue={'contained'}
           title={'To Awards'}
           onPress={()=> this.props.navigation.navigate("UserAwards")}
-          />
+          /> */}
           {/* <Button
           title={'To Friends'}
           onPress={()=> this.props.navigation.navigate("UserFriends")}
