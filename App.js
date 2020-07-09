@@ -74,7 +74,7 @@ export default function App() {
           component={Welcome}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
           name="Memes"
           component={Memes}
         />
