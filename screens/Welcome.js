@@ -52,6 +52,10 @@ export default function Welcome(props) {
           title={'To User'}
           onPress={() => props.navigation.navigate('UserPages')}
         ></Button>
+        <Button
+          title={'To Game'}
+          onPress={() => props.navigation.navigate('GameLobby')}
+        ></Button>
       </SafeAreaView>
     );
   }

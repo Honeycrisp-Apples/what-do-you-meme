@@ -17,6 +17,12 @@ import Memes from './screens/Memes';
 import UserMain from './screens/UserMain';
 import UserAwards from './screens/UserAwards';
 import UserFriends from './screens/UserFriends';
+import GameLobby from './screens/GameScreens/GameLobby'
+import MemePresentation from './screens/GameScreens/MemePresentation'
+import CaptionInput from './screens/GameScreens/CaptionInput'
+import RoundResults from './screens/GameScreens/RoundResults'
+import VotingScreen from './screens/GameScreens/VotingScreen'
+import WinningScreen from './screens/GameScreens/WinningScreen'
 
 import { decode, encode } from 'base-64';
 
@@ -82,6 +88,36 @@ export default function App() {
           options={{ headerShown: false }}
           name="UserPages"
           component={UserTabs}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="GameLobby"
+          component={GameLobby}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="MemePresentation"
+          component={MemePresentation}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="CaptionInput"
+          component={CaptionInput}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="VotingScreen"
+          component={VotingScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="RoundResults"
+          component={RoundResults}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="WiningScreen"
+          component={WinningScreen}
         />
       </Stack.Navigator>
 
