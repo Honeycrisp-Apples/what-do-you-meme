@@ -45,7 +45,9 @@ export function FormTextArea({ labelName, modeValue, ...rest }) {
       mode={'outlined'}
       // mode={modeValue}
       {...rest}
-      style={styles.input}
+      //  multiline={true}
+      // numberOfLines={4}
+      style={styles.textarea}
       // contentStyle={styles.buttonContainer}
     />
   );
@@ -66,6 +68,13 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     backgroundColor: '#fff',
     // color: 'darkred'
+  },
+  textarea:{
+    marginTop: 10,
+    marginHorizontal: 24,
+    borderRadius: 5,
+    textAlignVertical: 'top',
+    backgroundColor: '#fff',
   },
   button: {
     marginTop: 10,
