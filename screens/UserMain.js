@@ -125,7 +125,7 @@ export default function UserMain({ navigation }) {
               </View>
             </View>
 
-            <FormButton
+            {/* <FormButton
               title={'To Awards'}
               modeValue={'contained'}
               onPress={() => this.props.navigation.navigate('UserAwards')}
@@ -139,7 +139,7 @@ export default function UserMain({ navigation }) {
               title={'To Welcome'}
               modeValue={'contained'}
               onPress={() => this.props.navigation.navigate('Welcome')}
-            />
+            />*/}
           </Card>
         </ScrollView>
       </SafeAreaView>

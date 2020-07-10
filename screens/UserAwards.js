@@ -65,14 +65,14 @@ export default function UserAwards() {
         </View>
 
         {/* <Text>Hi there!!!</Text> */}
-        <Button
+        {/* <Button
           title={'To UserMain'}
           onPress={() => this.props.navigation.navigate('UserMain')}
         ></Button>
         <Button
           title={'To Friends'}
           onPress={() => this.props.navigation.navigate('UserFriends')}
-        ></Button>
+        ></Button> */}
         {/* <Button
         title={'To Friends'}
         onPress={()=> this.props.navigation.navigate("UserFriends")}
