@@ -45,7 +45,7 @@ export default function UserMain({ navigation }) {
               icon="close-circle"
               size={36}
               color="orange"
-              onPress={() => navigation.goBack(navigation.state.key)}
+              onPress={() => navigation.navigate("Welcome")}
             />
             <View style={styles.topPart}>
               <View style={styles.imgCont}>
