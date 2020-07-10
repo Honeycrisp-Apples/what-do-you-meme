@@ -26,6 +26,8 @@ import CaptionInput from './screens/GameScreens/CaptionInput';
 import RoundResults from './screens/GameScreens/RoundResults';
 import VotingScreen from './screens/GameScreens/VotingScreen';
 import WinningScreen from './screens/GameScreens/WinningScreen';
+import Game from './screens/Game';
+
 
 import { decode, encode } from 'base-64';
 
@@ -64,6 +66,7 @@ export default function App() {
 	// return <Main />;
 	const Stack = createStackNavigator();
 
+
 	const LoginStack = createStackNavigator();
 	// 	Login: { screen: Login },
 	// 	SignUp: { screen: SignUp },
@@ -96,6 +99,7 @@ export default function App() {
 					<Stack.Screen options={{ headerShown: false }} name="RoundResults" component={RoundResults} />
 					<Stack.Screen options={{ headerShown: false }} name="WiningScreen" component={WinningScreen} />
 				</Stack.Navigator>
+
 
 				{/* <StatusBar /> */}
 			</NavigationContainer>
