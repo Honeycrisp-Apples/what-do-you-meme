@@ -1,9 +1,15 @@
-import React from 'react'
-import { SafeAreaView, View, Text, Image, StyleSheet} from 'react-native';
+import React from 'react';
+import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
 import Fire from '../../constants/Fire';
-import {FormButton} from '../../components/Reusables'
+import { FormButton } from '../../components/Reusables';
 
 export default class MemePresentation extends React.Component {
+  // componentDidMount(){
+  //   setTimeout(() => {
+  //     this.props.navigation.navigate('CaptionInput');
+  //  }, 2500);
+  // }
+
 
   constructor(props){
     super(props)
@@ -72,3 +78,4 @@ const styles = StyleSheet.create({
     height:100
   }
 })
+

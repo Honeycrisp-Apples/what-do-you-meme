@@ -17,12 +17,13 @@ import Memes from './screens/Memes';
 import UserMain from './screens/UserMain';
 import UserAwards from './screens/UserAwards';
 import UserFriends from './screens/UserFriends';
-import GameLobby from './screens/GameScreens/GameLobby'
-import MemePresentation from './screens/GameScreens/MemePresentation'
-import CaptionInput from './screens/GameScreens/CaptionInput'
-import RoundResults from './screens/GameScreens/RoundResults'
-import VotingScreen from './screens/GameScreens/VotingScreen'
-import WinningScreen from './screens/GameScreens/WinningScreen'
+import GameLobby from './screens/GameScreens/GameLobby';
+import MemePresentation from './screens/GameScreens/MemePresentation';
+import CaptionInput from './screens/GameScreens/CaptionInput';
+import RoundResults from './screens/GameScreens/RoundResults';
+import VotingScreen from './screens/GameScreens/VotingScreen';
+import WinningScreen from './screens/GameScreens/WinningScreen';
+import Game from './screens/Game';
 
 import { decode, encode } from 'base-64';
 
@@ -80,7 +81,7 @@ export default function App() {
           component={Welcome}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
           name="Memes"
           component={Memes}
         />
@@ -92,7 +93,7 @@ export default function App() {
         <Stack.Screen
           options={{ headerShown: false }}
           name="GameLobby"
-          component={GameLobby}
+          component={Game}
         />
         <Stack.Screen
           options={{ headerShown: false }}

@@ -1,9 +1,10 @@
-import React from 'react'
-import { SafeAreaView, View, Text, Image, StyleSheet} from 'react-native';
+import React from 'react';
+import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
 import Fire from '../../constants/Fire';
-import {FormButton} from '../../components/Reusables'
+import { FormButton } from '../../components/Reusables';
 
 export default class VotingScreen extends React.Component {
+
   constructor(props){
     super(props)
     this.state = {
@@ -36,6 +37,4 @@ export default class VotingScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-
-})
+const styles = StyleSheet.create({});
