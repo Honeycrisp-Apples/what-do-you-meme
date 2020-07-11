@@ -73,6 +73,7 @@ export default class Game extends React.Component {
     }
   }
   // have a state for memes, setState of current meme and pass it down to MemePresentation, CaptionInput, Voting Screen, Round Results
+  //redux firebase needed for anyplace where user is updating object
   render() {
     return (
       <View>
