@@ -1,9 +1,9 @@
-import React from 'react';
 import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
 import Fire from '../../constants/Fire';
 import { FormButton } from '../../components/Reusables';
 import * as firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import React, { useState, useEffect } from 'react';
 
 export default function GameLobby({ navigation, route }) {
   // getGames() {
@@ -22,6 +22,8 @@ export default function GameLobby({ navigation, route }) {
   //   return <Text>Collection: Loading...</Text>;
   // } else if (value) {
   //   console.log('value', value.data());
+
+  console.log('route params data', route.params.theGame.data());
   console.log('navigation', route);
   return (
     <SafeAreaView style={styles.lobby}>
@@ -79,13 +81,13 @@ export default function GameLobby({ navigation, route }) {
         style={{ marginTop: 'auto' }}
         colorValue={'white'}
         modeValue={'contained'}
-        onPress={() => this.props.navigation.navigate('Welcome')}
+        onPress={() => navigation.navigate('Welcome')}
       />
       <FormButton
         title={'next panel'}
         colorValue={'white'}
         modeValue={'contained'}
-        onPress={() => this.props.navigation.navigate('MemePresentation')}
+        onPress={() => navigation.navigate('MemePresentation')}
       />
     </SafeAreaView>
   );

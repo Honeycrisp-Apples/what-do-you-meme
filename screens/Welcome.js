@@ -5,6 +5,7 @@ import Fire from '../constants/Fire';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+// import functions from 'firebase-functions';
 
 // type Props = {
 //   navigation: { navigate: (arg0: string) => void, state: {params: {username? : string}} },
@@ -72,15 +73,41 @@ export default function Welcome(props) {
           numUsers: 1,
           playing: false,
           winningMeme: '',
+          timeStamp: Fire.shared.getTime(),
         },
         { merge: true }
       )
-      .then((thing2) => console.log('thing2', thing2));
+      .then(() => {
+        firebase
+          .firestore()
+          .collection('game')
+          .orderBy('timeStamp', 'desc')
+          .limit(1)
+          .get()
+          .then(async (query) => {
+            let thing2 = query.docs[0];
+            await thing2.ref.update({
+              gameId: thing2.ref.id,
+            });
+            return thing2;
+            // goToGame(thing2);
+          })
+          .then((thing2) => {
+            goToGame(thing2);
+            console.log('thing2', thing2);
+          });
+      });
+    // console.log('hit me');
+    // const goPlease = functions.firestore
+    //   .document('game/{gameId}')
+    //   .onCreate((snap, context) => goToGame(snap));
+    // goPlease();
+    // console.log('thing2 docs', thing2.docs[0].data());
+    // .then((thing2) => console.log('thing2', thing2));
     // console.log('thing2', thing2);
-    // goToGame(thing2);
     // return thing2;
     // add a timestamp to each game object, query the database ordering by the timestamp for the last child
-    //ref.orderByChild('timestamp').limitToLast(1).on('child_added',function(snapshot) {
+    // ref.orderByChild('timestamp').limitToLast(1).on('child_added',function(snapshot) {
     // console.log('new record', snapshot.val());
     // });
   };
