@@ -48,7 +48,7 @@ export default function Welcome(props) {
         // </View>
         <Card style={styles.card}
          onPress={()=> {
-           if(item.link) return props.navigation.navigate("GameLobby")
+           if(item.link) return props.navigation.navigate(item.link)
          }
         }
         >
