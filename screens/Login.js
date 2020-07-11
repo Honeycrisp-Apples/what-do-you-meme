@@ -45,7 +45,7 @@ export default class Login extends React.Component{
     console.log("PASS: ", this.state.password)
     Fire.shared.login(this.state.email, this.state.password).then((user)=> {
       console.log("The logged in user is: ", user)
-      this.props.navigation.navigate('Welcome', {username: user})
+      // this.props.navigation.navigate('Welcome', {username: user})
     })
     // .then(()=> this.props.navigation.navigate('Welcome', {username: "nope"}))
     .catch((err)=> alert(err.message))

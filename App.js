@@ -97,7 +97,7 @@ export default function App() {
 					<Stack.Screen options={{ headerShown: false }} name="CaptionInput" component={CaptionInput} />
 					<Stack.Screen options={{ headerShown: false }} name="VotingScreen" component={VotingScreen} />
 					<Stack.Screen options={{ headerShown: false }} name="RoundResults" component={RoundResults} />
-					<Stack.Screen options={{ headerShown: false }} name="WiningScreen" component={WinningScreen} />
+					<Stack.Screen options={{ headerShown: false }} name="WinningScreen" component={WinningScreen} />
 				</Stack.Navigator>
 
 
