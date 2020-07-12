@@ -4,8 +4,12 @@ import { FormButton } from '../../components/Reusables';
 import * as firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect } from 'react';
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {firestoreConnect} from 'react-redux-firebase'
 
-export default function GameLobby({ navigation, route }) {
+export function GameLobby(props) {
+  const { navigation, route } = props
   // getGames() {
   //   firebase.firestore.collection('games');
   // }
@@ -22,8 +26,8 @@ export default function GameLobby({ navigation, route }) {
   //   return <Text>Collection: Loading...</Text>;
   // } else if (value) {
   //   console.log('value', value.data());
-
-  console.log('route params data', route.params.theGame.data());
+  console.log('route params gameID:', route.params.gameID)
+  console.log('route params theGame.data():', route.params.theGame.data());
   console.log('navigation', route);
   return (
     <SafeAreaView style={styles.lobby}>
@@ -114,3 +118,19 @@ const styles = StyleSheet.create({
     height: 50,
   },
 });
+
+const mapStateToProps = (state) => {
+  console.log("Here's the state from redux: ", state)
+  return(
+    {
+      hello: 'hello'
+    }
+  )
+}
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect((props) => [
+    { collection: 'game', doc: props.route.params.gameID }
+  ])
+)(GameLobby)

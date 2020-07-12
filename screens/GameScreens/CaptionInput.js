@@ -5,7 +5,7 @@ import {FormButton, FormInput, FormTextArea} from '../../components/Reusables'
 import { ScrollView } from 'react-native-gesture-handler';
 import Textarea from 'react-native-textarea';
 import { Audio } from 'expo-av';
-const soundObject = new Audio.Sound();
+// const soundObject = new Audio.Sound();
 import {
   Player,
   Recorder,
@@ -29,11 +29,11 @@ export default class CaptionInput extends React.Component {
   //   await soundObject.playAsync();
   //   }
   // }
-  async playSound(){
-    await soundObject.unloadAsync()
-    await soundObject.loadAsync(require('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3'));
-    await soundObject.playAsync()
-  }
+  // async playSound(){
+  //   await soundObject.unloadAsync()
+  //   await soundObject.loadAsync(require('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3'));
+  //   await soundObject.playAsync()
+  // }
   captionChange(){
     this.setState({caption: ''})
   }
@@ -44,7 +44,7 @@ export default class CaptionInput extends React.Component {
     const change = async () => {
       if(this.state.count>0){
         // await soundObject.replayAsync()
-        this.playSound()
+        // this.playSound()
         this.setState({count: this.state.count-1})
       }else {
         clearInterval(myvar1)

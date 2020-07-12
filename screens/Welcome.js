@@ -84,8 +84,8 @@ export default function Welcome(props) {
   //   firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`)
   // );
 
-  const goToGame = (thing) => {
-    props.navigation.navigate('GameLobby', { theGame: thing });
+  const goToGame = (thing, thingID) => {
+    props.navigation.navigate('GameLobby', { theGame: thing, gameID: thingID });
   };
 
   // console.log('game', game.data());
@@ -101,13 +101,14 @@ export default function Welcome(props) {
           users: [newUser],
           currentMeme: '',
           endMode: false,
-          gameId: '',
+          gameId: "",
           gameMode: 'regular',
           gotUsers: false,
           inputs: [newInput],
           numUsers: 1,
           playing: false,
           winningMeme: '',
+          roundMemes: [],
           timeStamp: Fire.shared.getTime(),
         },
         { merge: true }
@@ -128,7 +129,8 @@ export default function Welcome(props) {
             // goToGame(thing2);
           })
           .then((thing2) => {
-            goToGame(thing2);
+            //pass the game id as well
+            goToGame(thing2, thing2.ref.id);
             console.log('thing2', thing2);
           });
       });
@@ -169,7 +171,8 @@ export default function Welcome(props) {
             users: [...curUsers, newUser],
             inputs: [...curInputs, newInput],
           });
-          goToGame(thing);
+          // also pass the game id
+          goToGame(thing, thing.ref.id);
         } else {
           makeNewGame(newUser, newInput);
         }
