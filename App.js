@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import firebase from 'firebase';
+import firebase, { storage } from 'firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import useCachedResources from './hooks/useCachedResources';
@@ -28,6 +28,14 @@ import VotingScreen from './screens/GameScreens/VotingScreen';
 import WinningScreen from './screens/GameScreens/WinningScreen';
 import Game from './screens/Game';
 
+//needed for react/redux/firestore connection
+import {Provider} from 'react-redux'
+import store from './redux/store'
+import { createFirestoreInstance, reduxFirestore } from 'redux-firestore';
+import { ReactReduxFirebaseProvider, isLoaded } from 'react-redux-firebase';
+import firebase2 from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 import { decode, encode } from 'base-64';
 
@@ -42,6 +50,18 @@ if (!global.atob) {
 //function defining normal stack and function defining tab stack and combine those
 //V4 bottom stack navigation
 export default function App() {
+	const rrfConfig = {
+		userProfile: 'users',
+		useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
+	}
+	const rrfProps = {
+		firebase: firebase2,
+		config: rrfConfig,
+		dispatch: store.dispatch,
+		createFirestoreInstance // <- needed if using firestore
+	}
+
+
 	const [ user, loading, error ] = useAuthState(firebase.auth());
 	// const isLoadingComplete = useCachedResources();
 	// const colorScheme = useColorScheme();
@@ -80,38 +100,44 @@ export default function App() {
 	}
 	if (user) {
 		return (
-			<NavigationContainer>
-				{/* <Navigation colorScheme={colorScheme} /> */}
-				<Stack.Navigator>
-					{/* <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
-					<Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} /> */}
-					<Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
-					<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
-					<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
-					<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
-					<Stack.Screen
-						options={{ headerShown: false }}
-						name="MemePresentation"
-						component={MemePresentation}
-					/>
-					<Stack.Screen options={{ headerShown: false }} name="CaptionInput" component={CaptionInput} />
-					<Stack.Screen options={{ headerShown: false }} name="VotingScreen" component={VotingScreen} />
-					<Stack.Screen options={{ headerShown: false }} name="RoundResults" component={RoundResults} />
-					<Stack.Screen options={{ headerShown: false }} name="WinningScreen" component={WinningScreen} />
-				</Stack.Navigator>
-
-
-				{/* <StatusBar /> */}
-			</NavigationContainer>
+			<Provider store={store}>
+				<ReactReduxFirebaseProvider {...rrfProps}>
+					<NavigationContainer>
+						{/* <Navigation colorScheme={colorScheme} /> */}
+						<Stack.Navigator>
+							{/* <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
+							<Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} /> */}
+							<Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
+							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
+							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
+							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="MemePresentation"
+								component={MemePresentation}
+								/>
+							<Stack.Screen options={{ headerShown: false }} name="CaptionInput" component={CaptionInput} />
+							<Stack.Screen options={{ headerShown: false }} name="VotingScreen" component={VotingScreen} />
+							<Stack.Screen options={{ headerShown: false }} name="RoundResults" component={RoundResults} />
+							<Stack.Screen options={{ headerShown: false }} name="WinningScreen" component={WinningScreen} />
+						</Stack.Navigator>
+						{/* <StatusBar /> */}
+					</NavigationContainer>
+				</ReactReduxFirebaseProvider>
+			</Provider>
 		);
 	} else {
 		return (
-			<NavigationContainer>
-				<LoginStack.Navigator>
-					<LoginStack.Screen options={{ headerShown: false }} name="Login" component={Login} />
-					<LoginStack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} />
-				</LoginStack.Navigator>
-			</NavigationContainer>
+			<Provider store={store}>
+				<ReactReduxFirebaseProvider {...rrfProps}>
+					<NavigationContainer>
+						<LoginStack.Navigator>
+							<LoginStack.Screen options={{ headerShown: false }} name="Login" component={Login} />
+							<LoginStack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} />
+						</LoginStack.Navigator>
+					</NavigationContainer>
+				</ReactReduxFirebaseProvider>
+			</Provider>
 		);
 	}
 	// const logic = () =>

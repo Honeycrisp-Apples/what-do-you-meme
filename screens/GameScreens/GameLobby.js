@@ -4,8 +4,12 @@ import { FormButton } from '../../components/Reusables';
 import * as firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect } from 'react';
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {firestoreConnect} from 'react-redux-firebase'
 
-export default function GameLobby({ navigation, route }) {
+export function GameLobby(props) {
+  const { navigation, route, gameUsers, game } = props
   // getGames() {
   //   firebase.firestore.collection('games');
   // }
@@ -16,6 +20,13 @@ export default function GameLobby({ navigation, route }) {
   //     snapshotListenOptions: { includeMetadataChanges: true },
   //   }
   // );
+  // const [value, loading, error] = useDocument(
+  //   firebase.firestore().collection('users').doc(``)
+  // );
+  console.log('route params gameID:', route.params.gameID)
+  console.log('route params theGame.data():', route.params.theGame.data());
+  console.log('navigation', route);
+  console.log("gameUsers", gameUsers)
   // if (error) {
   //   return <Text>Error: {JSON.stringify(error)}</Text>;
   // } else if (loading) {
@@ -23,59 +34,84 @@ export default function GameLobby({ navigation, route }) {
   // } else if (value) {
   //   console.log('value', value.data());
 
-  console.log('route params data', route.params.theGame.data());
-  console.log('navigation', route);
+  let unsubscribe  = firebase.firestore().collection('game').doc(`${route.params.gameID}`)
+  .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
+    console.log("This is the gameDoc:", gameDoc)
+    // return await gameDoc.ref.update({
+    //   playing: true
+    // })
+  })
+
+  useEffect(() => {
+    return () => unsubscribe()
+  })
+
+  const startGame = () => {
+    // game.playing = true
+    navigation.push("MemePresentation", {gameID: route.params.gameID})
+  }
+  if(game && game.numUsers === 2){
+    // game.playing = true
+    console.log("Hit me!!!!!!")
+    const hi = async() => {
+
+      await firebase.firestore().collection('game').doc(`${route.params.gameID}`)
+      .update({
+        playing: true
+      })
+      // unsubscribe = firebase.firestore().collection('game').doc(`${route.params.gameID}`)
+      // .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
+      //   console.log("This is the gameDoc:", gameDoc)
+      //   // return await gameDoc.ref.update({
+      //   //   playing: true
+      //   // })
+      // })
+      // .get()
+      // .then(async (gameDoc) => {
+      //   return await gameDoc.ref.update({
+      //     playing: true
+      //   })
+      // })
+      // unsubscribe()
+    }
+    hi().then(()=> setTimeout(startGame, 5000))
+    // setTimeout(startGame, 5000)
+
+  }
   return (
     <SafeAreaView style={styles.lobby}>
       <Text style={{ color: 'white' }}>
-        Number of Players: {route.params.theGame.data().numUsers}
+       { game && `Number of Players: ${game.numUsers}`}
       </Text>
       <Text style={{ fontSize: 50, color: 'white', textAlign: 'center' }}>
         Game Lobby!
       </Text>
       <Text style={{ fontSize: 20, color: 'white', textAlign: 'center' }}>
-        Waiting for users...
+        {
+        game &&
+        game.playing ? "Starting Game!" : "Waiting for Memers..."
+        }
       </Text>
       {/* this is where a map happens */}
-      <View style={styles.user}>
-        <Image
-          style={styles.userimg}
-          source={{
-            uri:
-              'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg',
-          }}
-        />
-        <View style={{ marginLeft: 5 }}>
-          <Text style={{ fontSize: 20 }}>DISPLAY NAME</Text>
-          <Text style={{ fontSize: 10 }}>MEMER POINTS:</Text>
-        </View>
-      </View>
-      <View style={styles.user}>
-        <Image
-          style={styles.userimg}
-          source={{
-            uri:
-              'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg',
-          }}
-        />
-        <View style={{ marginLeft: 5 }}>
-          <Text style={{ fontSize: 20 }}>DISPLAY NAME</Text>
-          <Text style={{ fontSize: 10 }}>MEMER POINTS:</Text>
-        </View>
-      </View>
-      <View style={styles.user}>
-        <Image
-          style={styles.userimg}
-          source={{
-            uri:
-              'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg',
-          }}
-        />
-        <View style={{ marginLeft: 5 }}>
-          <Text style={{ fontSize: 20 }}>DISPLAY NAME</Text>
-          <Text style={{ fontSize: 10 }}>MEMER POINTS:</Text>
-        </View>
-      </View>
+      {
+       gameUsers && gameUsers.length &&
+        gameUsers.map((user)=> {
+          return (
+            <View key={user.userId} style={styles.user}>
+              <Image
+                style={styles.userimg}
+                source={{
+                  uri: `${user.imageURL}`
+                }}
+              />
+              <View style={{ marginLeft: 5 }}>
+                <Text style={{ fontSize: 20 }}>{user.displayName}</Text>
+                <Text style={{ fontSize: 10 }}>MEMER POINTS: {user.points}</Text>
+              </View>
+            </View>
+          )
+        })
+      }
       <FormButton
         title={'leave game'}
         style={{ marginTop: 'auto' }}
@@ -114,3 +150,25 @@ const styles = StyleSheet.create({
     height: 50,
   },
 });
+
+const mapStateToProps = (state, ownProps) => {
+  console.log("Here's the state from redux: ", state)
+  let ID = ownProps.route.params.gameID
+  let games = state.firestore.data.game
+  let game = games ? games[ID] : null
+
+  return(
+    {
+      hello: 'hello',
+      game: game ? game : null,
+      gameUsers: game ? game.users : null
+    }
+  )
+}
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect((props) => [
+    { collection: 'game', doc: props.route.params.gameID}
+  ])
+)(GameLobby)

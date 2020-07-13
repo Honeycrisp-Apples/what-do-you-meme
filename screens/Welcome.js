@@ -81,11 +81,14 @@ export default function Welcome(props) {
   // );
 
   // const [userData, userLoading, userError] = useDocument(
-  //   firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`)
+  //   firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`),
+  //   {
+  //     snapshotListenOptions: { includeMetadataChanges: true },
+  //   }
   // );
 
-  const goToGame = (thing) => {
-    props.navigation.navigate('GameLobby', { theGame: thing });
+  const goToGame = (thing, thingID) => {
+    props.navigation.navigate('GameLobby', { theGame: thing, gameID: thingID });
   };
 
   // console.log('game', game.data());
@@ -99,15 +102,16 @@ export default function Welcome(props) {
       .set(
         {
           users: [newUser],
-          currentMeme: '',
+          currentMeme: 'https://i.imgflip.com/1w7ygt.jpg',
           endMode: false,
-          gameId: '',
+          gameId: "",
           gameMode: 'regular',
           gotUsers: false,
           inputs: [newInput],
           numUsers: 1,
           playing: false,
           winningMeme: '',
+          roundMemes: [],
           timeStamp: Fire.shared.getTime(),
         },
         { merge: true }
@@ -128,7 +132,8 @@ export default function Welcome(props) {
             // goToGame(thing2);
           })
           .then((thing2) => {
-            goToGame(thing2);
+            //pass the game id as well
+            goToGame(thing2, thing2.ref.id);
             console.log('thing2', thing2);
           });
       });
@@ -154,8 +159,14 @@ export default function Welcome(props) {
       .orderBy('numUsers')
       .limit(1)
       .get()
-      .then((query) => {
-        const newUser = { userId: Fire.shared.getUID(), wins: 0, wonMemes: [] };
+      .then(async (query) => {
+        const theUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+        // const theUser = userData ? userData : 'nope'
+        console.log("theUser:", theUser)
+        console.log("theUserData:", theUser.data())
+        const newUser = await { userId: Fire.shared.getUID(), wins: 0, wonMemes: [],
+          displayName: theUser.data().displayName, imageURL: theUser.data().imageURL, points: theUser.data().points
+        };
         const newInput = { caption: '', userId: Fire.shared.getUID(), vote: 0 };
         if (query.docs.length) {
           const thing = query.docs[0];
@@ -169,7 +180,8 @@ export default function Welcome(props) {
             users: [...curUsers, newUser],
             inputs: [...curInputs, newInput],
           });
-          goToGame(thing);
+          // also pass the game id
+          goToGame(thing, thing.ref.id);
         } else {
           makeNewGame(newUser, newInput);
         }

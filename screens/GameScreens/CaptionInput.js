@@ -5,15 +5,22 @@ import {FormButton, FormInput, FormTextArea} from '../../components/Reusables'
 import { ScrollView } from 'react-native-gesture-handler';
 import Textarea from 'react-native-textarea';
 import { Audio } from 'expo-av';
-const soundObject = new Audio.Sound();
+// const soundObject = new Audio.Sound();
 import {
   Player,
   Recorder,
   MediaStates
 } from '@react-native-community/audio-toolkit';
 
+import * as firebase from 'firebase';
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {firestoreConnect} from 'react-redux-firebase'
+
+import {updateGameInput} from '../../redux/game-redux'
+
 const { width, height } = Dimensions.get('screen');
-export default class CaptionInput extends React.Component {
+class CaptionInput extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -29,11 +36,11 @@ export default class CaptionInput extends React.Component {
   //   await soundObject.playAsync();
   //   }
   // }
-  async playSound(){
-    await soundObject.unloadAsync()
-    await soundObject.loadAsync(require('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3'));
-    await soundObject.playAsync()
-  }
+  // async playSound(){
+  //   await soundObject.unloadAsync()
+  //   await soundObject.loadAsync(require('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3'));
+  //   await soundObject.playAsync()
+  // }
   captionChange(){
     this.setState({caption: ''})
   }
@@ -44,34 +51,80 @@ export default class CaptionInput extends React.Component {
     const change = async () => {
       if(this.state.count>0){
         // await soundObject.replayAsync()
-        this.playSound()
+        // this.playSound()
         this.setState({count: this.state.count-1})
       }else {
         clearInterval(myvar1)
         Keyboard.dismiss()
         this.setState({show: 'none'})
-
+        // await updateGameInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption)
+        await this.updateInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption )
         console.log('leaving to vote')
-        // return this.props.navigation.navigate("VotingScreen")
+        return this.props.navigation.push("VotingScreen", {gameID: this.props.route.params.gameID})
       }
     }
     myvar1 = setInterval(()=>change(), 1000)
   }
   async componentWillUnmount(){
-    await soundObject.unloadAsync()
+    // await soundObject.unloadAsync()
+  }
+  async updateInput(gameID, userID, caption){
+    // let unsubscribe =
+    let gameDoc = await firebase.firestore().collection('game').doc(`${gameID}`).get()
+    let curInputs = gameDoc.data().inputs
+    curInputs.forEach((input, ind)=>{
+      //get rid of the old caption input value
+      if(input.userID === userID){
+        curInputs.splice(ind, 1)
+      }
+    })
+    console.log("curInputs after splice", curInputs)
+    // make a new input caption value
+    let newInput = {caption, userID, vote: 0}
+    //update gameDoc inputs array
+    await firebase.firestore().collection('game').doc(`${gameID}`).update({
+      inputs: [...curInputs, newInput]
+    })
+    // await firebase.firestore().collection('game').doc(`${gameID}`)
+    // .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
+
+    // })
+    // .get()
+    // .then(async (query)=> {
+    //   const gameDoc = query
+    //   let curInputs = gameDoc.data().inputs
+    //   curInputs.forEach((input, ind)=>{
+    //     //get rid of the old caption input value
+    //     if(input.userID === userID){
+    //       curInputs.splice(ind, 1)
+    //     }
+    //   })
+    //   console.log("curInputs after splice", curInputs)
+    //   // make a new input caption value
+    //   let newInput = {caption, userID, vote: 0}
+    //   //update gameDoc inputs array
+    //   return await gameDoc.ref.update({
+    //     inputs: [...curInputs, newInput]
+    //   })
+    // })
+    // unsubscribe()
   }
   //have a component will unmount to GameObj.unputs.push(this.state.caption) to account for navigation...
   render(){
+    const {navigation, route, roundMeme} = this.props
       return(
         <SafeAreaView style={styles.panel}>
           <ScrollView contentContainerStyle={styles.panel} onPress={Keyboard.dismiss}>
 
           <Text style={{fontSize: 45, color: 'white', textAlign: 'center', marginVertical: 10}}>MAKE YOUR CAPTION</Text>
           <View style={{justifyContent: 'flex-end' ,alignItems: 'center', marginBottom: 10}}>
-            <Image
-            style={styles.memeimg}
-            source={{uri: "https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"}}
-            />
+            {
+              roundMeme && roundMeme.length &&
+              <Image
+              style={styles.memeimg}
+              source={{uri: roundMeme}}
+              />
+            }
             <View style={{position: 'absolute', width: 300, height: 300, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
               <Text style={{color: 'white', fontSize: 30, textAlign: 'center'}}>{(this.state.caption) || ""}</Text>
             </View>
@@ -123,3 +176,26 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   }
 })
+
+const mapStateToProps = (state, ownProps) => {
+  console.log("Here's the state from redux: ", state)
+  let ID = ownProps.route.params.gameID
+  let games = state.firestore.data.game
+  let game = games ? games[ID] : null
+
+  return(
+    {
+      hello: 'hello',
+      game: game ? game : null,
+      gameUsers: game ? game.users : null,
+      roundMeme: game ? game.currentMeme : null
+    }
+  )
+}
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect((props) => [
+    { collection: 'game', doc: props.route.params.gameID}
+  ])
+)(CaptionInput)
