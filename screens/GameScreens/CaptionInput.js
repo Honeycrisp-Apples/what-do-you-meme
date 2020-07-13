@@ -19,6 +19,9 @@ import {firestoreConnect} from 'react-redux-firebase'
 
 import {updateGameInput} from '../../redux/game-redux'
 
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import  { useState, useEffect } from 'react';
+
 const { width, height } = Dimensions.get('screen');
 class CaptionInput extends React.Component {
   constructor(props){

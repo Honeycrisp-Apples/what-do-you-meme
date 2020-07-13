@@ -6,58 +6,100 @@ import * as firebase from 'firebase';
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {firestoreConnect} from 'react-redux-firebase'
+import { useCollection, useDocument, useDocumentOnce } from 'react-firebase-hooks/firestore';
+import  { useState, useEffect } from 'react';
 
 
-class MemePresentation extends React.Component {
+export default function MemePresentation (props){
+
+  // constructor(props){
+  //   super(props)
+  //   this.state={
+  //     display: 'none'
+  //   }
+  // }
+  // componentDidMount(){
+  //   setTimeout(() => {
+  //     // this.props.navigation.push('CaptionInput', {gameID: this.props.route.params.gameID});
+  //     this.setState({display: 'flex'})
+  //  }, 2500);
+  //  this.unsubscribe = firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`)
+  //  .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
+  //    console.log("This is the gameDoc:", gameDoc)
+  //    // return await gameDoc.ref.update({
+  //    //   playing: true
+  //    // })
+  //  })
+  // }
+  // componentWillUnmount(){
+  //   this.unsubscribe()
+  // }
+
+  // useEffect(()=> {
+    // setTimeout(() => {
+    //   // this.props.navigation.push('CaptionInput', {gameID: this.props.route.params.gameID});
+    //   this.setState({display: 'flex'})
+    // }, 2500);
+    // let unsubscribe = firebase.firestore().collection('game').doc(`${props.route.params.gameID}`)
+    // .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
+    //   console.log("This is the gameDoc:", gameDoc)
+    //   // return await gameDoc.ref.update({
+    //   //   playing: true
+    //   // })
+    // })
+  // },[])
 
 
-  constructor(props){
-    super(props)
-    this.state={
-      display: 'none'
-    }
-  }
-  componentDidMount(){
-    setTimeout(() => {
-      // this.props.navigation.push('CaptionInput', {gameID: this.props.route.params.gameID});
-      this.setState({display: 'flex'})
-   }, 2500);
-   this.unsubscribe = firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`)
-   .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
-     console.log("This is the gameDoc:", gameDoc)
-     // return await gameDoc.ref.update({
-     //   playing: true
-     // })
-   })
-  }
-  componentWillUnmount(){
-    this.unsubscribe()
-  }
+  let [value, loading, error] = useDocument(
+    firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
+    // {
+    //   snapshotListenOptions: { includeMetadataChanges: true },
+    // }
+  );
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      console.log("Meme Presentation is in focus!")
+    });
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return () => { value = null; loading = null; error = null; console.log("NULLS: ", value, loading, error); return unsubscribe};
+  }, [props.navigation]);
 
-  render(){
-    const {gameUsers, roundMeme, route} = this.props
+  // render(){
+    // const {gameUsers, roundMeme, route} = this.props
+    if (error) {
+      return <Text>Error: {JSON.stringify(error)}</Text>;
+    } else if (loading) {
+      return <Text>Collection: Loading...</Text>;
+    } else if (value) {
+      console.log('value', value.data());
     return(
     <SafeAreaView style={{backgroundColor: 'darkred', flex:1}}>
       <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND 1</Text>
       <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>Here we go...</Text>
       <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
         {
-        roundMeme && roundMeme.length &&
+        // roundMeme && roundMeme.length &&
+        value.data() && value.data().currentMeme && value.data().currentMeme.length &&
         <Image
         style={styles.memeimg}
-        source={{uri: `${roundMeme}`}}
+        // source={{uri: `${roundMeme}`}}
+        source={{uri: `${value.data().currentMeme}`}}
         />
         }
-      <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
+      {/* <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
         <View style={{backgroundColor:"gold", height: 60, width: 60, borderRadius: 30, justifyContent:'center', marginRight: 30}}>
         <Text style={{color: 'white', textAlign: 'center', fontSize: 25}}>G0!</Text>
         </View>
-      </View>
+      </View> */}
       </View>
       <View style={styles.players}>
         {
-          gameUsers && gameUsers.length &&
-          gameUsers.map((user)=> {
+          // gameUsers && gameUsers.length &&
+          // gameUsers.map((user)=> {
+          value.data() && value.data().users && value.data().users.length &&
+          value.data().users.map((user)=> {
             if(user.userId !== Fire.shared.getUID()){
               return (
                 <View key={user.userId} style={{alignItems: "center"}}>
@@ -72,11 +114,13 @@ class MemePresentation extends React.Component {
           })
         }
       </View>
-      <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>this.props.navigation.push('CaptionInput', {gameID: route.params.gameID})}/>
+      <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.push('CaptionInput', {gameID: props.route.params.gameID})}/>
     </SafeAreaView>
     )
   }
+  return null
 }
+
 
 const styles = StyleSheet.create({
   memeimg:{
@@ -100,26 +144,26 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = (state, ownProps) => {
-  console.log("Here's the state from redux: ", state)
-  let ID = ownProps.route.params.gameID
-  let games = state.firestore.data.game
-  let game = games ? games[ID] : null
+// const mapStateToProps = (state, ownProps) => {
+//   console.log("Here's the state from redux: ", state)
+//   let ID = ownProps.route.params.gameID
+//   let games = state.firestore.data.game
+//   let game = games ? games[ID] : null
 
-  return(
-    {
-      hello: 'hello',
-      game: game ? game : null,
-      gameUsers: game ? game.users : null,
-      roundMeme: game ? game.currentMeme : null
-    }
-  )
-}
+//   return(
+//     {
+//       hello: 'hello',
+//       game: game ? game : null,
+//       gameUsers: game ? game.users : null,
+//       roundMeme: game ? game.currentMeme : null
+//     }
+//   )
+// }
 
-export default compose(
-  connect(mapStateToProps),
-  firestoreConnect((props) => [
-    { collection: 'game', doc: props.route.params.gameID}
-  ])
-)(MemePresentation)
+// export default compose(
+//   connect(mapStateToProps),
+//   firestoreConnect((props) => [
+//     { collection: 'game', doc: props.route.params.gameID}
+//   ])
+// )(MemePresentation)
 
