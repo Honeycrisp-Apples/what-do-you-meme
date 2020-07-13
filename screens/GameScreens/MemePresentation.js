@@ -50,12 +50,13 @@ export default function MemePresentation (props){
   // },[])
 
 
-  // let [value, loading, error] = useDocument(
-  //   firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
-  //   // {
-  //   //   snapshotListenOptions: { includeMetadataChanges: true },
-  //   // }
-  // );
+  let [value, loading, error] = useDocument(
+    firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
+    // {
+    //   snapshotListenOptions: { includeMetadataChanges: true },
+    // }
+  );
+  if(!props.navigation.isFocused()) {return null}
   // useEffect(() => {
   //   const unsubscribe = props.navigation.addListener('focus', () => {
   //     // The screen is focused
@@ -79,27 +80,27 @@ export default function MemePresentation (props){
   //   return () => unsubscribe()
   // },[props.route.params.gameID])
 
-  const [error, setError] = React.useState(false)
-  const [loading, setLoading] = React.useState(true)
-  const [value, setValue] = React.useState(null)
+  // const [error, setError] = React.useState(false)
+  // const [loading, setLoading] = React.useState(true)
+  // const [value, setValue] = React.useState(null)
 
-  useEffect(()=>{
-    const unsubscribe = firebase
-        .firestore()
-        .collection('recipes')
-        .doc(`${props.route.params.gameID}`)
-        .onSnapshot(
-          doc => {
-            setLoading(false)
-            setValue(doc)
-          },
-          err => {
-            setError(err)
-          }
-        )
-        console.log("Mounted?")
-    return () => {console.log("Unmounted?"); return unsubscribe()}
-  },[props.route.params.gameID])
+  // useEffect(()=>{
+  //   const unsubscribe = firebase
+  //       .firestore()
+  //       .collection('recipes')
+  //       .doc(`${props.route.params.gameID}`)
+  //       .onSnapshot(
+  //         doc => {
+  //           setLoading(false)
+  //           setValue(doc)
+  //         },
+  //         err => {
+  //           setError(err)
+  //         }
+  //       )
+  //       console.log("Mounted?")
+  //   return () => {console.log("Unmounted?"); return unsubscribe()}
+  // },[props.route.params.gameID])
 
 
   // render(){
@@ -110,6 +111,10 @@ export default function MemePresentation (props){
       return <Text>Collection: Loading...</Text>;
     } else if (value) {
       console.log('value', value.data());
+      setTimeout(() => {
+        props.navigation.push('CaptionInput', {gameID: props.route.params.gameID});
+        // this.setState({display: 'flex'})
+      }, 2500);
     return(
     <SafeAreaView style={{backgroundColor: 'darkred', flex:1}}>
       <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND 1</Text>
@@ -150,7 +155,7 @@ export default function MemePresentation (props){
           })
         }
       </View>
-      <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.navigate('CaptionInput', {gameID: props.route.params.gameID})}/>
+      {/* <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.navigate('CaptionInput', {gameID: props.route.params.gameID})}/> */}
     </SafeAreaView>
     )
   }

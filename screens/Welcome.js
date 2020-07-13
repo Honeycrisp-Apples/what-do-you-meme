@@ -50,7 +50,8 @@ export default function Welcome(props) {
         // </View>
         <Card style={styles.card}
          onPress={()=> {
-           if(item.link) return props.navigation.navigate(item.link)
+           if(item.link) return addUserToGame()
+           else {return alert("New Game Mode Coming Soon")}
          }
         }
         >
@@ -244,7 +245,7 @@ export default function Welcome(props) {
         />
         <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
         <FormButton title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
-        <Button title={'Join Game'} onPress={() => addUserToGame()}></Button>
+        {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}
         {/* <Button
           title={'To User'}

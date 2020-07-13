@@ -27,7 +27,7 @@ class CaptionInput extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      count: 10, caption: '', show:"flex", player: "new Player('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3')"
+      count: 30, caption: '', show:"flex", player: "new Player('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3')"
     }
     this.captionChange = this.captionChange.bind(this)
     // this.loadSound()
@@ -44,6 +44,8 @@ class CaptionInput extends React.Component {
   //   await soundObject.loadAsync(require('../../assets/audio/Tick-DeepFrozenApps-397275646.mp3'));
   //   await soundObject.playAsync()
   // }
+
+
   captionChange(){
     this.setState({caption: ''})
   }
@@ -114,7 +116,9 @@ class CaptionInput extends React.Component {
   }
   //have a component will unmount to GameObj.unputs.push(this.state.caption) to account for navigation...
   render(){
+
     const {navigation, route, roundMeme} = this.props
+    if(!navigation.isFocused()) {return null}
       return(
         <SafeAreaView style={styles.panel}>
           <ScrollView contentContainerStyle={styles.panel} onPress={Keyboard.dismiss}>
@@ -150,7 +154,7 @@ class CaptionInput extends React.Component {
           placeholderTextColor={'darkred'}
           maxLength={70}
           />
-          <FormButton title={'game lobby'} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/>
+          {/* <FormButton title={'game lobby'} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/>
           <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>this.props.navigation.navigate('VotingScreen')}/>
           {/* <Text>Time before page change: {this.state.count}</Text> */}
           </ScrollView>

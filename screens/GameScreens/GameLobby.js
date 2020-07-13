@@ -15,12 +15,14 @@ export default function GameLobby(props) {
   // }
   //sorting can happen to pass appropriate game to the next page; certain boxes are dependent on user array on game object
 
-  // let [value, loading, error] = useDocument(
-  //   firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
-  //   // {
-  //   //   snapshotListenOptions: { includeMetadataChanges: true },
-  //   // }
-  // );
+  let [value, loading, error] = useDocument(
+    firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
+    // {
+    //   snapshotListenOptions: { includeMetadataChanges: true },
+    // }
+  );
+  // console.log("Route: ", navigation)
+  if(!navigation.isFocused()) {return null}
   // useEffect(() => {
   //   const unsubscribe = props.navigation.addListener('focus', () => {
   //     // The screen is focused
@@ -32,27 +34,27 @@ export default function GameLobby(props) {
   //   return unsubscribe()};
   // }, [props.navigation.navigate]);
 
-  const [error, setError] = React.useState(false)
-  const [loading, setLoading] = React.useState(true)
-  const [value, setValue] = React.useState()
+  // const [error, setError] = React.useState(false)
+  // const [loading, setLoading] = React.useState(true)
+  // const [value, setValue] = React.useState()
 
-  useEffect(()=>{
-    const unsubscribe = firebase
-        .firestore()
-        .collection('recipes')
-        .doc(`${props.route.params.gameID}`)
-        .onSnapshot(
-          doc => {
-            setLoading(false)
-            setValue(doc)
-          },
-          err => {
-            setError(err)
-          }
-        )
-        console.log("Mounted?")
-    return () => {console.log("Unmounted?"); return () => unsubscribe()}
-  },[])
+  // useEffect(()=>{
+  //   const unsubscribe = firebase
+  //       .firestore()
+  //       .collection('recipes')
+  //       .doc(`${props.route.params.gameID}`)
+  //       .onSnapshot(
+  //         doc => {
+  //           setLoading(false)
+  //           setValue(doc)
+  //         },
+  //         err => {
+  //           setError(err)
+  //         }
+  //       )
+  //       console.log("Mounted?")
+  //   return () => {console.log("Unmounted?"); return () => unsubscribe()}
+  // },[])
 
   // const [value, loading, error] = useDocument(
   //   firebase.firestore().collection('users').doc(``)
@@ -85,7 +87,7 @@ export default function GameLobby(props) {
     navigation.navigate("MemePresentation", {gameID: route.params.gameID})
   }
   // if(game && game.numUsers === 2){
-    if(value && value.data() && value.data().numUsers === 2){
+    if(value && value.data() && value.data().numUsers === 3){
     // game.playing = true
     console.log("Hit me!!!!!!")
     const hi = async() => {
@@ -161,19 +163,19 @@ export default function GameLobby(props) {
           )
         })
       }
-      <FormButton
+      {/* <FormButton
         title={'leave game'}
         style={{ marginTop: 'auto' }}
         colorValue={'white'}
         modeValue={'contained'}
         onPress={() => navigation.navigate('Welcome')}
-      />
-      <FormButton
+      /> */}
+      {/* <FormButton
         title={'next panel'}
         colorValue={'white'}
         modeValue={'contained'}
         onPress={() => navigation.navigate('MemePresentation')}
-      />
+      /> */}
     </SafeAreaView>
   );
 }
