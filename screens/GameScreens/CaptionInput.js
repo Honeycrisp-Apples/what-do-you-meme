@@ -63,7 +63,7 @@ class CaptionInput extends React.Component {
         // await updateGameInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption)
         await this.updateInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption )
         console.log('leaving to vote')
-        return this.props.navigation.push("VotingScreen", {gameID: this.props.route.params.gameID})
+        return this.props.navigation.navigate("VotingScreen", {gameID: this.props.route.params.gameID})
       }
     }
     myvar1 = setInterval(()=>change(), 1000)

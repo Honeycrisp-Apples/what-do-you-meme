@@ -50,21 +50,57 @@ export default function MemePresentation (props){
   // },[])
 
 
-  let [value, loading, error] = useDocument(
-    firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
-    // {
-    //   snapshotListenOptions: { includeMetadataChanges: true },
-    // }
-  );
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call any action
-      console.log("Meme Presentation is in focus!")
-    });
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return () => { value = null; loading = null; error = null; console.log("NULLS: ", value, loading, error); return unsubscribe};
-  }, [props.navigation]);
+  // let [value, loading, error] = useDocument(
+  //   firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
+  //   // {
+  //   //   snapshotListenOptions: { includeMetadataChanges: true },
+  //   // }
+  // );
+  // useEffect(() => {
+  //   const unsubscribe = props.navigation.addListener('focus', () => {
+  //     // The screen is focused
+  //     // Call any action
+  //     console.log("Meme Presentation is focused!")
+  //   });
+  //   // Return the function to unsubscribe from the event so it gets removed on unmount
+  //   return () => { value = null; loading = null; error = null; console.log("MEME NULLS: ", value, loading, error);
+  //   return unsubscribe()};
+  // }, [props.navigation.navigate]);
+
+
+  // let value = null
+  // let error = null
+  // let loading = null
+  // useEffect(()=>{
+  //   const unsubscribe = async () => {
+  //     const gameDoc = await firebase.firestore().collection('game').doc(`${props.route.params.gameUID}`).get()
+  //     value = gameDoc
+  //   }
+  //   return () => unsubscribe()
+  // },[props.route.params.gameID])
+
+  const [error, setError] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
+  const [value, setValue] = React.useState(null)
+
+  useEffect(()=>{
+    const unsubscribe = firebase
+        .firestore()
+        .collection('recipes')
+        .doc(`${props.route.params.gameID}`)
+        .onSnapshot(
+          doc => {
+            setLoading(false)
+            setValue(doc)
+          },
+          err => {
+            setError(err)
+          }
+        )
+        console.log("Mounted?")
+    return () => {console.log("Unmounted?"); return unsubscribe()}
+  },[props.route.params.gameID])
+
 
   // render(){
     // const {gameUsers, roundMeme, route} = this.props
@@ -81,7 +117,7 @@ export default function MemePresentation (props){
       <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
         {
         // roundMeme && roundMeme.length &&
-        value.data() && value.data().currentMeme && value.data().currentMeme.length &&
+        value && value.data() && value.data().currentMeme && value.data().currentMeme.length &&
         <Image
         style={styles.memeimg}
         // source={{uri: `${roundMeme}`}}
@@ -98,7 +134,7 @@ export default function MemePresentation (props){
         {
           // gameUsers && gameUsers.length &&
           // gameUsers.map((user)=> {
-          value.data() && value.data().users && value.data().users.length &&
+          value && value.data() && value.data().users && value.data().users.length &&
           value.data().users.map((user)=> {
             if(user.userId !== Fire.shared.getUID()){
               return (
@@ -114,11 +150,11 @@ export default function MemePresentation (props){
           })
         }
       </View>
-      <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.push('CaptionInput', {gameID: props.route.params.gameID})}/>
+      <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.navigate('CaptionInput', {gameID: props.route.params.gameID})}/>
     </SafeAreaView>
     )
   }
-  return null
+  return <Text style={{fontSize: 50}}>Hello, MP</Text>
 }
 
 

@@ -15,21 +15,44 @@ export default function GameLobby(props) {
   // }
   //sorting can happen to pass appropriate game to the next page; certain boxes are dependent on user array on game object
 
-  let [value, loading, error] = useDocument(
-    firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
-    // {
-    //   snapshotListenOptions: { includeMetadataChanges: true },
-    // }
-  );
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call any action
-      console.log("Game Loby is in focus!")
-    });
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return () => { value = null; loading = null; error = null; console.log("NULLS: ", value, loading, error); return unsubscribe};
-  }, [props.navigation]);
+  // let [value, loading, error] = useDocument(
+  //   firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
+  //   // {
+  //   //   snapshotListenOptions: { includeMetadataChanges: true },
+  //   // }
+  // );
+  // useEffect(() => {
+  //   const unsubscribe = props.navigation.addListener('focus', () => {
+  //     // The screen is focused
+  //     // Call any action
+  //     console.log("Game Loby is in focus!")
+  //   });
+  //   // Return the function to unsubscribe from the event so it gets removed on unmount
+  //   return () => { value = null; loading = null; error = null; console.log("GAME NULLS: ", value, loading, error);
+  //   return unsubscribe()};
+  // }, [props.navigation.navigate]);
+
+  const [error, setError] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
+  const [value, setValue] = React.useState()
+
+  useEffect(()=>{
+    const unsubscribe = firebase
+        .firestore()
+        .collection('recipes')
+        .doc(`${props.route.params.gameID}`)
+        .onSnapshot(
+          doc => {
+            setLoading(false)
+            setValue(doc)
+          },
+          err => {
+            setError(err)
+          }
+        )
+        console.log("Mounted?")
+    return () => {console.log("Unmounted?"); return () => unsubscribe()}
+  },[])
 
   // const [value, loading, error] = useDocument(
   //   firebase.firestore().collection('users').doc(``)
@@ -59,7 +82,7 @@ export default function GameLobby(props) {
 
   const startGame = () => {
     // game.playing = true
-    navigation.push("MemePresentation", {gameID: route.params.gameID})
+    navigation.navigate("MemePresentation", {gameID: route.params.gameID})
   }
   // if(game && game.numUsers === 2){
     if(value && value.data() && value.data().numUsers === 2){
@@ -101,7 +124,7 @@ export default function GameLobby(props) {
     <SafeAreaView style={styles.lobby}>
       <Text style={{ color: 'white' }}>
        {/* { game && `Number of Players: ${game.numUsers}`} */}
-       { value && `Number of Players: ${value.data().numUsers}`}
+       { value && value.data() && `Number of Players: ${value.data().numUsers}`}
       </Text>
       <Text style={{ fontSize: 50, color: 'white', textAlign: 'center' }}>
         Game Lobby!
@@ -112,7 +135,7 @@ export default function GameLobby(props) {
         game.playing ? "Starting Game!" : "Waiting for Memers..."
         } */}
         {
-        value &&
+        value && value.data() &&
         value.data().playing ? "Starting Game!" : "Waiting for Memers..."
         }
       </Text>
@@ -120,7 +143,7 @@ export default function GameLobby(props) {
       {
       //  gameUsers && gameUsers.length &&
       //   gameUsers.map((user)=> {
-          value.data().users && value.data().users.length &&
+          value && value.data() && value.data().users && value.data().users.length &&
           value.data().users.map((user)=> {
           return (
             <View key={user.userId} style={styles.user}>
@@ -154,7 +177,7 @@ export default function GameLobby(props) {
     </SafeAreaView>
   );
 }
-return null
+return <Text style={{fontSize: 50}}>Hello, GL</Text>
 }
 
 const styles = StyleSheet.create({
