@@ -1,10 +1,13 @@
 import {combineReducers} from 'redux'
 import {firestoreReducer} from 'redux-firestore'
+import {firebaseReducer} from "react-redux-firebase";
 import gameReducer from './game-redux'
+
 
 const rootReducer = combineReducers({
   gameStuff: gameReducer,
-  firestoreData: firestoreReducer
+  firebase: firebaseReducer,
+  firestore: firestoreReducer
 })
 
 export default rootReducer
