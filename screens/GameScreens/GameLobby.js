@@ -4,6 +4,7 @@ import { FormButton } from '../../components/Reusables';
 import * as firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect } from 'react';
+import Game from '../Game';
 
 export default function GameLobby({ navigation, route }) {
   // getGames() {
@@ -23,12 +24,12 @@ export default function GameLobby({ navigation, route }) {
   // } else if (value) {
   //   console.log('value', value.data());
 
-  console.log('route params data', route.params.theGame.data());
-  console.log('navigation', route);
+  // console.log('route params data', route.params.theGame.data());
+  // console.log('navigation', route);
   return (
     <SafeAreaView style={styles.lobby}>
       <Text style={{ color: 'white' }}>
-        Number of Players: {route.params.theGame.data().numUsers}
+        {/* Number of Players: {route.params.theGame.data().numUsers} */}
       </Text>
       <Text style={{ fontSize: 50, color: 'white', textAlign: 'center' }}>
         Game Lobby!

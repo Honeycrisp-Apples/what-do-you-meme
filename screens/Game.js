@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React from 'react';
 import { Text, View, Image, ScrollView, Button } from 'react-native';
 import CaptionInput from './GameScreens/CaptionInput';
@@ -6,6 +7,8 @@ import MemePresentation from './GameScreens/MemePresentation';
 import RoundResults from './GameScreens/RoundResults';
 import VotingScreen from './GameScreens/VotingScreen';
 import WinningScreen from './GameScreens/WinningScreen';
+import firebase from 'firebase';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 
 export default class Game extends React.Component {
   constructor() {
@@ -15,6 +18,7 @@ export default class Game extends React.Component {
       screen: 0,
       rounds: 0,
       intervalState: null,
+      curMeme: '',
     };
     this.startGame = this.startGame.bind(this);
   }
@@ -38,11 +42,39 @@ export default class Game extends React.Component {
 
   checkGame(timer) {
     console.log('checking game');
+    // console.log('route', this.props.route.params.gameID);
+    // let gameId = this.props.route.params.gameID;
+    // const ref = firebase.firestore().collection('game');
+    // console.log('ref', ref.docs[0].id);
+    // const docRefId = ref.docs[0].id;
+    // let gameValue = firebase.firestore().collection('game').doc(gameId).get();
+    // console.log('Game Value Meme', gameValue.roundOneMeme);
+    // gameValue
+    //   .get()
+    //   .then(function (doc) {
+    //     if (doc.exists) {
+    //       console.log('Document data:', doc.data());
+    //     } else {
+    //       // doc.data() will be undefined in this case
+    //       console.log('No such document!');
+    //       console.log('GameValue Meme', gameValue.roundOneMeme);
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log('Error getting document:', error);
+    //   });
     if (timer > 0) {
       return;
     } else {
       switch (this.state.screen) {
         case 1:
+          // if (this.state.rounds === 0) {
+          //   this.setState({ curMeme: gameValue.roundMemes[0] });
+          // } else if (this.state.rounds === 1) {
+          //   this.setState({ curMeme: gameValue.roundMemes[1] });
+          // } else if (this.state.rounds === 2) {
+          //   this.setState({ curMeme: gameValue.roundMemes[2] });
+          // }
           this.setState({ screen: this.state.screen + 1, timer: 2 });
           break;
         case 2:
@@ -82,13 +114,13 @@ export default class Game extends React.Component {
         {this.state.screen === 0 ? (
           <GameLobby />
         ) : this.state.screen === 1 ? (
-          <MemePresentation />
+          <MemePresentation meme={this.state.curMeme} />
         ) : this.state.screen === 2 ? (
-          <CaptionInput />
+          <CaptionInput meme={this.state.curMeme} />
         ) : this.state.screen === 3 ? (
-          <VotingScreen />
+          <VotingScreen meme={this.state.curMeme} />
         ) : this.state.screen === 4 ? (
-          <RoundResults />
+          <RoundResults meme={this.state.curMeme} />
         ) : (
           <WinningScreen />
         )}
