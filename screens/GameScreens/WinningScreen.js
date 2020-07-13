@@ -3,8 +3,12 @@ import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
 import Fire from '../../constants/Fire';
 import { FormButton } from '../../components/Reusables';
 import {IconButton} from 'react-native-paper'
+import * as firebase from 'firebase';
 
 export default class WinningScreen extends React.Component {
+  async componentDidMount(){
+    await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).delete()
+  }
   render() {
     return(
       <SafeAreaView style={styles.winResults}>
