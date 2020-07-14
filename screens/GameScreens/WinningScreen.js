@@ -4,12 +4,16 @@ import Fire from '../../constants/Fire';
 import { FormButton } from '../../components/Reusables';
 import { IconButton } from 'react-native-paper';
 import * as firebase from 'firebase';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { firestoreConnect } from 'react-redux-firebase';
 
-export default class WinningScreen extends React.Component {
+class WinningScreen extends React.Component {
   // async componentDidMount() {
   //   // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).delete()
   // }
   render() {
+    const winningMeme = this.props.winningMeme;
     return (
       <SafeAreaView style={styles.winResults}>
         <IconButton
@@ -62,8 +66,7 @@ export default class WinningScreen extends React.Component {
           <Image
             style={styles.memeimg}
             source={{
-              uri:
-                'https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125',
+              uri: winningMeme,
             }}
           />
         </View>
@@ -154,3 +157,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const mapStateToProps = (state, ownProps) => {
+  console.log("Here's the state from redux: ", state);
+  let ID = ownProps.route.params.gameID;
+  let games = state.firestore.data.game;
+  let game = games ? games[ID] : null;
+
+  return {
+    hello: 'hello',
+    game: game ? game : null,
+    gameUsers: game ? game.users : null,
+    winningMeme: game ? game.winningMeme : null,
+    gameInputs: game ? game.inputs : null,
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect((props) => [
+    { collection: 'game', doc: props.route.params.gameID },
+  ])
+)(WinningScreen);
