@@ -1,5 +1,15 @@
 import React from 'react';
-import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground } from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  Button,
+  View,
+  ScrollView,
+  Dimensions,
+  StyleSheet,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import Fire from '../constants/Fire';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase';
@@ -7,9 +17,8 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 // import functions from 'firebase-functions';
 import { Card } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
-import {FormButton} from '../components/Reusables'
+import { FormButton } from '../components/Reusables';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
 
 // type Props = {
 //   navigation: { navigate: (arg0: string) => void, state: {params: {username? : string}} },
@@ -38,33 +47,52 @@ export default function Welcome(props) {
   // }
 
   const data = [
-    { title: "Best Caption", link: "GameLobby", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"},
-    { title: "Ultimate Memer", link: "", image:"https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"},
-    { title: "More Game Modes Coming Soon", link: "", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
-  ]
+    {
+      title: 'Best Caption',
+      link: 'GameLobby',
+      image:
+        'https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200',
+    },
+    {
+      title: 'Ultimate Memer',
+      link: '',
+      image:
+        'https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125',
+    },
+    {
+      title: 'More Game Modes Coming Soon',
+      link: '',
+      image:
+        'https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200',
+    },
+  ];
 
-  const _renderItem = ({item, index}) => {
+  const _renderItem = ({ item, index }) => {
     return (
-        // <View style={styles.slide}>
-        //     <Text style={styles.title}>{ item.title }</Text>
-        // </View>
-        <Card style={styles.card}
-         onPress={()=> {
-           if(item.link) return addUserToGame()
-           else {return alert("New Game Mode Coming Soon")}
-         }
-        }
+      // <View style={styles.slide}>
+      //     <Text style={styles.title}>{ item.title }</Text>
+      // </View>
+      <Card
+        style={styles.card}
+        onPress={() => {
+          if (item.link) return addUserToGame();
+          else {
+            return alert('New Game Mode Coming Soon');
+          }
+        }}
+      >
+        <ImageBackground
+          style={styles.image}
+          source={{ uri: item.image }}
+          imageStyle={{ opacity: 0.5, borderRadius: 3 }}
         >
-          <ImageBackground
-          style={styles.image} source={{uri: item.image}}
-          imageStyle={{opacity:0.5, borderRadius: 3}}
-          >
-          <Text style={{fontSize: 30, textAlign: 'center' , color: 'white'}}>{((item.title)|| "Hi there").toUpperCase()}</Text>
-          </ImageBackground>
-        </Card>
+          <Text style={{ fontSize: 30, textAlign: 'center', color: 'white' }}>
+            {(item.title || 'Hi there').toUpperCase()}
+          </Text>
+        </ImageBackground>
+      </Card>
     );
-  }
-
+  };
 
   const getout = () => {
     Fire.shared.logout();
@@ -105,7 +133,7 @@ export default function Welcome(props) {
           users: [newUser],
           currentMeme: 'https://i.imgflip.com/1w7ygt.jpg',
           endMode: false,
-          gameId: "",
+          gameId: '',
           gameMode: 'regular',
           gotUsers: false,
           inputs: [newInput],
@@ -161,26 +189,43 @@ export default function Welcome(props) {
       .limit(1)
       .get()
       .then(async (query) => {
-        const theUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+        const theUser = await firebase
+          .firestore()
+          .collection('users')
+          .doc(`${Fire.shared.getUID()}`)
+          .get();
         // const theUser = userData ? userData : 'nope'
-        console.log("theUser:", theUser)
-        console.log("theUserData:", theUser.data())
-        const newUser = await { userId: Fire.shared.getUID(), wins: 0, wonMemes: [],
-          displayName: theUser.data().displayName, imageURL: theUser.data().imageURL, points: theUser.data().points
+        console.log('theUser:', theUser);
+        console.log('theUserData:', theUser.data());
+        const newUser = await {
+          userId: Fire.shared.getUID(),
+          wins: 0,
+          wonMemes: [],
+          displayName: theUser.data().displayName,
+          imageURL: theUser.data().imageURL,
+          points: theUser.data().points,
         };
         const newInput = { caption: '', userId: Fire.shared.getUID(), vote: 0 };
+
         if (query.docs.length) {
           const thing = query.docs[0];
           console.log('query', query.docs);
           let curVal = thing.data().numUsers;
           let curUsers = thing.data().users;
+          console.log('curUsers', curUsers);
           let curInputs = thing.data().inputs;
           const numOfPlayers = curVal + 1;
-          thing.ref.update({
-            numUsers: numOfPlayers,
-            users: [...curUsers, newUser],
-            inputs: [...curInputs, newInput],
-          });
+          for (let i = 0; i < curUsers.length; i++) {
+            newUser.displayName !== curUsers[i].displayName
+              ? curUsers &&
+                thing.ref.update({
+                  numUsers: numOfPlayers,
+                  users: [...curUsers, newUser],
+
+                  inputs: [...curInputs, newInput],
+                })
+              : alert("Ooops, you've already joined a game!");
+          }
           // also pass the game id
           goToGame(thing, thing.ref.id);
         } else {
@@ -205,16 +250,24 @@ export default function Welcome(props) {
   if (user) {
     return (
       <SafeAreaView style={styles.welcome}>
-        <TouchableOpacity style={styles.mainUser}
-        onPress={() => props.navigation.navigate('UserPages')}
+        <TouchableOpacity
+          style={styles.mainUser}
+          onPress={() => props.navigation.navigate('UserPages')}
         >
-         {/* needs user object in database image url and points */}
+          {/* needs user object in database image url and points */}
           <Image
-          style={styles.userimg}
-          source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
+            style={styles.userimg}
+            source={{
+              uri:
+                'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg',
+            }}
           />
-          <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
-          <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS:</Text>
+          <Text style={{ fontSize: 20, marginLeft: 5 }}>
+            {user.displayName.toUpperCase()}
+          </Text>
+          <Text style={{ fontSize: 10, marginLeft: 'auto', marginRight: 10 }}>
+            MEMER POINTS:
+          </Text>
         </TouchableOpacity>
         {/* <Text>{`Hello there, ${user.displayName}`}</Text> */}
         {/* <View
@@ -237,14 +290,24 @@ export default function Welcome(props) {
           </ScrollView>
         </View> */}
         <Carousel
-              // ref={(c) => { this._carousel = c; }}
-              data={data}
-              renderItem={_renderItem}
-              sliderWidth={width}
-              itemWidth={width - 100}
+          // ref={(c) => { this._carousel = c; }}
+          data={data}
+          renderItem={_renderItem}
+          sliderWidth={width}
+          itemWidth={width - 100}
         />
-        <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
-        <FormButton title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
+        <FormButton
+          title={'create a room'}
+          colorValue={'orange'}
+          modeValue={'contained'}
+          onPress={() => alert('Functionality not available yet.')}
+        />
+        <FormButton
+          title={'logout'}
+          colorValue={'white'}
+          modeValue={'contained'}
+          onPress={() => getout()}
+        />
         {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}
         {/* <Button
@@ -258,7 +321,6 @@ export default function Welcome(props) {
           title={'To Game'}
           onPress={() => props.navigation.navigate('GameLobby')}
         ></Button> */}
-
       </SafeAreaView>
     );
   }
@@ -266,10 +328,9 @@ export default function Welcome(props) {
   // }
 }
 const styles = StyleSheet.create({
-  welcome:{
+  welcome: {
     flex: 1,
-    backgroundColor: 'darkred'
-
+    backgroundColor: 'darkred',
   },
   scrollContainer: {
     height,
@@ -284,31 +345,30 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // justifyContent: 'center',
     alignItems: 'center',
-
   },
-  mainUser:{
+  mainUser: {
     flexDirection: 'row',
     backgroundColor: 'white',
     margin: 10,
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
-  userimg:{
-    borderRadius: 50/2,
+  userimg: {
+    borderRadius: 50 / 2,
     borderWidth: 3,
     borderColor: 'darkred',
     width: 50,
-    height:50
+    height: 50,
   },
   image: {
     borderRadius: 5,
     width: width - 100,
     height: height,
     flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
+    resizeMode: 'cover',
+    justifyContent: 'center',
     // backgroundColor: "rgba(255,0,0,0.3)"
     // opacity: 0.7
   },
