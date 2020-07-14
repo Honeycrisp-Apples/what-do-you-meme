@@ -19,6 +19,7 @@ import { Card } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import { FormButton } from '../components/Reusables';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 // type Props = {
 //   navigation: { navigate: (arg0: string) => void, state: {params: {username? : string}} },
@@ -154,9 +155,22 @@ export default function Welcome(props) {
           .get()
           .then(async (query) => {
             let thing2 = query.docs[0];
-            await thing2.ref.update({
-              gameId: thing2.ref.id,
+            const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+            axios.get('https://api.imgflip.com/get_memes').then((memeData) => {
+              let shuffledMemes = shuffle(memeData.data.data.memes);
+              thing2.ref
+                .update({
+                  gameId: thing2.ref.id,
+                  roundMemes: [
+                    shuffledMemes[0].url,
+                    shuffledMemes[1].url,
+                    shuffledMemes[2].url,
+                  ],
+                  winningMeme: shuffledMemes[3].url,
+                })
+                .catch((error) => console.log(error));
             });
+
             return thing2;
             // goToGame(thing2);
           })
