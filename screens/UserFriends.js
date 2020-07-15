@@ -61,6 +61,8 @@ export default function UserFriends() {
               //find cleaner way to do this... maybe useEffect?
               const found = valueC.docs.filter((doc) => doc.id === friend)[0];
               console.log('Found?:', found?.data().imageURL);
+              {/* change imageurl to avatar above   ^^^^^^ */ }
+
               return (
                 <View key={index} style={styles.friendCont}>
                   <Image
@@ -68,6 +70,8 @@ export default function UserFriends() {
                     // source={require('../assets/images/icon.png')}
                     source={{ uri: `${found?.data().imageURL}` }}
                   />
+                 {/* change imageurl to avatar above ^^^^^^ */}
+
                   <Text
                     style={{
                       marginTop: 5,
