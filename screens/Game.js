@@ -8,8 +8,8 @@ import VotingScreen from './GameScreens/VotingScreen';
 import WinningScreen from './GameScreens/WinningScreen';
 
 export default class Game extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       timer: null,
       screen: 0,
@@ -18,9 +18,12 @@ export default class Game extends React.Component {
     };
     this.startGame = this.startGame.bind(this);
   }
-
+  componentDidMount(){
+    console.log("TheGameComp: ", this.props.route.params.gameID)
+    this.startGame()
+  }
   startGame() {
-    this.setState({ timer: 3, screen: 1 });
+    this.setState({ timer: 10, screen: 0 });
     this.startInterval(60);
   }
 
@@ -42,27 +45,30 @@ export default class Game extends React.Component {
       return;
     } else {
       switch (this.state.screen) {
+        case 0:
+          this.setState({ screen: this.state.screen + 1, timer: 35 });
+          break;
         case 1:
-          this.setState({ screen: this.state.screen + 1, timer: 2 });
+          this.setState({ screen: this.state.screen + 1, timer: 15 });
           break;
+        // case 2:
+        //   this.setState({ screen: this.state.screen + 1, timer: 3 });
+        //   break;
         case 2:
-          this.setState({ screen: this.state.screen + 1, timer: 3 });
-          break;
-        case 3:
           this.setState({
             screen: this.state.screen + 1,
-            timer: 2,
+            timer: 15,
             rounds: this.state.rounds + 1,
           });
           break;
-        case 4:
-          if (this.state.rounds === 3) {
+        case 3:
+          if (this.state.rounds === 2) {
             this.setState({
               screen: this.state.screen + 1,
               timer: 0,
             });
           } else {
-            this.setState({ screen: 1, timer: 3 });
+            this.setState({ screen: 1, timer: 15 });
           }
           break;
 
@@ -75,24 +81,28 @@ export default class Game extends React.Component {
   // have a state for memes, setState of current meme and pass it down to MemePresentation, CaptionInput, Voting Screen, Round Results
   //redux firebase needed for anyplace where user is updating object
   render() {
+    const {gameID} = this.props.route.params
     return (
-      <View>
-        <Text>{this.state.timer > 0 && this.state.timer}</Text>
-        <Button title="Start Game" onPress={() => this.startGame()} />
-        {this.state.screen === 0 ? (
-          <GameLobby />
+      // <View>
+        /* <Text>{this.state.timer > 0 && this.state.timer}</Text> */
+        /* <Button title="Start Game" onPress={() => this.startGame()} /> */
+        // {
+        // this.state.screen === 0 ? (
+        //   <GameLobby />
+        // ) :
+        this.state.screen === 0 ? (
+          <MemePresentation GID={gameID}/>
         ) : this.state.screen === 1 ? (
-          <MemePresentation />
+          <CaptionInput GID={gameID}/>
         ) : this.state.screen === 2 ? (
-          <CaptionInput />
+          <VotingScreen GID={gameID}/>
         ) : this.state.screen === 3 ? (
-          <VotingScreen />
-        ) : this.state.screen === 4 ? (
-          <RoundResults />
+          <RoundResults GID={gameID}/>
         ) : (
-          <WinningScreen />
-        )}
-      </View>
+          <WinningScreen GID={gameID}/>
+        )
+      // }
+      // </View>
     );
   }
 }

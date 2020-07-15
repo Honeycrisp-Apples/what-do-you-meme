@@ -63,9 +63,10 @@ class CaptionInput extends React.Component {
         Keyboard.dismiss()
         this.setState({show: 'none'})
         // await updateGameInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption)
-        await this.updateInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption )
+        // await this.updateInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption )
+        await this.updateInput(this.props.GID, Fire.shared.getUID(), this.state.caption )
         console.log('leaving to vote')
-        return this.props.navigation.navigate("VotingScreen", {gameID: this.props.route.params.gameID})
+        // return this.props.navigation.navigate("VotingScreen", {gameID: this.props.route.params.gameID})
       }
     }
     myvar1 = setInterval(()=>change(), 1000)
@@ -125,8 +126,9 @@ class CaptionInput extends React.Component {
   //have a component will unmount to GameObj.unputs.push(this.state.caption) to account for navigation...
   render(){
 
-    const {navigation, route, roundMeme} = this.props
-    if(!navigation.isFocused()) {return null}
+    // const {navigation, route, roundMeme} = this.props
+    const {roundMeme} = this.props
+    // if(!navigation.isFocused()) {return null}
       return(
         <SafeAreaView style={styles.panel}>
           <ScrollView contentContainerStyle={styles.panel} onPress={Keyboard.dismiss}>
@@ -194,7 +196,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
-  let ID = ownProps.route.params.gameID
+  // let ID = ownProps.route.params.gameID
+  let ID = ownProps.GID
   let games = state.firestore.data.game
   let game = games ? games[ID] : null
 
@@ -211,6 +214,7 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
-    { collection: 'game', doc: props.route.params.gameID}
+    // { collection: 'game', doc: props.route.params.gameID}
+    { collection: 'game', doc: props.GID}
   ])
 )(CaptionInput)

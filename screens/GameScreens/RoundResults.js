@@ -24,7 +24,8 @@ class RoundResults extends React.Component {
   //     // this.setState({winMemeCap: 'flex'})
   //  }, 2000);
   console.log("mounted")
-  let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+  // let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+  let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.GID}`).get()
   let accIndex = await gameDoc.data().inputs.reduce((acc, curInput, index)=>{
     // if(index === 0) { console.log("first index"); acc = index}
     if(curInput.vote > acc.maxV) { console.log("comparing indexes"); acc.maxV = curInput.vote; acc.index = index}
@@ -46,15 +47,15 @@ class RoundResults extends React.Component {
   console.log("AccIndex:",accIndex.index)
   this.setState({winningIndex: accIndex.index, mounted: 1})
 
-  setTimeout(() => {
-    this.props.navigation.navigate('WinningScreen', {gameID: this.props.route.params.gameID});
+  // setTimeout(() => {
+    // this.props.navigation.navigate('WinningScreen', {gameID: this.props.route.params.gameID});
     // this.setState({winMemer: 'flex'})
-  }, 4000);
+  // }, 4000);
   }
 
   render(){
     const {navigation, route, gameID, gameUsers, gameInputs, roundMeme} = this.props
-    if(!navigation.isFocused()) {return null}
+    // if(!navigation.isFocused()) {return null}
     console.log("winningIndex:", this.state.winningIndex)
     if(gameInputs && gameInputs.length){console.log("gameInputs winner", gameInputs[this.state.winningIndex])}
 
@@ -133,7 +134,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
-  let ID = ownProps.route.params.gameID
+  // let ID = ownProps.route.params.gameID
+  let ID = ownProps.GID
   let games = state.firestore.data.game
   let game = games ? games[ID] : null
 
@@ -151,6 +153,6 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
-    { collection: 'game', doc: props.route.params.gameID}
+    { collection: 'game', doc: props.GID}
   ])
 )(RoundResults)

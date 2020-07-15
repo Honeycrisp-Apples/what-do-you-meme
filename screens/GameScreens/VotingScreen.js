@@ -28,7 +28,7 @@ class VotingScreen extends React.Component {
       }else {
         clearInterval(myvar1)
         console.log('leaving to results')
-        return this.props.navigation.navigate("RoundResults", {gameID: this.props.route.params.gameID})
+        // return this.props.navigation.navigate("RoundResults", {gameID: this.props.route.params.gameID})
       }
     }
     myvar1 = setInterval(()=>change(), 1000)
@@ -36,7 +36,8 @@ class VotingScreen extends React.Component {
   async handleVote(index=0){
     //handle randomization later
     console.log("index", index)
-    await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    await firebase.firestore().collection('game').doc(`${this.props.GID}`).get()
     .then(async (query)=> {
       let gameDoc = query
       let curInputs = gameDoc.data().inputs
@@ -52,7 +53,7 @@ class VotingScreen extends React.Component {
   }
   render(){
     const {navigation, route, gameID, gameUsers, gameInputs, roundMeme} = this.props
-    if(!navigation.isFocused()) {return null}
+    // if(!navigation.isFocused()) {return null}
     const curUser = Fire.shared.getUID()
     return (
       <SafeAreaView style={{flex:1, backgroundColor: 'darkred'}}>
@@ -156,7 +157,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
-  let ID = ownProps.route.params.gameID
+  // let ID = ownProps.route.params.gameID
+  let ID = ownProps.GID
   let games = state.firestore.data.game
   let game = games ? games[ID] : null
 
@@ -174,6 +176,7 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
-    { collection: 'game', doc: props.route.params.gameID}
+    // { collection: 'game', doc: props.route.params.gameID}
+    { collection: 'game', doc: props.GID}
   ])
 )(VotingScreen)

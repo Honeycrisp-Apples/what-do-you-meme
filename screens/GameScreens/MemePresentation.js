@@ -51,12 +51,18 @@ export default function MemePresentation (props){
 
 
   let [value, loading, error] = useDocument(
-    firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
+    firebase.firestore().collection('game').doc(`${props.GID}`),
+    // firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
     // {
     //   snapshotListenOptions: { includeMetadataChanges: true },
     // }
   );
-  if(!props.navigation.isFocused()) {return null}
+  // if(!props.navigation.isFocused()) {return null}
+
+
+
+
+
   // useEffect(() => {
   //   const unsubscribe = props.navigation.addListener('focus', () => {
   //     // The screen is focused
@@ -116,7 +122,7 @@ export default function MemePresentation (props){
     } else if (value) {
       console.log('value', value.data());
       setTimeout(() => {
-        props.navigation.push('CaptionInput', {gameID: props.route.params.gameID});
+        // props.navigation.push('CaptionInput', {gameID: props.route.params.gameID});
         // this.setState({display: 'flex'})
       }, 2500);
     return(

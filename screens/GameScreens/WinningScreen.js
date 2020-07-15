@@ -15,7 +15,8 @@ export default class WinningScreen extends React.Component {
   }
 
   async componentDidMount(){
-    let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    // let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.GID}`).get()
     let theWinner = await gameDoc.data().users.reduce((acc, curUser, index)=>{
       if(index === 0) { console.log("first index"); acc = curUser}
       else if(curUser.wins > acc.wins) { console.log("comparing indexes"); acc = curUser}
@@ -35,6 +36,7 @@ export default class WinningScreen extends React.Component {
   render() {
     const winner = this.state.winningUser
     const losers = this.state.players
+    const {navigation} = this.props
     return(
       <SafeAreaView style={styles.winResults}>
         <IconButton
@@ -48,7 +50,7 @@ export default class WinningScreen extends React.Component {
               icon="close-circle"
               size={36}
               color="orange"
-              onPress={() => this.props.navigation.navigate("Welcome")}
+              onPress={() => navigation? navigation.navigate("Welcome") : alert("nope")}
             />
         <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>WINNER!!!</Text>
         <View style={{backgroundColor: 'orange', height: 200, width: 200, borderRadius: 100, alignSelf: 'center', justifyContent: "center", alignItems: "center" }}>
