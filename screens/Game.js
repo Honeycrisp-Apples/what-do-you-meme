@@ -7,6 +7,8 @@ import RoundResults from './GameScreens/RoundResults';
 import VotingScreen from './GameScreens/VotingScreen';
 import WinningScreen from './GameScreens/WinningScreen';
 
+import * as firebase from 'firebase';
+
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +40,13 @@ export default class Game extends React.Component {
       }, 1000),
     });
   }
-
+  async clearInputs(gameID){
+    await firebase.firestore().collection('game').doc(`${gameID}`).update(
+      {
+        inputs: []
+      }
+    )
+  }
   checkGame(timer) {
     console.log('checking game');
     if (timer > 0) {
@@ -68,7 +76,7 @@ export default class Game extends React.Component {
               timer: 0,
             });
           } else {
-            this.setState({ screen: 1, timer: 15 });
+            this.setState({ screen: 0, timer: 15 });
           }
           break;
 
@@ -82,6 +90,9 @@ export default class Game extends React.Component {
   //redux firebase needed for anyplace where user is updating object
   render() {
     const {gameID} = this.props.route.params
+    // if(this.state.screen === 0){
+    //   this.clearInputs(gameID)
+    // }
     return (
       // <View>
         /* <Text>{this.state.timer > 0 && this.state.timer}</Text> */

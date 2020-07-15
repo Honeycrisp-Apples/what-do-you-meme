@@ -136,11 +136,12 @@ class CaptionInput extends React.Component {
           <Text style={{fontSize: 45, color: 'white', textAlign: 'center', marginVertical: 10}}>MAKE YOUR CAPTION</Text>
           <View style={{justifyContent: 'flex-end' ,alignItems: 'center', marginBottom: 10}}>
             {
-              roundMeme && roundMeme.length &&
-              <Image
-              style={styles.memeimg}
-              source={{uri: roundMeme}}
-              />
+              (roundMeme && roundMeme.length) ? (
+                <Image
+                style={styles.memeimg}
+                source={{uri: roundMeme}}
+                />
+              ) : (null)
             }
             <View style={{position: 'absolute', width: 300, height: 300, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
               <Text style={{color: 'white', fontSize: 30, textAlign: 'center'}}>{(this.state.caption) || ""}</Text>

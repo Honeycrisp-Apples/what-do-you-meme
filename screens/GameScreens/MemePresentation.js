@@ -60,7 +60,16 @@ export default function MemePresentation (props){
   // if(!props.navigation.isFocused()) {return null}
 
 
-
+  // useEffect(()=> {
+  //   const callMe = async function (){
+  //     if(value){
+  //       await value.update({
+  //         inputs: []
+  //       })
+  //     }
+  //   }
+  //   callMe()
+  // }, [])
 
 
   // useEffect(() => {
@@ -108,23 +117,37 @@ export default function MemePresentation (props){
   //   return () => {console.log("Unmounted?"); return unsubscribe()}
   // },[props.route.params.gameID])
 
-    // useEffect(async ()=>{
-    //   await firebase.firestore().collection('game').doc(`${props.route.params.gameID}`).update({
-    //     inputs: []
-    //   })
-    // },[])
+    useEffect(()=>{
+      const callMe = async () => {
+        await firebase.firestore().collection('game').doc(`${props.GID}`).update({
+          inputs: []
+        })
+      }
+      callMe()
+    },[])
   // render(){
     // const {gameUsers, roundMeme, route} = this.props
+
+
+    // const clearInputs = async (gameID) => {
+    //   await firebase.firestore().collection('game').doc(`${gameID}`).update(
+    //     {
+    //       inputs: []
+    //     }
+    //   )
+    // }
+
     if (error) {
       return <Text>Error: {JSON.stringify(error)}</Text>;
     } else if (loading) {
       return <Text>Collection: Loading...</Text>;
     } else if (value) {
       console.log('value', value.data());
-      setTimeout(() => {
+      // setTimeout(() => {
         // props.navigation.push('CaptionInput', {gameID: props.route.params.gameID});
         // this.setState({display: 'flex'})
-      }, 2500);
+      // }, 2500);
+      // clearInputs(props.GID)
     return(
     <SafeAreaView style={{backgroundColor: 'darkred', flex:1}}>
       <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND 1</Text>

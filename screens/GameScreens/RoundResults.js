@@ -64,43 +64,47 @@ class RoundResults extends React.Component {
         <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND RESULTS</Text>
         <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>The Winning Meme is...</Text>
         <View style={{display:this.state.winMemeCap, alignItems: 'center', width: 300, alignSelf:'center'}}>
-          {roundMeme && roundMeme.length &&
+          {(roundMeme && roundMeme.length) ? (
             <Image
               style={styles.memeimg}
               source={{uri: roundMeme}}
             />
+            ) : (null)
           }
           <View style={{backgroundColor: 'white', width: '100%'}}>
             {
-              gameInputs && gameInputs.length && gameInputs[this.state.winningIndex] &&
-              <Text style={{textAlign: 'center'}}>{gameInputs[this.state.winningIndex].caption}</Text>
+              (gameInputs && gameInputs.length && gameInputs[this.state.winningIndex]) ? (
+                <Text style={{textAlign: 'center'}}>{gameInputs[this.state.winningIndex].caption}</Text>
+              ) : (null)
             }
           </View>
         </View>
         <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>Round Memer: </Text>
         <View style={{display: this.state.winMemer, backgroundColor: 'gold', height: 200, width: 200, borderRadius: 100, alignSelf: 'center', justifyContent: "center", alignItems: "center" }}>
           {
-            gameUsers && gameUsers.length && gameInputs && gameInputs &&
+            (gameUsers && gameUsers.length && gameInputs && gameInputs) ? (
             <>
               <Image
                 style={styles.img}
                 source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
               />
               {
-              gameUsers && gameUsers.length && gameInputs && gameInputs.length && gameInputs[this.state.winningIndex] &&
-                gameUsers.map((user)=>{
-                  console.log('checking')
-                  if(user.userId === gameInputs[this.state.winningIndex].userId)
-                  {
-                    console.log("UDN: ", user.displayName)
-                    return <Text style={{color: 'white'}}>{user.displayName.toUpperCase()}</Text>
-                  }
-                  else {
-                    return null
-                  }
-                })
+              (gameUsers && gameUsers.length && gameInputs && gameInputs.length && gameInputs[this.state.winningIndex]) ? (
+                  gameUsers.map((user)=>{
+                    console.log('checking')
+                    if(user.userId === gameInputs[this.state.winningIndex].userId)
+                    {
+                      console.log("UDN: ", user.displayName)
+                      return <Text key={user.userId} style={{color: 'white'}}>{user.displayName.toUpperCase()}</Text>
+                    }
+                    else {
+                      return null
+                    }
+                  })
+                ) : (null)
               }
             </>
+            ) : (null)
           }
         </View>
         {/* <FormButton title={'next panel'} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("WinningScreen")}/>
