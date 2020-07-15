@@ -117,8 +117,8 @@ export default class Fire {
       },
     ];
   };
-  makeUser = (user, awards = this.initAwards) => {
-    return this.getUsers().doc(`${this.getUID()}`).set(
+  makeUser = async (user, awards = this.initAwards) => {
+    return await this.getUsers().doc(`${this.getUID()}`).set(
       {
         // _id: user._id,
         displayName: user.displayName,

@@ -13,40 +13,50 @@ class RoundResults extends React.Component {
     super(props)
     this.state = {
       winMemeCap:  "flex",
-      winMemer: 'flex'
+      winMemer: 'flex',
+      winningIndex : 0,
+      mounted: 0
     }
   }
-  componentDidMount(){
+  async componentDidMount(){
   //   setTimeout(() => {
   //     // this.props.navigation.navigate('WinningScreen');
   //     // this.setState({winMemeCap: 'flex'})
   //  }, 2000);
-   setTimeout(() => {
+  console.log("mounted")
+  let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+  let accIndex = await gameDoc.data().inputs.reduce((acc, curInput, index)=>{
+    if(index === 0) { console.log("first index"); acc = index}
+    else if(curInput.vote > acc) { console.log("comparing indexes"); acc = index}
+    console.log("acc: ", acc)
+    return acc
+  },0)
+  console.log("accIndex: ", accIndex)
+    await gameDoc.data().users.forEach(async (curUser, index)=> {
+      if((curUser.userId === gameDoc.data().inputs[accIndex].userId) && (curUser.userId === Fire.shared.getUID())){
+        console.log("counted")
+        let curUsers = gameDoc.data().users
+        curUsers[index].wins = curUsers[index].wins + 1
+        await gameDoc.ref.update({
+          users: curUsers
+        })
+      }
+    })
+
+  console.log("AccIndex:",accIndex)
+  this.setState({winningIndex: accIndex, mounted: 1})
+
+  setTimeout(() => {
     this.props.navigation.navigate('WinningScreen', {gameID: this.props.route.params.gameID});
     // this.setState({winMemer: 'flex'})
- }, 4000);
+  }, 4000);
   }
-  // async whoWon(){
-  //   let winningIndex = 0
-  //   await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
-  //   .then((gameDoc)=> {
-  //     winningIndex = gameDoc.data().inputs.reduce((acc, curInput, index)=>{
-  //       if(index === 0) { acc = index}
-  //       else if(curInput.vote >= gameDoc.data().inputs[index--].vote) {acc = index}
-  //       console.log("acc: ", acc)
-  //       return acc
-  //     },0)
-  //   })
-  //   console.log("win index: ", winningIndex)
-  //   return winningIndex
-  // }
+
   render(){
     const {navigation, route, gameID, gameUsers, gameInputs, roundMeme} = this.props
     if(!navigation.isFocused()) {return null}
-    // const winnerFunc = async () => await this.whoWon()
-    // const winner = winnerFunc()
-    // console.log(winner)
-    // if(gameInputs && gameInputs.length){console.log("gameInputs winner", gameInputs[winner])}
+    console.log("winningIndex:", this.state.winningIndex)
+    if(gameInputs && gameInputs.length){console.log("gameInputs winner", gameInputs[this.state.winningIndex])}
 
     return (
       <SafeAreaView style={styles.roundResults}>
@@ -61,8 +71,8 @@ class RoundResults extends React.Component {
           }
           <View style={{backgroundColor: 'white', width: '100%'}}>
             {
-              gameInputs && gameInputs.length && gameInputs[3] &&
-              <Text style={{textAlign: 'center'}}>{gameInputs[3].caption}</Text>
+              gameInputs && gameInputs.length && gameInputs[this.state.winningIndex] &&
+              <Text style={{textAlign: 'center'}}>{gameInputs[this.state.winningIndex].caption}</Text>
             }
           </View>
         </View>
@@ -76,16 +86,18 @@ class RoundResults extends React.Component {
                 source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
               />
               {
-              gameUsers && gameUsers.length && gameInputs && gameInputs &&
-                gameUsers.forEach((user)=>{
+              gameUsers && gameUsers.length && gameInputs && gameInputs.length && gameInputs[this.state.winningIndex] &&
+                gameUsers.map((user)=>{
                   console.log('checking')
-                  if(user.userId === gameInputs[3].userId)
+                  if(user.userId === gameInputs[this.state.winningIndex].userId)
                   {
-                    console.log("UDN", user.displayName)
-                    return (<Text style={{color: 'white'}}>{user.displayName}</Text>)
+                    console.log("UDN: ", user.displayName)
+                    return <Text style={{color: 'white'}}>{user.displayName.toUpperCase()}</Text>
+                  }
+                  else {
+                    return null
                   }
                 })
-
               }
             </>
           }

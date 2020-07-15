@@ -89,7 +89,7 @@ export default function Welcome(props) {
   // );
 
   const goToGame = (thing, thingID) => {
-    props.navigation.navigate('GameLobby', { theGame: thing, gameID: thingID });
+    props.navigation.navigate('GameLobby', {gameID: thingID});
   };
 
   // console.log('game', game.data());
@@ -108,7 +108,8 @@ export default function Welcome(props) {
           gameId: "",
           gameMode: 'regular',
           gotUsers: false,
-          inputs: [newInput],
+          // inputs: [newInput],
+          inputs:[],
           numUsers: 1,
           playing: false,
           winningMeme: '',
@@ -179,7 +180,7 @@ export default function Welcome(props) {
           thing.ref.update({
             numUsers: numOfPlayers,
             users: [...curUsers, newUser],
-            inputs: [...curInputs, newInput],
+            // inputs: [...curInputs, newInput],
           });
           // also pass the game id
           goToGame(thing, thing.ref.id);
@@ -196,26 +197,36 @@ export default function Welcome(props) {
 
   // render(){
   const [user, loading, error] = useAuthState(firebase.auth());
+  const [userData, userL, userE] = useDocument(firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`))
+
   if (loading) {
     return <Text>I'm loading</Text>;
   }
   if (error) {
     return <Text>You Messed Up!!</Text>;
   }
-  if (user) {
+  if (user && userData) {
+    console.log("userData:", userData.data())
     return (
       <SafeAreaView style={styles.welcome}>
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
         >
          {/* needs user object in database image url and points */}
-          <Image
-          style={styles.userimg}
-          source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
-          />
-          <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
-          <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS:</Text>
+
+              <Image
+              style={styles.userimg}
+              source={{uri: `${userData.data().imageURL}`}}
+              />
+
+              {user && user.displayName &&
+              <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
+              }
+
+              <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS: {`${userData.data().points}`}</Text>
+
         </TouchableOpacity>
+
         {/* <Text>{`Hello there, ${user.displayName}`}</Text> */}
         {/* <View
           style={styles.scrollContainer}

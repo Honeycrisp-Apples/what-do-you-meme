@@ -102,7 +102,11 @@ export default function MemePresentation (props){
   //   return () => {console.log("Unmounted?"); return unsubscribe()}
   // },[props.route.params.gameID])
 
-
+    // useEffect(async ()=>{
+    //   await firebase.firestore().collection('game').doc(`${props.route.params.gameID}`).update({
+    //     inputs: []
+    //   })
+    // },[])
   // render(){
     // const {gameUsers, roundMeme, route} = this.props
     if (error) {

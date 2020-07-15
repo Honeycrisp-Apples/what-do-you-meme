@@ -6,10 +6,35 @@ import {IconButton} from 'react-native-paper'
 import * as firebase from 'firebase';
 
 export default class WinningScreen extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      winningUser: {},
+      players: []
+    }
+  }
+
   async componentDidMount(){
-    await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).delete()
+    let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    let theWinner = await gameDoc.data().users.reduce((acc, curUser, index)=>{
+      if(index === 0) { console.log("first index"); acc = curUser}
+      else if(curUser.wins > acc.wins) { console.log("comparing indexes"); acc = curUser}
+      console.log("acc: ", acc)
+      return acc
+    },{})
+    let theRest = await gameDoc.data().users.filter((curUser)=> {
+      return curUser.userId !== theWinner.userId
+    })
+    this.setState({
+      winningUser: theWinner,
+      players: theRest
+    })
+    //delete the game
+    // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).delete()
   }
   render() {
+    const winner = this.state.winningUser
+    const losers = this.state.players
     return(
       <SafeAreaView style={styles.winResults}>
         <IconButton
@@ -27,11 +52,17 @@ export default class WinningScreen extends React.Component {
             />
         <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>WINNER!!!</Text>
         <View style={{backgroundColor: 'orange', height: 200, width: 200, borderRadius: 100, alignSelf: 'center', justifyContent: "center", alignItems: "center" }}>
-          <Image
+          {
+            (winner && winner.imageURL && winner.displayName)?(
+              <>
+            <Image
             style={styles.img}
-            source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
-          />
-          <Text style={{color: 'white'}}>DISPLAY NAME</Text>
+            source={{uri: winner.imageURL}}
+            />
+            <Text style={{color: 'white'}}>{winner.displayName || "HI"}</Text>
+            </>
+            ): null
+          }
         </View>
         <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>PRIZED MEME: </Text>
         <View style={{alignItems: 'center', width: 300, alignSelf:'center'}}>
@@ -41,30 +72,28 @@ export default class WinningScreen extends React.Component {
           />
         </View>
         <View style={styles.players}>
-        <View style={{height: 140, width: 140, backgroundColor: "darkred", alignItems: 'center', borderRadius: 70, justifyContent: 'center'}}>
-        <Image
-        style={styles.img}
-        source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
-        />
-        <IconButton
-        icon="account-plus"
-        size={20}
-        color="white"
-        onPress={() => alert("Functionaility not available yet.")}
-        />
-        </View>
-        <View style={{height: 140, width: 140, backgroundColor: "darkred", alignItems: 'center', borderRadius: 70, justifyContent: 'center'}}>
-        <Image
-        style={styles.img}
-        source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
-        />
-        <IconButton
-        icon="account-plus"
-        size={20}
-        color="white"
-        onPress={() => alert("Functionaility not available yet.")}
-        />
-        </View>
+        {
+          (losers && losers.length)?
+          (
+          losers.map((player)=>{
+            return(
+              <View key={player.userId}
+              style={{height: 140, width: 140, backgroundColor: "darkred", alignItems: 'center', borderRadius: 70, justifyContent: 'center'}}>
+                <Image
+                style={styles.img}
+                source={{uri: `${player.imageURL}`}}
+                />
+                <IconButton
+                icon="account-plus"
+                size={20}
+                color="white"
+                onPress={() => alert("Functionaility not available yet.")}
+                />
+              </View>
+            )
+          })
+          ): null
+        }
       </View>
         <FormButton title={'game lobby'} style={{marginTop: 'auto'}} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/>
       </SafeAreaView>

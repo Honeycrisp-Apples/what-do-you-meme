@@ -72,24 +72,32 @@ class CaptionInput extends React.Component {
   }
   async componentWillUnmount(){
     // await soundObject.unloadAsync()
+    // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).update({
+    //   inputs: []
+    // })
   }
   async updateInput(gameID, userID, caption){
     // let unsubscribe =
-    let gameDoc = await firebase.firestore().collection('game').doc(`${gameID}`).get()
-    let curInputs = gameDoc.data().inputs
-    curInputs.forEach((input, ind)=>{
-      //get rid of the old caption input value
-      if(input.userID === userID){
-        curInputs.splice(ind, 1)
-      }
-    })
-    console.log("curInputs after splice", curInputs)
+    // let gameDoc = await firebase.firestore().collection('game').doc(`${gameID}`).get()
+    // let curInputs = gameDoc.data().inputs
+    let myInput = {caption, userId: userID, vote: 0}
+    // curInputs.forEach(async (input, ind)=>{
+    //   //get rid of the old caption input value
+    //   if(input.userId == userID){
+    //     await curInputs.splice(ind, 1, myInput)
+    //   }
+    // })
+    // console.log("curInputs after splice", curInputs)
     // make a new input caption value
-    let newInput = {caption, userID, vote: 0}
     //update gameDoc inputs array
-    await firebase.firestore().collection('game').doc(`${gameID}`).update({
-      inputs: [...curInputs, newInput]
-    })
+    if(myInput.caption){
+      await firebase.firestore().collection('game').doc(`${gameID}`).update({
+        inputs: firebase.firestore.FieldValue.arrayUnion(myInput)
+      })
+    }
+    // await firebase.firestore().collection('game').doc(`${gameID}`).set({
+    //     inputs: firebase.firestore.FieldValue.arrayUnion(myInput)
+    //   })
     // await firebase.firestore().collection('game').doc(`${gameID}`)
     // .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
 
