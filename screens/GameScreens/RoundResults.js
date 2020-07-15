@@ -26,14 +26,14 @@ class RoundResults extends React.Component {
   console.log("mounted")
   let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
   let accIndex = await gameDoc.data().inputs.reduce((acc, curInput, index)=>{
-    if(index === 0) { console.log("first index"); acc = index}
-    else if(curInput.vote > acc) { console.log("comparing indexes"); acc = index}
+    // if(index === 0) { console.log("first index"); acc = index}
+    if(curInput.vote > acc.maxV) { console.log("comparing indexes"); acc.maxV = curInput.vote; acc.index = index}
     console.log("acc: ", acc)
     return acc
-  },0)
-  console.log("accIndex: ", accIndex)
+  },{maxV: 0, index: 0})
+  console.log("accIndex: ", accIndex.index)
     await gameDoc.data().users.forEach(async (curUser, index)=> {
-      if((curUser.userId === gameDoc.data().inputs[accIndex].userId) && (curUser.userId === Fire.shared.getUID())){
+      if((curUser.userId === gameDoc.data().inputs[accIndex.index].userId) && (curUser.userId === Fire.shared.getUID())){
         console.log("counted")
         let curUsers = gameDoc.data().users
         curUsers[index].wins = curUsers[index].wins + 1
@@ -43,8 +43,8 @@ class RoundResults extends React.Component {
       }
     })
 
-  console.log("AccIndex:",accIndex)
-  this.setState({winningIndex: accIndex, mounted: 1})
+  console.log("AccIndex:",accIndex.index)
+  this.setState({winningIndex: accIndex.index, mounted: 1})
 
   setTimeout(() => {
     this.props.navigation.navigate('WinningScreen', {gameID: this.props.route.params.gameID});
