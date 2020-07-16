@@ -29,15 +29,16 @@ import WinningScreen from './screens/GameScreens/WinningScreen';
 import Game from './screens/Game';
 
 //needed for react/redux/firestore connection
-import {Provider} from 'react-redux'
-import store from './redux/store'
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import { createFirestoreInstance, reduxFirestore } from 'redux-firestore';
 import { ReactReduxFirebaseProvider, isLoaded } from 'react-redux-firebase';
-import firebase2 from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import firebase2 from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 import { decode, encode } from 'base-64';
+import UserNavigator from './navigation/UserNavigator';
 
 if (!global.btoa) {
 	global.btoa = encode;
@@ -53,14 +54,13 @@ export default function App() {
 	const rrfConfig = {
 		userProfile: 'users',
 		useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
-	}
+	};
 	const rrfProps = {
 		firebase: firebase2,
 		config: rrfConfig,
 		dispatch: store.dispatch,
 		createFirestoreInstance // <- needed if using firestore
-	}
-
+	};
 
 	const [ user, loading, error ] = useAuthState(firebase.auth());
 	// const isLoadingComplete = useCachedResources();
@@ -86,7 +86,6 @@ export default function App() {
 	// return <Main />;
 	const Stack = createStackNavigator();
 
-
 	const LoginStack = createStackNavigator();
 	// 	Login: { screen: Login },
 	// 	SignUp: { screen: SignUp },
@@ -109,17 +108,37 @@ export default function App() {
 							<Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} /> */}
 							<Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
 							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
-							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="UserPages"
+								component={(UserTabs, UserNavigator)}
+							/>
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
 							<Stack.Screen
 								options={{ headerShown: false }}
 								name="MemePresentation"
 								component={MemePresentation}
-								/>
-							<Stack.Screen options={{ headerShown: false }} name="CaptionInput" component={CaptionInput} />
-							<Stack.Screen options={{ headerShown: false }} name="VotingScreen" component={VotingScreen} />
-							<Stack.Screen options={{ headerShown: false }} name="RoundResults" component={RoundResults} />
-							<Stack.Screen options={{ headerShown: false }} name="WinningScreen" component={WinningScreen} />
+							/>
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="CaptionInput"
+								component={CaptionInput}
+							/>
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="VotingScreen"
+								component={VotingScreen}
+							/>
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="RoundResults"
+								component={RoundResults}
+							/>
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="WinningScreen"
+								component={WinningScreen}
+							/>
 						</Stack.Navigator>
 						{/* <StatusBar /> */}
 					</NavigationContainer>

@@ -132,6 +132,14 @@ export default class Fire {
 			{ merge: true }
 		);
 	};
+	//Uploading Avatar
+	uploadAvatar = (avatarImage) => {
+		let user = firebase.auth().currentUser;
+
+		return firebase.firestore().collection('users').doc(user.uid).update({
+			avatar: avatarImage
+		});
+	};
 	// getFriendPic
 	getTime = () => firebase.firestore.FieldValue.serverTimestamp();
 }

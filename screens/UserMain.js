@@ -6,9 +6,9 @@ import firebase from 'firebase';
 import { FormButton, FormInut } from '../components/Reusables';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Fire from '../constants/Fire';
-// import PickAvatar from '../utilities/PickAvatar';
-import UserPermissions from '../utilities/UserPermissions';
-import * as ImagePicker from 'expo-image-picker';
+// import UserPermissions from '../utilities/UserPermissions';
+// import * as ImagePicker from 'expo-image-picker';
+
 const { width, height } = Dimensions.get('screen');
 
 export default function UserMain({ navigation }) {
@@ -18,16 +18,20 @@ export default function UserMain({ navigation }) {
 	const [ value, loading, error ] = useDocument(
 		firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`)
 	);
-	async function PickAvatar() {
-		UserPermissions.getCameraPermission();
+	// async function PickAvatar() {
+	// 	UserPermissions.getCameraPermission();
 
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			allowsEditing: true
-		});
-		if (!result.cancelled) {
-			this.setState({ user: { ...this.state.user, avatar: result.uri } });
-		}
+	// 	let result = await ImagePicker.launchImageLibraryAsync({
+	// 		mediaTypes: ImagePicker.MediaTypeOptions.Images,
+	// 		allowsEditing: true
+	// 	});
+	// 	if (!result.cancelled) {
+	// 		this.setState({ user: { ...this.state.user, avatar: result.uri } });
+	// 	}
+	// }
+
+	function handlePickAvatarNavigation() {
+		navigation.navigate('PickAvatar');
 	}
 
 	if (error) {
@@ -56,7 +60,7 @@ export default function UserMain({ navigation }) {
 							<View style={styles.imgCont}>
 								<Image style={styles.img} source={{ uri: `${value.data().avatar}` }} />
 								{/* change imageurl to avatar above                       ^^^^^^ */}
-								<TouchableOpacity style={{ marginTop: 5 }} onPress={PickAvatar}>
+								<TouchableOpacity style={{ marginTop: 5 }} onPress={handlePickAvatarNavigation}>
 									<Text
 										style={{
 											fontSize: 10,
