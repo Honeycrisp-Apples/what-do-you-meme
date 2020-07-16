@@ -84,10 +84,6 @@ class RoundResults extends React.Component {
           {
             (gameUsers && gameUsers.length && gameInputs && gameInputs) ? (
             <>
-              <Image
-                style={styles.img}
-                source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
-              />
               {
               (gameUsers && gameUsers.length && gameInputs && gameInputs.length && gameInputs[this.state.winningIndex]) ? (
                   gameUsers.map((user)=>{
@@ -95,7 +91,16 @@ class RoundResults extends React.Component {
                     if(user.userId === gameInputs[this.state.winningIndex].userId)
                     {
                       console.log("UDN: ", user.displayName)
-                      return <Text key={user.userId} style={{color: 'white'}}>{user.displayName.toUpperCase()}</Text>
+                      return (
+                      <>
+                        <Image
+                          key={user.userId + "K"}
+                          style={styles.img}
+                          source={{uri: user.imageURL}}
+                        />
+                        <Text key={user.userId + "M"} style={{color: 'white'}}>{user.displayName.toUpperCase()}</Text>
+                      </>
+                      )
                     }
                     else {
                       return null
@@ -122,7 +127,8 @@ const styles = StyleSheet.create({
   },
   memeimg:{
     width: 300,
-    height:300,
+    height:350,
+    resizeMode: 'contain',
     borderWidth: 3,
     borderColor: 'orange',
   },
@@ -148,7 +154,7 @@ const mapStateToProps = (state, ownProps) => {
       hello: 'hello',
       game: game ? game : null,
       gameUsers: game ? game.users : null,
-      roundMeme: game ? game.currentMeme : null,
+      // roundMeme: game ? game.currentMeme : null,
       gameInputs: game ? game.inputs : null
     }
   )

@@ -119,7 +119,7 @@ export default function MemePresentation (props){
 
     useEffect(()=>{
       const callMe = async () => {
-        await firebase.firestore().collection('game').doc(`${props.GID}`).update({
+        firebase.firestore().collection('game').doc(`${props.GID}`).update({
           inputs: []
         })
       }
@@ -148,6 +148,7 @@ export default function MemePresentation (props){
         // this.setState({display: 'flex'})
       // }, 2500);
       // clearInputs(props.GID)
+      const {roundMeme} = props
     return(
     <SafeAreaView style={{backgroundColor: 'darkred', flex:1}}>
       <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND 1</Text>
@@ -155,12 +156,15 @@ export default function MemePresentation (props){
       <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
         {
         // roundMeme && roundMeme.length &&
-        value && value.data() && value.data().currentMeme && value.data().currentMeme.length &&
-        <Image
-        style={styles.memeimg}
-        // source={{uri: `${roundMeme}`}}
-        source={{uri: `${value.data().currentMeme}`}}
-        />
+        // value && value.data() && value.data().currentMeme && value.data().currentMeme.length &&
+        (roundMeme && roundMeme.length) ? (
+          <Image
+          style={styles.memeimg}
+          // source={{uri: `${roundMeme}`}}
+          // source={{uri: `${value.data().currentMeme}`}}
+          source={{uri: `${roundMeme}`}}
+          />
+        ) : null
         }
       {/* <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
         <View style={{backgroundColor:"gold", height: 60, width: 60, borderRadius: 30, justifyContent:'center', marginRight: 30}}>
@@ -172,20 +176,21 @@ export default function MemePresentation (props){
         {
           // gameUsers && gameUsers.length &&
           // gameUsers.map((user)=> {
-          value && value.data() && value.data().users && value.data().users.length &&
-          value.data().users.map((user)=> {
-            if(user.userId !== Fire.shared.getUID()){
-              return (
-                <View key={user.userId} style={{alignItems: "center"}}>
-                  <Image
-                  style={styles.img}
-                  source={{uri:`${user.imageURL}`}}
-                  />
-                  <Text style={{fontSize: 20, color: 'white'}}>{`${user.displayName}` || "Mario"}</Text>
-                </View>
-              )
-            }
-          })
+          (value && value.data() && value.data().users && value.data().users.length)?(
+            value.data().users.map((user)=> {
+              if(user.userId !== Fire.shared.getUID()){
+                return (
+                  <View key={user.userId} style={{alignItems: "center"}}>
+                    <Image
+                    style={styles.img}
+                    source={{uri:`${user.imageURL}`}}
+                    />
+                    <Text style={{fontSize: 20, color: 'white'}}>{`${user.displayName}` || "Mario"}</Text>
+                  </View>
+                )
+              }
+            })
+          ): null
         }
       </View>
       {/* <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.navigate('CaptionInput', {gameID: props.route.params.gameID})}/> */}
@@ -199,7 +204,8 @@ export default function MemePresentation (props){
 const styles = StyleSheet.create({
   memeimg:{
     width: 300,
-    height:300,
+    height:350,
+    resizeMode: 'contain',
     borderWidth: 3,
     borderColor: 'gold',
   },

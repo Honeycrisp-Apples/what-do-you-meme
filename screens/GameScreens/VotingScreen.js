@@ -167,7 +167,7 @@ const mapStateToProps = (state, ownProps) => {
       hello: 'hello',
       game: game ? game : null,
       gameUsers: game ? game.users : null,
-      roundMeme: game ? game.currentMeme : null,
+      // roundMeme: game ? game.currentMeme : null,
       gameInputs: game ? game.inputs : null
     }
   )

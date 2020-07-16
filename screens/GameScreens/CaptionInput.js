@@ -143,7 +143,7 @@ class CaptionInput extends React.Component {
                 />
               ) : (null)
             }
-            <View style={{position: 'absolute', width: 300, height: 300, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
+            <View style={{position: 'absolute', width: 300, height: 350, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
               <Text style={{color: 'white', fontSize: 30, textAlign: 'center'}}>{(this.state.caption) || ""}</Text>
             </View>
             <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
   },
   memeimg:{
     width: 300,
-    height:300,
+    height:350,
+    resizeMode: 'contain',
     borderWidth: 3,
     borderColor: 'orange',
   },
@@ -207,7 +208,7 @@ const mapStateToProps = (state, ownProps) => {
       hello: 'hello',
       game: game ? game : null,
       gameUsers: game ? game.users : null,
-      roundMeme: game ? game.currentMeme : null
+      // roundMeme: game ? game.currentMeme : null
     }
   )
 }

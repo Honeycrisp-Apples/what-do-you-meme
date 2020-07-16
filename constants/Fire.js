@@ -128,6 +128,7 @@ export default class Fire {
         earnedMemes: [],
         awards: awards(),
         friends: [],
+        inGame: false
       },
       { merge: true }
     );
