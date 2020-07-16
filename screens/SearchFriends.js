@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { StyleSheet, Text, View, TextInput, ScrollView, Image, Button } from 'react-native';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import { useNavigation } from '@react-navigation/native';
 import firebase from 'firebase';
 import Fire from '../constants/Fire';
 
@@ -11,30 +12,40 @@ export default function SearchFriends() {
 		firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`)
 	);
 
-	const [ valueC, lC, eC ] = useCollection(firebase.firestore().collection('users'), {
-		snapshotListenOptions: { includeMetadataChanges: true }
-	});
+	// const [ valueC, lC, eC ] = useCollection(firebase.firestore().collection('users'), {
+	//  snapshotListenOptions: { includeMetadataChanges: true }
+	// });
 
-	const [ state, setState ] = useState({
-		s: 'Search for Friends!',
-		results: [],
-		selected: {}
-	});
+	const [ s, setS ] = useState('Search for Friends!');
+	const [ results, setResults ] = useState([]);
+	const [ selected, setSelected ] = useState({});
+	const navigation = useNavigation();
+
+	// const [ state, setState ] = useState({
+	//  s: 'Search for Friends!',
+	//  results: [],
+	//  selected: {}
+	// });
 
 	const search = () => {
-		// &s= is a query paramater
-		axios(apiurl + '&s=' + state.s).then(({ data }) => {
+		let users = firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get();
+		// //   // &s= is a query paramater
+		// //   users + '&s=' + s
+		// // )
+		// // let searchValues = users + '&s=' + s;
+		// console.log('Users:', users);
+
+		users.then((data) => {
+			console.log('Data:', data);
 			let results = data.Search;
-			console.log(results);
-			setState((prevState) => {
-				return { ...prevState, results: results };
-			});
+			console.log('Results:', results);
+			setResults(results);
 		});
 	};
 
 	if (error) {
 		return <Text>Error: {JSON.stringify(error)}</Text>;
-	} else if (loading && lC) {
+	} else if (loading) {
 		return <Text>Collection: Loading...</Text>;
 	} else if (value) {
 		return (
@@ -43,26 +54,23 @@ export default function SearchFriends() {
 				<Text style={styles.title}>Users</Text>
 				<TextInput
 					style={styles.searchbox}
-					onChangeText={(text) =>
-						setState((prevState) => {
-							return { ...prevState, s: text };
-						})}
+					onChangeText={(text) => setS(text)}
 					onSubmitEditing={search}
-					value={state.s}
+					value={s}
 				/>
 
 				<ScrollView style={styles.results}>
-					{state.results.map((result) => (
-						<View key={result.imdbID} style={styles.result}>
+					{results.map((result) => (
+						<View key={result.points} style={styles.result}>
 							<Image
-								source={{ uri: result.Poster }}
+								source={{ uri: result.imageUrl }}
 								style={{
 									width: '100%',
 									height: 300
 								}}
 								resizeMode="cover"
 							/>
-							<Text style={styles.heading}>{result.Title}</Text>
+							<Text style={styles.heading}>{result.displayName}</Text>
 						</View>
 					))}
 				</ScrollView>

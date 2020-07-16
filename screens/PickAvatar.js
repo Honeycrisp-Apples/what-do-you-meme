@@ -5,39 +5,86 @@ import UserPermissions from '../utilities/UserPermissions';
 import { uploadAvatar } from '../constants/Fire';
 import firebase from 'firebase';
 import Fire from '../constants/Fire';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 export default class PickAvatar extends React.Component {
-	state = {
-		avatarImage: null
+	constructor() {
+		super();
+		this.state = {
+			avatarImage: null
+		};
+		// this.onSubmit = this.onSubmit.bind();
+	}
+	// state = {
+	//  avatarImage: ''
+	// };
+
+	// selectImage = async () => {
+	//  UserPermissions.getCameraPermission();
+	//  const options = {
+	//      noData: true
+	//  };
+
+	//  await ImagePicker.launchImageLibraryAsync(options, (response) => {
+	//      if (!response.didCancel) {
+	//          const source = { uri: response.uri };
+	//          console.log('Source', source);
+	//          this.setState({
+	//              avatarImage: source
+	//          });
+	//          return firebase.firestore().collection('users').doc(this.getUID()).update({
+	//              avatar: this.state.avatarImage
+	//          });
+	//      }
+	//  });
+	// };
+
+	// onSubmit = async () => {
+	//  try {
+	//      const avatarImage = this.state.avatarImage;
+	//      await Fire.shared.uploadAvatar(avatarImage);
+
+	//      this.setState({
+	//          avatarImage: avatarImage
+	//      });
+	//      console.log('AvatarImage:', avatarImage);
+	//  } catch (e) {
+	//      console.error(e);
+	//  }
+	// };
+
+	componentDidMount() {
+		this.getPermissionAsync();
+	}
+
+	getPermissionAsync = async () => {
+		if (Constants.platform.ios) {
+			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+			if (status !== 'granted') {
+				alert('Sorry, we need camera roll permissions to make this work!');
+			}
+		}
 	};
 
 	selectImage = async () => {
-		UserPermissions.getCameraPermission();
-		const options = {
-			noData: true
-		};
-
-		await ImagePicker.launchImageLibraryAsync(options, (response) => {
-			if (!response.didCancel) {
-				const source = { uri: response.uri };
-				console.log(source);
-				this.setState({
-					avatarImage: source
+		try {
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [ 4, 3 ],
+				quality: 1
+			});
+			if (!result.cancelled) {
+				await this.setState({ avatarImage: result.uri });
+				firebase.firestore().collection('users').doc(Fire.shared.getUID()).update({
+					avatar: this.state.avatarImage
 				});
 			}
-		});
-	};
 
-	onSubmit = async () => {
-		try {
-			const avatarImage = this.state.avatarImage;
-			Fire.shared.uploadAvatar(avatarImage);
-
-			this.setState({
-				avatarImage: avatarImage
-			});
-		} catch (e) {
-			console.error(e);
+			console.log(result);
+		} catch (E) {
+			console.log(E);
 		}
 	};
 
@@ -62,9 +109,9 @@ export default class PickAvatar extends React.Component {
 						</Button>
 					)}
 				</View>
-				<Button status="success" onPress={this.onSubmit} style={{ marginTop: 30 }} title="Change Avatar">
-					Change Avatar
-				</Button>
+				{/* <Button status="success" onPress={this.onSubmit} style={{ marginTop: 30 }} title="Change Avatar">
+                    Change Avatar
+                </Button> */}
 				<Button
 					onPress={() => this.props.navigation.navigate('UserMain')}
 					style={{ marginTop: 30 }}
