@@ -20,6 +20,7 @@ import Memes from './screens/Memes';
 import UserMain from './screens/UserMain';
 import UserAwards from './screens/UserAwards';
 import UserFriends from './screens/UserFriends';
+import PickAvatar from './screens/PickAvatar';
 import GameLobby from './screens/GameScreens/GameLobby';
 import MemePresentation from './screens/GameScreens/MemePresentation';
 import CaptionInput from './screens/GameScreens/CaptionInput';
@@ -38,7 +39,6 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { decode, encode } from 'base-64';
-import UserNavigator from './navigation/UserNavigator';
 
 if (!global.btoa) {
 	global.btoa = encode;
@@ -108,11 +108,8 @@ export default function App() {
 							<Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} /> */}
 							<Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
 							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
-							<Stack.Screen
-								options={{ headerShown: false }}
-								name="UserPages"
-								component={(UserTabs, UserNavigator)}
-							/>
+							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
+							<Stack.Screen options={{ headerShown: false }} name="PickAvatar" component={PickAvatar} />
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
 							<Stack.Screen
 								options={{ headerShown: false }}

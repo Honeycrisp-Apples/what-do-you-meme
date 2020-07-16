@@ -43,10 +43,12 @@
     "react-native-gesture-handler": "~1.6.0",
     "react-native-hr": "^1.1.4",
     "react-native-hr-component": "^2.0.3",
+    "react-native-image-picker": "^2.3.3",
     "react-native-paper": "^3.10.1",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-svg": "12.1.0",
     "react-native-textarea": "^1.0.4",
     "react-native-ui-kitten": "^4.4.1",
     "react-native-vector-icons": "^7.0.0",
@@ -60,8 +62,7 @@
     "redux": "^4.0.5",
     "redux-firestore": "^0.13.0",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^5.1.1",
-    "react-native-svg": "12.1.0"
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

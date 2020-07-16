@@ -30,10 +30,6 @@ export default function UserMain({ navigation }) {
 	// 	}
 	// }
 
-	function handlePickAvatarNavigation() {
-		navigation.navigate('PickAvatar');
-	}
-
 	if (error) {
 		return <Text>Error: {JSON.stringify(error)}</Text>;
 	} else if (loading) {
@@ -60,7 +56,10 @@ export default function UserMain({ navigation }) {
 							<View style={styles.imgCont}>
 								<Image style={styles.img} source={{ uri: `${value.data().avatar}` }} />
 								{/* change imageurl to avatar above                       ^^^^^^ */}
-								<TouchableOpacity style={{ marginTop: 5 }} onPress={handlePickAvatarNavigation}>
+								<TouchableOpacity
+									style={{ marginTop: 5 }}
+									onPress={() => navigation.navigate('PickAvatar')}
+								>
 									<Text
 										style={{
 											fontSize: 10,

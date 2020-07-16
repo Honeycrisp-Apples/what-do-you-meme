@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import { Text, SafeAreaView, Button, StyleSheet, ScrollView, Image, View, Dimensions } from 'react-native';
+import { Text, Button, Image, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import UserPermissions from '../utilities/UserPermissions';
+import { uploadAvatar } from '../constants/Fire';
+import firebase from 'firebase';
+import Fire from '../constants/Fire';
 
 export default class PickAvatar extends React.Component {
 	state = {
 		avatarImage: null
 	};
 
-	selectImage = () => {
+	selectImage = async () => {
+		UserPermissions.getCameraPermission();
 		const options = {
 			noData: true
 		};
-		ImagePicker.launchImageLibrary(options, (response) => {
+
+		await ImagePicker.launchImageLibraryAsync(options, (response) => {
 			if (response.didCancel) {
 				console.log('User cancelled image picker');
 			} else if (response.error) {
@@ -20,6 +26,7 @@ export default class PickAvatar extends React.Component {
 				console.log('User tapped custom button: ', response.customButton);
 			} else {
 				const source = { uri: response.uri };
+				console.log(source);
 				this.setState({
 					avatarImage: source
 				});
@@ -30,7 +37,7 @@ export default class PickAvatar extends React.Component {
 	onSubmit = async () => {
 		try {
 			const avatarImage = this.state.avatarImage;
-			this.props.firebase.uploadAvatar(avatarImage);
+			Fire.shared.uploadAvatar(avatarImage);
 
 			this.setState({
 				avatarImage: null
@@ -55,12 +62,13 @@ export default class PickAvatar extends React.Component {
 								padding: 10,
 								margin: 30
 							}}
+							title="Add an image"
 						>
 							Add an image
 						</Button>
 					)}
 				</View>
-				<Button status="success" onPress={this.onSubmit} style={{ marginTop: 30 }}>
+				<Button status="success" onPress={this.onSubmit} style={{ marginTop: 30 }} title="Change Avatar">
 					Change Avatar
 				</Button>
 			</View>
