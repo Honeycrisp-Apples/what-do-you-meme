@@ -18,13 +18,7 @@ export default class PickAvatar extends React.Component {
 		};
 
 		await ImagePicker.launchImageLibraryAsync(options, (response) => {
-			if (response.didCancel) {
-				console.log('User cancelled image picker');
-			} else if (response.error) {
-				console.log('ImagePicker Error: ', response.error);
-			} else if (response.customButton) {
-				console.log('User tapped custom button: ', response.customButton);
-			} else {
+			if (!response.didCancel) {
 				const source = { uri: response.uri };
 				console.log(source);
 				this.setState({
@@ -40,7 +34,7 @@ export default class PickAvatar extends React.Component {
 			Fire.shared.uploadAvatar(avatarImage);
 
 			this.setState({
-				avatarImage: null
+				avatarImage: avatarImage
 			});
 		} catch (e) {
 			console.error(e);
@@ -70,6 +64,13 @@ export default class PickAvatar extends React.Component {
 				</View>
 				<Button status="success" onPress={this.onSubmit} style={{ marginTop: 30 }} title="Change Avatar">
 					Change Avatar
+				</Button>
+				<Button
+					onPress={() => this.props.navigation.navigate('UserMain')}
+					style={{ marginTop: 30 }}
+					title="Return to Profile"
+				>
+					Return to Profile
 				</Button>
 			</View>
 		);
