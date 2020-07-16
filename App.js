@@ -21,6 +21,8 @@ import UserMain from './screens/UserMain';
 import UserAwards from './screens/UserAwards';
 import UserFriends from './screens/UserFriends';
 import PickAvatar from './screens/PickAvatar';
+import SearchFriends from './screens/SearchFriends';
+import FriendRequests from './screens/FriendRequests';
 import GameLobby from './screens/GameScreens/GameLobby';
 import MemePresentation from './screens/GameScreens/MemePresentation';
 import CaptionInput from './screens/GameScreens/CaptionInput';
@@ -39,7 +41,6 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { decode, encode } from 'base-64';
-
 if (!global.btoa) {
 	global.btoa = encode;
 }
@@ -110,6 +111,16 @@ export default function App() {
 							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
 							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
 							<Stack.Screen options={{ headerShown: false }} name="PickAvatar" component={PickAvatar} />
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="SearchFriends"
+								component={SearchFriends}
+							/>
+							<Stack.Screen
+								options={{ headerShown: false }}
+								name="FriendRequests"
+								component={FriendRequests}
+							/>
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
 							<Stack.Screen
 								options={{ headerShown: false }}

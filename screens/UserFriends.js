@@ -13,7 +13,7 @@ import { FormButton } from '../components/Reusables';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import Fire from '../constants/Fire';
 import firebase from 'firebase';
-export default function UserFriends() {
+export default function UserFriends({ navigation }) {
   // static navigationOptions = ({navigation}) => {
   //   return({
   //     title: 'Friends',
@@ -125,9 +125,12 @@ export default function UserFriends() {
         </ScrollView>
         <FormButton
           modeValue={'contained'}
-          title={'Add Friend'}
-          onPress={() => alert('Page not made yet!')}
-        />
+          title={'Search for Friends!'}
+          onPress={() => navigation.navigate('SearchFriends')}        />
+        <FormButton
+          modeValue={'contained'}
+          title={'Check for Friend Requests'}
+          onPress={() => navigation.navigate('FriendRequests')} />
         {/* <FormButton
           modeValue={'contained'}
           title={'To UserMain'}
