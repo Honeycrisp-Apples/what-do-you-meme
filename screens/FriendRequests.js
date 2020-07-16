@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Button, View, Image } from 'react-native';
-import { RecieveFriendRequests, DeclineFriendRequest } from '../utilities/RecieveFriendRequest';
+import { AcceptFriendRequest, DeclineFriendRequest } from '../utilities/RecieveFriendRequest';
 import Fire from '../constants/Fire';
 import firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
@@ -47,7 +47,7 @@ export default function FriendRequests({ navigation }) {
 								resizeMode="cover"
 							/>
 							<Text> {req.name}</Text>
-							<Button title={'Accept'} />
+							<Button title={'Accept'} onPress={() => AcceptFriendRequest(req, value)} />
 							<Button title={'Decline'} onPress={() => DeclineFriendRequest(req, value)} />
 						</View>
 					))
