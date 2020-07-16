@@ -60,7 +60,7 @@ export default function GameLobby(props) {
   //   firebase.firestore().collection('users').doc(``)
   // );
   console.log('route params gameID:', route.params.gameID)
-  console.log('route params theGame.data():', route.params.theGame.data());
+  // console.log('route params theGame.data():', route.params.theGame.data());
   console.log('navigation', route);
   console.log("gameUsers", gameUsers)
   // if (error) {
@@ -84,7 +84,8 @@ export default function GameLobby(props) {
 
   const startGame = () => {
     // game.playing = true
-    navigation.navigate("MemePresentation", {gameID: route.params.gameID})
+    // navigation.navigate("MemePresentation", {gameID: route.params.gameID})
+    navigation.navigate("GameComp", {gameID: route.params.gameID})
   }
   // if(game && game.numUsers === 2){
     if(value && value.data() && value.data().numUsers === 3){

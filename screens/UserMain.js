@@ -101,7 +101,7 @@ export default function UserMain({ navigation }) {
                   value
                     .data()
                     .earnedMemes.map((meme, index) => (
-                      <Image key={index} style={styles.memes} source={meme} />
+                      <Image key={index} style={styles.memes} source={{uri: meme}} />
                     ))
                 ) : (
                   <Text>You gotta start playing some games!</Text>

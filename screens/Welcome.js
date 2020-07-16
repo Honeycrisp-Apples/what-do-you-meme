@@ -10,7 +10,7 @@ import Carousel from 'react-native-snap-carousel';
 import {FormButton} from '../components/Reusables'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-
+import axios from 'axios'
 // type Props = {
 //   navigation: { navigate: (arg0: string) => void, state: {params: {username? : string}} },
 //   username?: string
@@ -89,7 +89,7 @@ export default function Welcome(props) {
   // );
 
   const goToGame = (thing, thingID) => {
-    props.navigation.navigate('GameLobby', { theGame: thing, gameID: thingID });
+    props.navigation.navigate('GameLobby', {gameID: thingID});
   };
 
   // console.log('game', game.data());
@@ -108,7 +108,8 @@ export default function Welcome(props) {
           gameId: "",
           gameMode: 'regular',
           gotUsers: false,
-          inputs: [newInput],
+          // inputs: [newInput],
+          inputs:[],
           numUsers: 1,
           playing: false,
           winningMeme: '',
@@ -126,9 +127,19 @@ export default function Welcome(props) {
           .get()
           .then(async (query) => {
             let thing2 = query.docs[0];
-            await thing2.ref.update({
-              gameId: thing2.ref.id,
-            });
+
+            // await thing2.ref.update({
+            //   gameId: thing2.ref.id,
+            // });
+
+            const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+            axios.get('https://api.imgflip.com/get_memes').then((memeData) => {
+              let shuffledMemes = shuffle(memeData.data.data.memes);
+              thing2.ref.update({
+                gameId: thing2.ref.id,
+                roundMemes: [shuffledMemes[0].url,shuffledMemes[1].url,shuffledMemes[2].url],
+                winningMeme: shuffledMemes[3].url,
+              }).catch((error) => console.log(error));});
             return thing2;
             // goToGame(thing2);
           })
@@ -163,28 +174,41 @@ export default function Welcome(props) {
       .then(async (query) => {
         const theUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
         // const theUser = userData ? userData : 'nope'
-        console.log("theUser:", theUser)
-        console.log("theUserData:", theUser.data())
-        const newUser = await { userId: Fire.shared.getUID(), wins: 0, wonMemes: [],
-          displayName: theUser.data().displayName, imageURL: theUser.data().imageURL, points: theUser.data().points
-        };
-        const newInput = { caption: '', userId: Fire.shared.getUID(), vote: 0 };
-        if (query.docs.length) {
-          const thing = query.docs[0];
-          console.log('query', query.docs);
-          let curVal = thing.data().numUsers;
-          let curUsers = thing.data().users;
-          let curInputs = thing.data().inputs;
-          const numOfPlayers = curVal + 1;
-          thing.ref.update({
-            numUsers: numOfPlayers,
-            users: [...curUsers, newUser],
-            inputs: [...curInputs, newInput],
-          });
-          // also pass the game id
-          goToGame(thing, thing.ref.id);
-        } else {
-          makeNewGame(newUser, newInput);
+        if(!theUser.data().inGame){
+          await theUser.ref.update({
+            inGame: true
+          })
+          console.log("theUser:", theUser)
+          console.log("theUserData:", theUser.data())
+          const newUser = await { userId: Fire.shared.getUID(), wins: 0, wonMemes: [],
+            displayName: theUser.data().displayName, imageURL: theUser.data().imageURL, points: theUser.data().points
+          };
+          const newInput = { caption: '', userId: Fire.shared.getUID(), vote: 0 };
+          if (query.docs.length) {
+            const thing = query.docs[0];
+            console.log('query', query.docs);
+            let curVal = thing.data().numUsers;
+            // let curUsers = thing.data().users;
+            // let curInputs = thing.data().inputs;
+            const numOfPlayers = curVal + 1;
+            await thing.ref.update({
+              numUsers: numOfPlayers,
+              users: firebase.firestore.FieldValue.arrayUnion(newUser),
+            });
+              // (!theUser.data().inGame) ?
+              // (
+              // curUsers && thing.ref.update({
+              // numUsers: numOfPlayers, users: [...curUsers, newUser],
+              // })
+              // ): (alert("Ooops, you've already joined a game!"))
+
+            // also pass the game id
+
+            goToGame(thing, thing.ref.id);
+
+          } else {
+            makeNewGame(newUser, newInput);
+          }
         }
       })
       .catch((err) => {
@@ -196,26 +220,36 @@ export default function Welcome(props) {
 
   // render(){
   const [user, loading, error] = useAuthState(firebase.auth());
+  const [userData, userL, userE] = useDocument(firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`))
+
   if (loading) {
     return <Text>I'm loading</Text>;
   }
   if (error) {
     return <Text>You Messed Up!!</Text>;
   }
-  if (user) {
+  if (user && userData) {
+    console.log("userData:", userData.data())
     return (
       <SafeAreaView style={styles.welcome}>
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
         >
          {/* needs user object in database image url and points */}
-          <Image
-          style={styles.userimg}
-          source={{uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg"}}
-          />
-          <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
-          <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS:</Text>
+
+              <Image
+              style={styles.userimg}
+              source={{uri: `${userData.data().imageURL}`}}
+              />
+
+              {user && user.displayName &&
+              <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
+              }
+
+              <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS: {`${userData.data().points}`}</Text>
+
         </TouchableOpacity>
+
         {/* <Text>{`Hello there, ${user.displayName}`}</Text> */}
         {/* <View
           style={styles.scrollContainer}

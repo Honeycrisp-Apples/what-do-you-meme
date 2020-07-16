@@ -111,6 +111,7 @@ export default function App() {
 							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
 							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
+							<Stack.Screen options={{ headerShown: false }} name="GameComp" component={Game} />
 							<Stack.Screen
 								options={{ headerShown: false }}
 								name="MemePresentation"

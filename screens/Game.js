@@ -7,20 +7,29 @@ import RoundResults from './GameScreens/RoundResults';
 import VotingScreen from './GameScreens/VotingScreen';
 import WinningScreen from './GameScreens/WinningScreen';
 
+import * as firebase from 'firebase';
+
 export default class Game extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       timer: null,
       screen: 0,
       rounds: 0,
       intervalState: null,
+      curMeme: "",
+      game: {}
     };
     this.startGame = this.startGame.bind(this);
   }
-
-  startGame() {
-    this.setState({ timer: 3, screen: 1 });
+  componentDidMount(){
+    console.log("TheGameComp: ", this.props.route.params.gameID)
+    this.startGame()
+  }
+  async startGame() {
+    let theGame = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    this.setState({ timer: 10, screen: 0, game: theGame.data()});
+    this.setState({ curMeme: this.state.game.roundMemes[0]})
     this.startInterval(60);
   }
 
@@ -35,34 +44,44 @@ export default class Game extends React.Component {
       }, 1000),
     });
   }
-
+  async clearInputs(gameID){
+    await firebase.firestore().collection('game').doc(`${gameID}`).update(
+      {
+        inputs: []
+      }
+    )
+  }
   checkGame(timer) {
     console.log('checking game');
     if (timer > 0) {
       return;
     } else {
       switch (this.state.screen) {
+        case 0:
+          this.setState({ screen: this.state.screen + 1, timer: 35 });
+          break;
         case 1:
-          this.setState({ screen: this.state.screen + 1, timer: 2 });
+          this.setState({ screen: this.state.screen + 1, timer: 15 });
           break;
+        // case 2:
+        //   this.setState({ screen: this.state.screen + 1, timer: 3 });
+        //   break;
         case 2:
-          this.setState({ screen: this.state.screen + 1, timer: 3 });
-          break;
-        case 3:
           this.setState({
             screen: this.state.screen + 1,
-            timer: 2,
+            timer: 15,
             rounds: this.state.rounds + 1,
           });
           break;
-        case 4:
+        case 3:
           if (this.state.rounds === 3) {
             this.setState({
               screen: this.state.screen + 1,
               timer: 0,
             });
           } else {
-            this.setState({ screen: 1, timer: 3 });
+            this.setState({ screen: 0, timer: 15 , curMeme: this.state.game.roundMemes[this.state.rounds]});
+
           }
           break;
 
@@ -75,24 +94,32 @@ export default class Game extends React.Component {
   // have a state for memes, setState of current meme and pass it down to MemePresentation, CaptionInput, Voting Screen, Round Results
   //redux firebase needed for anyplace where user is updating object
   render() {
+    const {gameID} = this.props.route.params
+    const roundMeme = this.state.curMeme
+    // if(this.state.screen === 0){
+    //   this.clearInputs(gameID)
+    // }
     return (
-      <View>
-        <Text>{this.state.timer > 0 && this.state.timer}</Text>
-        <Button title="Start Game" onPress={() => this.startGame()} />
-        {this.state.screen === 0 ? (
-          <GameLobby />
+      // <View>
+        /* <Text>{this.state.timer > 0 && this.state.timer}</Text> */
+        /* <Button title="Start Game" onPress={() => this.startGame()} /> */
+        // {
+        // this.state.screen === 0 ? (
+        //   <GameLobby />
+        // ) :
+        this.state.screen === 0 ? (
+          <MemePresentation roundMeme={roundMeme} GID={gameID}/>
         ) : this.state.screen === 1 ? (
-          <MemePresentation />
+          <CaptionInput roundMeme={roundMeme} GID={gameID}/>
         ) : this.state.screen === 2 ? (
-          <CaptionInput />
+          <VotingScreen roundMeme={roundMeme} GID={gameID}/>
         ) : this.state.screen === 3 ? (
-          <VotingScreen />
-        ) : this.state.screen === 4 ? (
-          <RoundResults />
+          <RoundResults roundMeme={roundMeme} GID={gameID}/>
         ) : (
-          <WinningScreen />
-        )}
-      </View>
+          <WinningScreen GID={gameID} />
+        )
+      // }
+      // </View>
     );
   }
 }
