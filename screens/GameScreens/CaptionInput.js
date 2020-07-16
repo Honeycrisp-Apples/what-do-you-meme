@@ -63,33 +63,42 @@ class CaptionInput extends React.Component {
         Keyboard.dismiss()
         this.setState({show: 'none'})
         // await updateGameInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption)
-        await this.updateInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption )
+        // await this.updateInput(this.props.route.params.gameID, Fire.shared.getUID(), this.state.caption )
+        await this.updateInput(this.props.GID, Fire.shared.getUID(), this.state.caption )
         console.log('leaving to vote')
-        return this.props.navigation.navigate("VotingScreen", {gameID: this.props.route.params.gameID})
+        // return this.props.navigation.navigate("VotingScreen", {gameID: this.props.route.params.gameID})
       }
     }
     myvar1 = setInterval(()=>change(), 1000)
   }
   async componentWillUnmount(){
     // await soundObject.unloadAsync()
+    // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).update({
+    //   inputs: []
+    // })
   }
   async updateInput(gameID, userID, caption){
     // let unsubscribe =
-    let gameDoc = await firebase.firestore().collection('game').doc(`${gameID}`).get()
-    let curInputs = gameDoc.data().inputs
-    curInputs.forEach((input, ind)=>{
-      //get rid of the old caption input value
-      if(input.userID === userID){
-        curInputs.splice(ind, 1)
-      }
-    })
-    console.log("curInputs after splice", curInputs)
+    // let gameDoc = await firebase.firestore().collection('game').doc(`${gameID}`).get()
+    // let curInputs = gameDoc.data().inputs
+    let myInput = {caption, userId: userID, vote: 0}
+    // curInputs.forEach(async (input, ind)=>{
+    //   //get rid of the old caption input value
+    //   if(input.userId == userID){
+    //     await curInputs.splice(ind, 1, myInput)
+    //   }
+    // })
+    // console.log("curInputs after splice", curInputs)
     // make a new input caption value
-    let newInput = {caption, userID, vote: 0}
     //update gameDoc inputs array
-    await firebase.firestore().collection('game').doc(`${gameID}`).update({
-      inputs: [...curInputs, newInput]
-    })
+    if(myInput.caption){
+      await firebase.firestore().collection('game').doc(`${gameID}`).update({
+        inputs: firebase.firestore.FieldValue.arrayUnion(myInput)
+      })
+    }
+    // await firebase.firestore().collection('game').doc(`${gameID}`).set({
+    //     inputs: firebase.firestore.FieldValue.arrayUnion(myInput)
+    //   })
     // await firebase.firestore().collection('game').doc(`${gameID}`)
     // .onSnapshot({includeMetadataChanges: true}, async function(gameDoc){
 
@@ -117,8 +126,9 @@ class CaptionInput extends React.Component {
   //have a component will unmount to GameObj.unputs.push(this.state.caption) to account for navigation...
   render(){
 
-    const {navigation, route, roundMeme} = this.props
-    if(!navigation.isFocused()) {return null}
+    // const {navigation, route, roundMeme} = this.props
+    const {roundMeme} = this.props
+    // if(!navigation.isFocused()) {return null}
       return(
         <SafeAreaView style={styles.panel}>
           <ScrollView contentContainerStyle={styles.panel} onPress={Keyboard.dismiss}>
@@ -126,13 +136,14 @@ class CaptionInput extends React.Component {
           <Text style={{fontSize: 45, color: 'white', textAlign: 'center', marginVertical: 10}}>MAKE YOUR CAPTION</Text>
           <View style={{justifyContent: 'flex-end' ,alignItems: 'center', marginBottom: 10}}>
             {
-              roundMeme && roundMeme.length &&
-              <Image
-              style={styles.memeimg}
-              source={{uri: roundMeme}}
-              />
+              (roundMeme && roundMeme.length) ? (
+                <Image
+                style={styles.memeimg}
+                source={{uri: roundMeme}}
+                />
+              ) : (null)
             }
-            <View style={{position: 'absolute', width: 300, height: 300, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
+            <View style={{position: 'absolute', width: 300, height: 350, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
               <Text style={{color: 'white', fontSize: 30, textAlign: 'center'}}>{(this.state.caption) || ""}</Text>
             </View>
             <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
@@ -170,7 +181,8 @@ const styles = StyleSheet.create({
   },
   memeimg:{
     width: 300,
-    height:300,
+    height:350,
+    resizeMode: 'contain',
     borderWidth: 3,
     borderColor: 'orange',
   },
@@ -186,7 +198,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
-  let ID = ownProps.route.params.gameID
+  // let ID = ownProps.route.params.gameID
+  let ID = ownProps.GID
   let games = state.firestore.data.game
   let game = games ? games[ID] : null
 
@@ -195,7 +208,7 @@ const mapStateToProps = (state, ownProps) => {
       hello: 'hello',
       game: game ? game : null,
       gameUsers: game ? game.users : null,
-      roundMeme: game ? game.currentMeme : null
+      // roundMeme: game ? game.currentMeme : null
     }
   )
 }
@@ -203,6 +216,7 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
-    { collection: 'game', doc: props.route.params.gameID}
+    // { collection: 'game', doc: props.route.params.gameID}
+    { collection: 'game', doc: props.GID}
   ])
 )(CaptionInput)

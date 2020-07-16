@@ -122,6 +122,7 @@ export default function App() {
 								component={FriendRequests}
 							/>
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
+							<Stack.Screen options={{ headerShown: false }} name="GameComp" component={Game} />
 							<Stack.Screen
 								options={{ headerShown: false }}
 								name="MemePresentation"

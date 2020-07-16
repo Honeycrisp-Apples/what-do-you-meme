@@ -28,7 +28,7 @@ class VotingScreen extends React.Component {
       }else {
         clearInterval(myvar1)
         console.log('leaving to results')
-        return this.props.navigation.navigate("RoundResults", {gameID: this.props.route.params.gameID})
+        // return this.props.navigation.navigate("RoundResults", {gameID: this.props.route.params.gameID})
       }
     }
     myvar1 = setInterval(()=>change(), 1000)
@@ -36,7 +36,8 @@ class VotingScreen extends React.Component {
   async handleVote(index=0){
     //handle randomization later
     console.log("index", index)
-    await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    await firebase.firestore().collection('game').doc(`${this.props.GID}`).get()
     .then(async (query)=> {
       let gameDoc = query
       let curInputs = gameDoc.data().inputs
@@ -52,69 +53,72 @@ class VotingScreen extends React.Component {
   }
   render(){
     const {navigation, route, gameID, gameUsers, gameInputs, roundMeme} = this.props
-    if(!navigation.isFocused()) {return null}
+    // if(!navigation.isFocused()) {return null}
     const curUser = Fire.shared.getUID()
     return (
       <SafeAreaView style={{flex:1, backgroundColor: 'darkred'}}>
-        { roundMeme && roundMeme.length &&
+        { (roundMeme && roundMeme.length) ? (
 
-        //end of conditional is wrapped around this....
+          //end of conditional is wrapped around this....
 
-        <ImageBackground style={styles.image}
-        source={{uri: roundMeme}}
-        imageStyle={{opacity:0.5}}>
+          <ImageBackground style={styles.image}
+          source={{uri: roundMeme}}
+          imageStyle={{opacity:0.5}}>
 
-        {/* <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
-          <Image
-          style={styles.memeimg}
-          source={{uri: "https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"}}
-          />
-        </View> */}
-        {
-            this.state.voted ? (
-            <View>
-              <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>You&apos;ve casted your vote!! Good luck!</Text>
-              <Text style={{fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
-            </View>
-            ) : (
-              <>
-            <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>Cast Your Vote!</Text>
-            <Text style={{fontSize: 20, color: 'white', textAlign: 'center', fontWeight: 'bold'}}>Which Is A Better Caption?</Text>
-            <Text style={{fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
+          {/* <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
+            <Image
+            style={styles.memeimg}
+            source={{uri: "https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"}}
+            />
+          </View> */}
+          {
+              this.state.voted ? (
               <View>
-              {
-                gameInputs && gameInputs.length &&
-                gameInputs.map((input, ind)=>{
-                  if(input.caption && (input.userId !== `${curUser}`))
-                  return(
-                    <View key={ind} style={styles.captionToVote}>
-                      <View style={{marginLeft: 5, flex: 1}}>
-                        <Text style={{fontSize: 20, textAlign: 'center'}}>{input.caption}</Text>
-                        {/* <TouchableOpacity title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
-                        onPress={()=> alert("Feature not developed yet.")}
-                        >
-                          <Text style={{color: 'white', }}>vote</Text>
-                        </TouchableOpacity> */}
-                        <FormButton title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
-                        onPress={()=> this.handleVote(ind)}
-                        />
-                      </View>
-                    </View>
-                  )
-                })
-              }
+                <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>You&apos;ve casted your vote!! Good luck!</Text>
+                <Text style={{fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
               </View>
-              </>
-            )
-          }
+              ) : (
+                <>
+              <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>Cast Your Vote!</Text>
+              <Text style={{fontSize: 20, color: 'white', textAlign: 'center', fontWeight: 'bold'}}>Which Is A Better Caption?</Text>
+              <Text style={{fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
+                <View>
+                  {/* <Text>Hi there!</Text> */}
+                {
+                  (gameInputs && gameInputs.length) ? (
+                  gameInputs.map((input, ind)=>{
+                    if(input.caption && (input.userId !== `${curUser}`))
+                    return(
+                      <View key={ind} style={styles.captionToVote}>
+                        <View style={{marginLeft: 5, flex: 1}}>
+                          <Text style={{fontSize: 20, textAlign: 'center'}}>Caption: {input.caption}</Text>
+                          {/* <TouchableOpacity title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
+                          onPress={()=> alert("Feature not developed yet.")}
+                          >
+                            <Text style={{color: 'white', }}>vote</Text>
+                          </TouchableOpacity> */}
+                          <FormButton title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
+                          onPress={async ()=> await this.handleVote(ind)}
+                          />
+                        </View>
+                      </View>
+                    )
+                  })
+                  ): null
+                }
+                </View>
+                </>
+              )
+            }
 
 
 
-        {/* <FormButton title={'game lobby'} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/> */}
-        {/* <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>this.props.navigation.navigate('RoundResults')}/> */}
-        {/* <Text>Time until next navigation: {this.state.count}</Text> */}
+          {/* <FormButton title={'game lobby'} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/> */}
+          {/* <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>this.props.navigation.navigate('RoundResults')}/> */}
+          {/* <Text>Time until next navigation: {this.state.count}</Text> */}
           </ImageBackground>
-  }
+        ) : null
+        }
       </SafeAreaView>
     )
   }
@@ -153,7 +157,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
-  let ID = ownProps.route.params.gameID
+  // let ID = ownProps.route.params.gameID
+  let ID = ownProps.GID
   let games = state.firestore.data.game
   let game = games ? games[ID] : null
 
@@ -162,7 +167,7 @@ const mapStateToProps = (state, ownProps) => {
       hello: 'hello',
       game: game ? game : null,
       gameUsers: game ? game.users : null,
-      roundMeme: game ? game.currentMeme : null,
+      // roundMeme: game ? game.currentMeme : null,
       gameInputs: game ? game.inputs : null
     }
   )
@@ -171,6 +176,7 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
-    { collection: 'game', doc: props.route.params.gameID}
+    // { collection: 'game', doc: props.route.params.gameID}
+    { collection: 'game', doc: props.GID}
   ])
 )(VotingScreen)
