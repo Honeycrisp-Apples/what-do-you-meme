@@ -127,7 +127,8 @@ export default class Fire {
 				earnedMemes: [],
 				awards: awards(),
 				friends: [],
-				avatar: 'https://www.clipartkey.com/mpngs/m/9-96412_an-awesome-free-poop-emoji-svg.png'
+				avatar: 'https://www.clipartkey.com/mpngs/m/9-96412_an-awesome-free-poop-emoji-svg.png',
+				requests: []
 			},
 			{ merge: true }
 		);

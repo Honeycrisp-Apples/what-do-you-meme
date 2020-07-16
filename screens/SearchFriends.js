@@ -6,6 +6,7 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { useNavigation } from '@react-navigation/native';
 import firebase from 'firebase';
 import Fire from '../constants/Fire';
+import SendFriendRequest from '../utilities/SendFriendRequest';
 
 export default function SearchFriends() {
 	const [ value, loading, error ] = useDocument(
@@ -16,7 +17,7 @@ export default function SearchFriends() {
 	//  snapshotListenOptions: { includeMetadataChanges: true }
 	// });
 
-	const [ s, setS ] = useState('Search for Friends!');
+	const [ s, setS ] = useState('');
 	const [ results, setResults ] = useState([]);
 	const [ selected, setSelected ] = useState({});
 	const navigation = useNavigation();
@@ -27,20 +28,25 @@ export default function SearchFriends() {
 	//  selected: {}
 	// });
 
-	const search = () => {
-		let users = firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get();
+	const search = async () => {
+		await firebase.firestore().collection('users').where('displayName', '==', `${s}`).get().then(async (query) => {
+			// console.log('Data:', data);
+			let results = query.docs;
+			console.log('Results:', results);
+			setResults(results);
+		});
 		// //   // &s= is a query paramater
 		// //   users + '&s=' + s
 		// // )
 		// // let searchValues = users + '&s=' + s;
 		// console.log('Users:', users);
 
-		users.then((data) => {
-			console.log('Data:', data);
-			let results = data.Search;
-			console.log('Results:', results);
-			setResults(results);
-		});
+		// users.then(async (data) => {
+		// 	console.log('Data:', data);
+		// 	let results = await data.Search;
+		// 	console.log('Results:', results);
+		// 	setResults(results);
+		// });
 	};
 
 	if (error) {
@@ -53,6 +59,7 @@ export default function SearchFriends() {
 				<Button title="Go to UserMain" onPress={() => navigation.navigate('UserMain')} />
 				<Text style={styles.title}>Users</Text>
 				<TextInput
+					placeholder={'Search for Friends!'}
 					style={styles.searchbox}
 					onChangeText={(text) => setS(text)}
 					onSubmitEditing={search}
@@ -60,19 +67,21 @@ export default function SearchFriends() {
 				/>
 
 				<ScrollView style={styles.results}>
-					{results.map((result) => (
-						<View key={result.points} style={styles.result}>
-							<Image
-								source={{ uri: result.imageUrl }}
-								style={{
-									width: '100%',
-									height: 300
-								}}
-								resizeMode="cover"
-							/>
-							<Text style={styles.heading}>{result.displayName}</Text>
-						</View>
-					))}
+					{results && results.length ? (
+						results.map((result) => (
+							<View key={result.ref.id} style={styles.result} onPress={SendFriendRequest(result, value)}>
+								<Image
+									source={{ uri: result.data().avatar }}
+									style={{
+										width: '100%',
+										height: 300
+									}}
+									resizeMode="cover"
+								/>
+								<Text style={styles.heading}>{result.data().displayName}</Text>
+							</View>
+						))
+					) : null}
 				</ScrollView>
 				<StatusBar style="auto" />
 			</View>
