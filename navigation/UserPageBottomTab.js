@@ -17,49 +17,33 @@ const Tab = createMaterialBottomTabNavigator();
 //   );
 // }
 
-function UserTabs() {
-  return (
-    <Tab.Navigator activeColor="white" style={{ backgroundColor: 'white' }}>
-      <Tab.Screen
-        name="UserMain"
-        component={UserMain}
-        options={{
-          tabBarLabel: 'Profile',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="UserAwards"
-        component={UserAwards}
-        options={{
-          tabBarLabel: 'Awards',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="trophy-award"
-              color={color}
-              size={26}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="UserFriends"
-        component={UserFriends}
-        options={{
-          tabBarLabel: 'Friends',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="account-group"
-              color={color}
-              size={26}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
+export default function UserTabs() {
+	return (
+		<Tab.Navigator activeColor="white" style={{ backgroundColor: 'white' }}>
+			<Tab.Screen
+				name="UserMain"
+				component={UserMain}
+				options={{
+					tabBarLabel: 'Profile',
+					tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account" color={color} size={26} />
+				}}
+			/>
+			<Tab.Screen
+				name="UserAwards"
+				component={UserAwards}
+				options={{
+					tabBarLabel: 'Awards',
+					tabBarIcon: ({ color }) => <MaterialCommunityIcons name="trophy-award" color={color} size={26} />
+				}}
+			/>
+			<Tab.Screen
+				name="UserFriends"
+				component={UserFriends}
+				options={{
+					tabBarLabel: 'Friends',
+					tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-group" color={color} size={26} />
+				}}
+			/>
+		</Tab.Navigator>
+	);
 }
-
-export default UserTabs;
