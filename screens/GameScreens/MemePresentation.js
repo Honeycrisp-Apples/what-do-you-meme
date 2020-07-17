@@ -51,7 +51,7 @@ export default function MemePresentation (props){
 
 
   let [value, loading, error] = useDocument(
-    firebase.firestore().collection('game').doc(`${props.GID}`),
+    firebase.firestore().collection(`${props.gameType}`).doc(`${props.GID}`),
     // firebase.firestore().collection('game').doc(`${props.route.params.gameID}`),
     // {
     //   snapshotListenOptions: { includeMetadataChanges: true },
@@ -119,7 +119,7 @@ export default function MemePresentation (props){
 
     useEffect(()=>{
       const callMe = async () => {
-        firebase.firestore().collection('game').doc(`${props.GID}`).update({
+        firebase.firestore().collection(`${props.gameType}`).doc(`${props.GID}`).update({
           inputs: []
         })
       }

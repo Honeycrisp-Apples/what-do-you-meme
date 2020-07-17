@@ -1,7 +1,7 @@
 
 import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
 import Fire from '../../../constants/Fire';
-import { FormButton } from '../../components/Reusables';
+import { FormButton } from '../../../components/Reusables';
 import * as firebase from 'firebase';
 import { useCollection, useDocument, useDocumentOnce } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect } from 'react';
@@ -18,20 +18,19 @@ export function PartyLobby (props){
 
 
 
-  const startGame = () => {
+  const startGame = async () => {
     console.log("Hit me!!!!!!")
-    const hi = async() => {
       await firebase.firestore().collection('partyGames').doc(`${props.route.params.gameID}`)
       .update({
         playing: true
       })
-    }
-    hi().then(()=> setTimeout(()=>{
-      props.navigation.navigate("GameComp", {gameID: props.route.params.gameID})
-    }, 5000))
   }
 
-
+  if(value && value.data() && value.data().playing){
+    setTimeout(()=>{
+      props.navigation.navigate("GameComp", {gameID: props.route.params.gameID, whichGame: 'partyGames'})
+    }, 5000)
+  }
 
   if (error) {
     return <Text>Error: {JSON.stringify(error)}</Text>;
@@ -44,7 +43,7 @@ export function PartyLobby (props){
     const partyID = value.data().partyID
     console.log("Code:", partyID, "Host: ", hostID)
     return (
-      <SafeAreaView style={{backgroundColor: 'purple'}}>
+      <SafeAreaView style={{backgroundColor: 'purple', flex: 1}}>
         <Text style={{ color: 'white' }}>
         { value && value.data() && `Number of Players: ${value.data().numUsers}`}
         </Text>
@@ -85,7 +84,7 @@ export function PartyLobby (props){
         {
           (value && value.data() && value.data().numUsers > 2 && (Fire.shared.getUID() === hostID)) ? (
             <FormButton title={'start game'} colorValue={"orange"} modeValue={'contained'} onPress={() => startGame()}/>
-          ) : (<Text style={{ fontSize: 50, color: 'white', textAlign: 'center' }}>Waiting for Users....</Text>)
+          ) : (<Text style={{ fontSize: 30, color: 'white', textAlign: 'center' }}>Waiting for Users....</Text>)
         }
       </SafeAreaView>
     )

@@ -25,7 +25,7 @@ class RoundResults extends React.Component {
   //  }, 2000);
   console.log("mounted")
   // let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
-  let gameDoc = await firebase.firestore().collection('game').doc(`${this.props.GID}`).get()
+  let gameDoc = await firebase.firestore().collection(`${this.props.gameType}`).doc(`${this.props.GID}`).get()
   let accIndex = await gameDoc.data().inputs.reduce((acc, curInput, index)=>{
     // if(index === 0) { console.log("first index"); acc = index}
     if(curInput.vote > acc.maxV) { console.log("comparing indexes"); acc.maxV = curInput.vote; acc.index = index}
@@ -146,7 +146,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
   // let ID = ownProps.route.params.gameID
   let ID = ownProps.GID
-  let games = state.firestore.data.game
+  let games = (ownProps.gameType === "game") ? state.firestore.data.game : state.firestore.data.partyGames
   let game = games ? games[ID] : null
 
   return(
@@ -163,6 +163,6 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
-    { collection: 'game', doc: props.GID}
+    { collection: props.gameType, doc: props.GID}
   ])
 )(RoundResults)

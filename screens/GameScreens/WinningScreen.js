@@ -22,7 +22,7 @@ export default function WinningScreen (props) {
   const [wonMeme, setWonMeme] = useState('')
   useEffect(() =>{
     const callMe = async function (){
-      let gameDoc = await firebase.firestore().collection('game').doc(`${props.GID}`).get()
+      let gameDoc = await firebase.firestore().collection(`${props.gameType}`).doc(`${props.GID}`).get()
       setWonMeme(gameDoc.data().winningMeme)
       let theWinner = await gameDoc.data().users.reduce((acc, curUser, index)=>{
         if(index === 0) { console.log("first index"); acc = curUser}

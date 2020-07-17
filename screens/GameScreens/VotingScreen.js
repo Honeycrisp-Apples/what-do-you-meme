@@ -37,7 +37,7 @@ class VotingScreen extends React.Component {
     //handle randomization later
     console.log("index", index)
     // await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
-    await firebase.firestore().collection('game').doc(`${this.props.GID}`).get()
+    await firebase.firestore().collection(`${this.props.gameType}`).doc(`${this.props.GID}`).get()
     .then(async (query)=> {
       let gameDoc = query
       let curInputs = gameDoc.data().inputs
@@ -159,7 +159,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
   // let ID = ownProps.route.params.gameID
   let ID = ownProps.GID
-  let games = state.firestore.data.game
+  let games = (ownProps.gameType === "game") ? state.firestore.data.game : state.firestore.data.partyGames
   let game = games ? games[ID] : null
 
   return(
@@ -177,6 +177,6 @@ export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
     // { collection: 'game', doc: props.route.params.gameID}
-    { collection: 'game', doc: props.GID}
+    { collection: props.gameType, doc: props.GID}
   ])
 )(VotingScreen)

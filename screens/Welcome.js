@@ -340,8 +340,8 @@ export default function Welcome(props) {
               sliderWidth={width}
               itemWidth={width - 100}
         />
-        <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
-        <FormButton title={'join a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
+        <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => makeParty()}/>
+        <FormButton title={'join a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => props.navigation.navigate("JoinParty")}/>
         <FormButton title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
         {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}

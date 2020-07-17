@@ -92,7 +92,7 @@ class CaptionInput extends React.Component {
     // make a new input caption value
     //update gameDoc inputs array
     if(myInput.caption){
-      await firebase.firestore().collection('game').doc(`${gameID}`).update({
+      await firebase.firestore().collection(`${this.props.gameType}`).doc(`${gameID}`).update({
         inputs: firebase.firestore.FieldValue.arrayUnion(myInput)
       })
     }
@@ -200,7 +200,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
   // let ID = ownProps.route.params.gameID
   let ID = ownProps.GID
-  let games = state.firestore.data.game
+  let games = (ownProps.gameType === "game") ? state.firestore.data.game : state.firestore.data.partyGames
   let game = games ? games[ID] : null
 
   return(
@@ -217,6 +217,6 @@ export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
     // { collection: 'game', doc: props.route.params.gameID}
-    { collection: 'game', doc: props.GID}
+    { collection: props.gameType, doc: props.GID}
   ])
 )(CaptionInput)
