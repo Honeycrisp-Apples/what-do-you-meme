@@ -91,9 +91,72 @@ export default function Welcome(props) {
   const goToGame = (thing, thingID) => {
     props.navigation.navigate('GameLobby', {gameID: thingID});
   };
+  const goToParty = (thing, thingID) => {
+    props.navigation.navigate("PartyLobby", {gameID: thingID})
+  }
 
-  // console.log('game', game.data());
+  const makeParty = async () => {
+    const theUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+    const newUser = await { userId: Fire.shared.getUID(), wins: 0, wonMemes: [],
+      displayName: theUser.data().displayName, imageURL: theUser.data().imageURL, points: theUser.data().points
+    };
 
+    firebase
+      .firestore()
+      .collection('partyGames')
+      .doc()
+      .set(
+        {
+          users: [newUser],
+          currentMeme: 'https://i.imgflip.com/1w7ygt.jpg',
+          endMode: false,
+          gameId: "",
+          gameMode: 'regular',
+          gotUsers: false,
+          hostID: Fire.shared.getUID(),
+          partyID: '',
+          inputs:[],
+          numUsers: 1,
+          playing: false,
+          winningMeme: '',
+          roundMemes: [],
+          timeStamp: Fire.shared.getTime(),
+        },
+        { merge: true }
+      )
+      .then(() => {
+        firebase
+          .firestore()
+          .collection('partyGames')
+          .orderBy('timeStamp', 'desc')
+          .limit(1)
+          .get()
+          .then(async (query) => {
+            let thing2 = query.docs[0];
+
+            // await thing2.ref.update({
+            //   gameId: thing2.ref.id,
+            // });
+
+            const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+            axios.get('https://api.imgflip.com/get_memes').then((memeData) => {
+              let shuffledMemes = shuffle(memeData.data.data.memes);
+              thing2.ref.update({
+                gameId: thing2.ref.id,
+                roundMemes: [shuffledMemes[0].url,shuffledMemes[1].url,shuffledMemes[2].url],
+                winningMeme: shuffledMemes[3].url,
+                partyID: thing2.ref.id.split("").slice(0,4).join('')
+              }).catch((error) => console.log(error));});
+            return thing2;
+            // goToGame(thing2);
+          })
+          .then((thing2) => {
+            //pass the game id as well
+            goToParty(thing2, thing2.ref.id);
+            console.log('thing2', thing2);
+          });
+      });
+  }
   //visit game Id later
   const makeNewGame = (newUser, newInput) => {
     firebase
@@ -278,6 +341,7 @@ export default function Welcome(props) {
               itemWidth={width - 100}
         />
         <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
+        <FormButton title={'join a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
         <FormButton title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
         {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}

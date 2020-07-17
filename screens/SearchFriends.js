@@ -113,7 +113,8 @@ const styles = StyleSheet.create({
 		width: '100%',
 		backgroundColor: '#fff',
 		borderRadius: 8,
-		marginBottom: 40
+		marginBottom: 40,
+		color: "black"
 	},
 	results: {
 		flex: 1

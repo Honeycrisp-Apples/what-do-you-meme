@@ -30,6 +30,8 @@ import RoundResults from './screens/GameScreens/RoundResults';
 import VotingScreen from './screens/GameScreens/VotingScreen';
 import WinningScreen from './screens/GameScreens/WinningScreen';
 import Game from './screens/Game';
+import { PartyLobby } from './screens/GameScreens/privateGames/PartyLobby';
+import { JoinParty } from './screens/GameScreens/privateGames/JoinParty';
 
 //needed for react/redux/firestore connection
 import { Provider } from 'react-redux';
@@ -122,6 +124,8 @@ export default function App() {
 								component={FriendRequests}
 							/>
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
+							<Stack.Screen options={{ headerShown: false }} name="PartyLobby" component={PartyLobby} />
+							<Stack.Screen options={{ headerShown: false }} name="JoinParty" component={JoinParty} />
 							<Stack.Screen options={{ headerShown: false }} name="GameComp" component={Game} />
 							<Stack.Screen
 								options={{ headerShown: false }}
