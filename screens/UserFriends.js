@@ -50,9 +50,6 @@ export default function UserFriends({ navigation }) {
 							//find cleaner way to do this... maybe useEffect?
 							// const found = valueC.docs.filter((doc) => doc.id === friend.userId)[0];
 							// console.log('Found?:', found?.data().imageURL);
-							{
-								/* change imageurl to avatar above   ^^^^^^ */
-							}
 
 							return (
 								<View key={index} style={styles.friendCont}>

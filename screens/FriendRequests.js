@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Button, View, Image } from 'react-native';
+import { Text, Button, View, Image, ScrollView } from 'react-native';
 import { AcceptFriendRequest, DeclineFriendRequest } from '../utilities/RecieveFriendRequest';
 import Fire from '../constants/Fire';
 import firebase from 'firebase';
@@ -33,16 +33,17 @@ export default function FriendRequests({ navigation }) {
 		return <Text>Collection: Loading...</Text>;
 	} else if (value) {
 		return (
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+			<ScrollView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 				<Button title="Go to UserMain" onPress={() => navigation.navigate('UserMain')} />
 				{value && value.data() && value.data().requests && value.data().requests.length ? (
 					value.data().requests.map((req) => (
-						<View style={{ backgroundColor: 'blue', width: '100%' }}>
+						<View style={{ backgroundColor: 'blue', width: '100%' }} key={req.userID}>
 							<Image
 								source={{ uri: req.picture }}
 								style={{
 									width: '100%',
-									height: 300
+									height: 300,
+									marginVertical: 10
 								}}
 								resizeMode="cover"
 							/>
@@ -54,7 +55,7 @@ export default function FriendRequests({ navigation }) {
 				) : (
 					<Text>There are no requests</Text>
 				)}
-			</View>
+			</ScrollView>
 		);
 	}
 }

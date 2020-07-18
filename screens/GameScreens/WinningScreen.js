@@ -7,6 +7,7 @@ import * as firebase from 'firebase';
 
 import  { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import SendFriendRequests from '../../utilities/SendFriendRequest';
 
 export default function WinningScreen (props) {
   // constructor(props){
@@ -115,6 +116,22 @@ export default function WinningScreen (props) {
             </>
             ): null
           }
+          {
+            (winner && (winner.userId !== Fire.shared.getUID())) ? (
+              <IconButton
+              icon="account-plus"
+              size={20}
+              color="white"
+              onPress={async () => {
+                let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+                let user = await firebase.firestore().collection('users').doc(`${winner.userId}`).get()
+                await SendFriendRequests(user, currentUser)
+                alert("Friend request sent!")
+              }}
+              />
+            )
+            : null
+          }
         </View>
         <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>PRIZED MEME: </Text>
         <View style={{alignItems: 'center', width: 300, alignSelf:'center'}}>
@@ -144,7 +161,12 @@ export default function WinningScreen (props) {
                 icon="account-plus"
                 size={20}
                 color="white"
-                onPress={() => alert("Functionaility not available yet.")}
+                onPress={async () => {
+                  let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+                  let user = await firebase.firestore().collection('users').doc(`${player.userId}`).get()
+                  await SendFriendRequests(user, currentUser)
+                  alert("Friend request sent!")
+                }}
                 />
               </View>
             )
