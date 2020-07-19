@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, Image, StyleSheet, Button } from 'react-native';
 import Fire from '../../constants/Fire';
 import { FormButton } from '../../components/Reusables';
 import {IconButton} from 'react-native-paper'
@@ -80,6 +80,7 @@ export default function WinningScreen (props) {
     //   }
     // }
     return(
+      <View style={{flex: 1, backgroundColor: 'rgb(0, 122, 255)'}}>
       <SafeAreaView style={styles.winResults}>
        {
        (winner && winner.userId) ? (
@@ -103,7 +104,7 @@ export default function WinningScreen (props) {
             />
        ): null
           }
-        <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>WINNER!!!</Text>
+        <Text style={{fontFamily: 'FredokaOne_400Regular' ,fontSize: 50, color: 'white', textAlign: 'center'}}>WINNER!!!</Text>
         <View style={{backgroundColor: 'orange', height: 200, width: 200, borderRadius: 100, alignSelf: 'center', justifyContent: "center", alignItems: "center" }}>
           {
             (winner && winner.imageURL && winner.displayName)?(
@@ -120,7 +121,7 @@ export default function WinningScreen (props) {
             (winner && (winner.userId !== Fire.shared.getUID())) ? (
               <IconButton
               icon="account-plus"
-              size={20}
+              size={40}
               color="white"
               onPress={async () => {
                 let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
@@ -133,7 +134,7 @@ export default function WinningScreen (props) {
             : null
           }
         </View>
-        <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>PRIZED MEME: </Text>
+        <Text style={{fontFamily: 'FredokaOne_400Regular' , fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>PRIZED MEME: </Text>
         <View style={{alignItems: 'center', width: 300, alignSelf:'center'}}>
           {
             (theMeme && theMeme.length) ? (
@@ -152,7 +153,7 @@ export default function WinningScreen (props) {
           losers.map((player)=>{
             return(
               <View key={player.userId}
-              style={{height: 140, width: 140, backgroundColor: "darkred", alignItems: 'center', borderRadius: 70, justifyContent: 'center'}}>
+              style={{height: 100, width: 100, backgroundColor: "white", flexDirection: "row", alignItems: 'center', width: "100%", justifyContent: 'center', marginVertical: 5}}>
                 <Image
                 style={styles.img}
                 source={{uri: `${player.imageURL}`}}
@@ -160,7 +161,7 @@ export default function WinningScreen (props) {
                 <IconButton
                 icon="account-plus"
                 size={20}
-                color="white"
+                color="blue"
                 onPress={async () => {
                   let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
                   let user = await firebase.firestore().collection('users').doc(`${player.userId}`).get()
@@ -168,6 +169,7 @@ export default function WinningScreen (props) {
                   alert("Friend request sent!")
                 }}
                 />
+                <Button title={'add friend'}></Button>
               </View>
             )
           })
@@ -176,6 +178,7 @@ export default function WinningScreen (props) {
       </View>
         {/* <FormButton title={'game lobby'} style={{marginTop: 'auto'}} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/> */}
       </SafeAreaView>
+      </View>
     )
   }
 // }
@@ -183,7 +186,7 @@ export default function WinningScreen (props) {
 const styles = StyleSheet.create({
   winResults:{
     flex: 1,
-    backgroundColor: 'gold'
+    // backgroundColor: 'blue'
   },
   memeimg:{
     width: 200,
@@ -201,7 +204,7 @@ const styles = StyleSheet.create({
   },
   players:{
     marginTop: 30,
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'center'
   },
 });

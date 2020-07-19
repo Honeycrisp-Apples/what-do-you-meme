@@ -129,10 +129,10 @@ export default function GameLobby(props) {
        {/* { game && `Number of Players: ${game.numUsers}`} */}
        { value && value.data() && `Number of Players: ${value.data().numUsers}`}
       </Text>
-      <Text style={{ fontSize: 50, color: 'white', textAlign: 'center' }}>
+      <Text style={{ fontFamily: 'FredokaOne_400Regular', fontSize: 50, color: 'white', textAlign: 'center' }}>
         Game Lobby!
       </Text>
-      <Text style={{ fontSize: 20, color: 'white', textAlign: 'center' }}>
+      <Text style={{fontFamily: 'FredokaOne_400Regular', fontSize: 20, color: 'white', textAlign: 'center' }}>
         {/* {
         game &&
         game.playing ? "Starting Game!" : "Waiting for Memers..."

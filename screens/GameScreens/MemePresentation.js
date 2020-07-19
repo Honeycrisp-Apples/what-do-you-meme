@@ -151,7 +151,7 @@ export default function MemePresentation (props){
       const {roundMeme} = props
     return(
     <SafeAreaView style={{backgroundColor: 'darkred', flex:1}}>
-      <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND 1</Text>
+      <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND {`${props.roundNum}`}</Text>
       <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>Here we go...</Text>
       <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
         {

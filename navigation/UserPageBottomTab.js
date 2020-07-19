@@ -19,7 +19,9 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function UserTabs() {
 	return (
-		<Tab.Navigator activeColor="white" style={{ backgroundColor: 'white' }}>
+		<Tab.Navigator activeColor="white" style={{ backgroundColor: 'white' }}
+		// barStyle={{ backgroundColor: '#694fad' }}
+		>
 			<Tab.Screen
 				name="UserMain"
 				component={UserMain}

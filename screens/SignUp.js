@@ -95,7 +95,7 @@ export default class SignUp extends React.Component{
         <ScrollView  contentContainerStyle={styles.card}
         // onPress={Keyboard.dismiss}
         >
-        <Text style={{fontSize: 24, color: 'white', alignSelf: 'center'}}>Create An Account</Text>
+        <Text style={{fontSize: 50, color: 'white', alignSelf: 'center', fontFamily: "FredokaOne_400Regular", textAlign: 'center' }}>CREATE AN ACCOUNT</Text>
           <FormInput
           // style={styles.inputs}
           modeValue="outlined"
@@ -138,13 +138,15 @@ export default class SignUp extends React.Component{
           <FormButton
           title="SIGNUP"
           modeValue="contained"
+          colorValue={'blue'}
           onPress={() => this.signin()}
           />
            <FormButton
           title="login here"
           uppercase={true}
+          colorValue={'white'}
           modeValue="text"
-          onPress={() => this.props.navigation.navigate('Login')}
+          onPress={() => this.props.navigation.navigate('Intro')}
           />
         </ScrollView>
       </SafeAreaView>
@@ -155,9 +157,10 @@ export default class SignUp extends React.Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: 'blue'
   },
   card: {
+    backgroundColor: 'rgba(0,0,139, 0.7)',
     margin: 10,
     flex: 1,
     justifyContent: "center"

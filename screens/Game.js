@@ -96,6 +96,7 @@ export default class Game extends React.Component {
   render() {
     const {gameID, whichGame} = this.props.route.params
     const roundMeme = this.state.curMeme
+    const roundNum = this.state.rounds
     // if(this.state.screen === 0){
     //   this.clearInputs(gameID)
     // }
@@ -108,7 +109,7 @@ export default class Game extends React.Component {
         //   <GameLobby />
         // ) :
         this.state.screen === 0 ? (
-          <MemePresentation roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
+          <MemePresentation  roundNum={roundNum} roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 1 ? (
           <CaptionInput roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 2 ? (

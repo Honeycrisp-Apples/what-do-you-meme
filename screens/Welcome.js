@@ -40,7 +40,7 @@ export default function Welcome(props) {
   const data = [
     { title: "Best Caption", link: "GameLobby", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"},
     { title: "Ultimate Memer", link: "", image:"https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"},
-    { title: "More Game Modes Coming Soon", link: "", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
+    { title: "More Game Modes Coming Soon", link: "", image:"https://images.unsplash.com/photo-1505744768106-34d8c47a1327?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
   ]
 
   const _renderItem = ({item, index}) => {
@@ -59,7 +59,7 @@ export default function Welcome(props) {
           style={styles.image} source={{uri: item.image}}
           imageStyle={{opacity:0.5, borderRadius: 3}}
           >
-          <Text style={{fontSize: 30, textAlign: 'center' , color: 'white'}}>{((item.title)|| "Hi there").toUpperCase()}</Text>
+          <Text style={{fontSize: 30, textAlign: 'center' , color: 'white', fontFamily: 'FredokaOne_400Regular'}}>{((item.title)|| "Hi there").toUpperCase()}</Text>
           </ImageBackground>
         </Card>
     );
@@ -309,7 +309,7 @@ export default function Welcome(props) {
               <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
               }
 
-              <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS: {`${userData.data().points}`}</Text>
+              <Text style={{fontSize: 15, marginLeft: 'auto', marginRight: 10,}}>MEMER POINTS: {`${userData.data().points}`}</Text>
 
         </TouchableOpacity>
 
@@ -333,16 +333,24 @@ export default function Welcome(props) {
             </Card>
           </ScrollView>
         </View> */}
+        <View style={{marginBottom: 20}}>
+
         <Carousel
+        layout={'default'}
               // ref={(c) => { this._carousel = c; }}
               data={data}
               renderItem={_renderItem}
               sliderWidth={width}
               itemWidth={width - 100}
         />
-        <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => makeParty()}/>
-        <FormButton title={'join a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => props.navigation.navigate("JoinParty")}/>
-        <FormButton title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
+        </View>
+        <View style={{marginTop: 'auto', marginBottom: 20}}>
+
+        <FormButton title={'create a room'} colorValue={"purple"} modeValue={'contained'} onPress={() => makeParty()}/>
+        <FormButton title={'join a room'} colorValue={"blue"} modeValue={'contained'} onPress={() => props.navigation.navigate("JoinParty")}/>
+        <FormButton  title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
+        <FormButton  title={'temp'} colorValue={"yellow"} modeValue={'contained'} onPress={() => props.navigation.navigate("GameLobby", {gameID: "e7Xp0HYrHEIxKBLOXYr8"})}/>
+        </View>
         {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}
         {/* <Button
@@ -366,14 +374,14 @@ export default function Welcome(props) {
 const styles = StyleSheet.create({
   welcome:{
     flex: 1,
-    backgroundColor: 'darkred'
+    backgroundColor: '#f1f1f1'
 
   },
   scrollContainer: {
     height,
   },
   card: {
-    backgroundColor: 'black',
+    backgroundColor: 'blue',
     width: width - 100,
     height: height,
     // marginLeft: 25,
@@ -391,12 +399,21 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   userimg:{
     borderRadius: 50/2,
     borderWidth: 3,
-    borderColor: 'darkred',
+    borderColor: 'blue',
     width: 50,
     height:50
   },
