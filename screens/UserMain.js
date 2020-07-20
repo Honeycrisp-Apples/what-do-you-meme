@@ -79,7 +79,7 @@ export default function UserMain({ navigation }) {
 							</View>
 
 							<View style={styles.nameCont}>
-								<Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>
+								<Text style={{ fontSize: 30, marginBottom: 5, fontWeight: 'bold', color: 'white' }}>
 									{value.data().displayName.toUpperCase()}
 								</Text>
 								<Text style={{ fontSize: 16, fontFamily: 'FredokaOne_400Regular', color: 'white' }}>{`MEMER POINTS: ${value.data().points}`}</Text>

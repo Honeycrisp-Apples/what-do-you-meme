@@ -56,7 +56,8 @@ class VotingScreen extends React.Component {
     // if(!navigation.isFocused()) {return null}
     const curUser = Fire.shared.getUID()
     return (
-      <SafeAreaView style={{flex:1, backgroundColor: 'darkred'}}>
+      <View style={{flex:1, backgroundColor: 'darkred'}}>
+      <SafeAreaView style={{flex:1}}>
         { (roundMeme && roundMeme.length) ? (
 
           //end of conditional is wrapped around this....
@@ -73,15 +74,17 @@ class VotingScreen extends React.Component {
           </View> */}
           {
               this.state.voted ? (
-              <View>
-                <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>You&apos;ve casted your vote!! Good luck!</Text>
-                <Text style={{fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
+              <View style={{flex: 1, backgroundColor: 'darkred'}}>
+                <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 50, color: 'white', textAlign: 'center'}}>You&apos;ve casted your vote!! Good luck!</Text>
+                <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
               </View>
               ) : (
                 <>
-              <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>Cast Your Vote!</Text>
-              <Text style={{fontSize: 20, color: 'white', textAlign: 'center', fontWeight: 'bold'}}>Which Is A Better Caption?</Text>
-              <Text style={{fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
+                <View style={styles.startVote}>
+                  <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 50, color: 'white', textAlign: 'center'}}>Cast Your Vote!</Text>
+                  <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 20, color: 'white', textAlign: 'center', fontWeight: 'bold'}}>Which Is A Better Caption?</Text>
+                  <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
+                  </View>
                 <View>
                   {/* <Text>Hi there!</Text> */}
                 {
@@ -91,13 +94,14 @@ class VotingScreen extends React.Component {
                     return(
                       <View key={ind} style={styles.captionToVote}>
                         <View style={{marginLeft: 5, flex: 1}}>
-                          <Text style={{fontSize: 20, textAlign: 'center'}}>Caption: {input.caption}</Text>
+                          <Text style={{fontSize: 20, textAlign: 'center'}}>{input.caption}</Text>
                           {/* <TouchableOpacity title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
                           onPress={()=> alert("Feature not developed yet.")}
                           >
                             <Text style={{color: 'white', }}>vote</Text>
                           </TouchableOpacity> */}
-                          <FormButton title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
+                          <FormButton title={"vote"} mode={'contained'} color={'darkred'}
+                          style={styles.votebtn}
                           onPress={async ()=> await this.handleVote(ind)}
                           />
                         </View>
@@ -120,6 +124,7 @@ class VotingScreen extends React.Component {
         ) : null
         }
       </SafeAreaView>
+      </View>
     )
   }
 }
@@ -153,6 +158,13 @@ const styles = StyleSheet.create({
     // backgroundColor: "rgba(255,0,0,0.3)"
     // opacity: 0.7
   },
+  startVote: {
+    // flexDirection: 'row',
+    backgroundColor: 'darkred',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10
+  }
 });
 
 const mapStateToProps = (state, ownProps) => {

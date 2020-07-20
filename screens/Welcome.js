@@ -1,5 +1,5 @@
-import React from 'react';
-import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground, Alert, TouchableHighlight, TouchableOpacity } from 'react-native';
 import Fire from '../constants/Fire';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase';
@@ -8,8 +8,9 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { Card } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import {FormButton} from '../components/Reusables'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+// import { TouchableOpacity } from 'react-native-gesture-handler';
 import {LoadingMemer} from './LoadingMemer'
+import {CustomAlert} from './CustomAlerts'
 
 import axios from 'axios'
 // type Props = {
@@ -20,10 +21,12 @@ import axios from 'axios'
 //   user: any,
 //   ready: boolean
 // }
-const { width } = Dimensions.get('window');
-const height = width * 0.8;
+const { width, height } = Dimensions.get('window');
+const height2 = width * 0.8;
 
 export default function Welcome(props) {
+  const [master, setMaster] = useState(false)
+  const [notYet, setNotYet] = useState(false)
   // state = {
   //   // user: this.props.navigation.state.params.username
   //   user: Fire.shared.getUser(),
@@ -40,8 +43,8 @@ export default function Welcome(props) {
 
   const data = [
     { title: "Best Caption", link: "GameLobby", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"},
-    { title: "Ultimate Memer", link: "", image:"https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"},
-    { title: "More Game Modes Coming Soon", link: "", image:"https://images.unsplash.com/photo-1505744768106-34d8c47a1327?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
+    { title: "Ultimate Memer", link: "masterOpen", image:"https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"},
+    { title: "More Game Modes Coming Soon", link: "notYetOpen", image:"https://images.unsplash.com/photo-1505744768106-34d8c47a1327?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
   ]
 
   const _renderItem = ({item, index}) => {
@@ -51,8 +54,10 @@ export default function Welcome(props) {
         // </View>
         <Card style={styles.card}
          onPress={()=> {
-           if(item.link) return addUserToGame()
-           else {return alert("New Game Mode Coming Soon")}
+           if(item.link === "GameLobby") return addUserToGame()
+          //  else {return Alert.alert("Not A Master Memer!","You must earn more memes to unlock!")}
+          else if(item.link === 'masterOpen') return setMaster("flex")
+          else if (item.link === "notYetOpen") return setNotYet("flex")
          }
         }
         >
@@ -296,6 +301,7 @@ export default function Welcome(props) {
   if (user && userData) {
     console.log("userData:", userData.data())
     return (
+      <View style={styles.welcome}>
       <SafeAreaView style={styles.welcome}>
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
@@ -366,8 +372,37 @@ export default function Welcome(props) {
           title={'To Game'}
           onPress={() => props.navigation.navigate('GameLobby')}
         ></Button> */}
+        {
+          master ? (
+            <TouchableOpacity
+            style={{position: 'absolute',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: height,
+            width: width}}
+            onPress={()=> setMaster(false)}>
+              <CustomAlert visible={master} title={"Not A Master Memer!"} message={"You have to play more games and earn more memes to unlock."}/>
+            </TouchableOpacity>
+          ): null
+        }
 
+        {
+        notYet ? (
+          <TouchableOpacity
+            style={{position: 'absolute',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: height,
+            width: width}}
+            onPress={()=> setNotYet(false)}>
+          <CustomAlert visible={notYet} title={"Coming Soon!"} message={"There's so many games that are coming your way!"}/>
+          </TouchableOpacity>
+        ): null
+        }
       </SafeAreaView>
+      </View>
     );
   }
   // return <Text>Umm... how?</Text>;
@@ -381,12 +416,12 @@ const styles = StyleSheet.create({
 
   },
   scrollContainer: {
-    height,
+    height: height2,
   },
   card: {
     backgroundColor: 'blue',
     width: width - 100,
-    height: height,
+    height: height2,
     // marginLeft: 25,
     // marginRight: 25
     // backgroundColor: 'blue',
@@ -423,7 +458,7 @@ const styles = StyleSheet.create({
   image: {
     borderRadius: 5,
     width: width - 100,
-    height: height,
+    height: height2,
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",

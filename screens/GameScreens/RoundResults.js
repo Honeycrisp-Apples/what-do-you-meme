@@ -61,8 +61,9 @@ class RoundResults extends React.Component {
 
     return (
       <SafeAreaView style={styles.roundResults}>
-        <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND RESULTS</Text>
-        <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>The Winning Meme is...</Text>
+        <Text style={{fontFamily: 'FredokaOne_400Regular', fontSize: 40, color: 'white', textAlign: 'center'}}>ROUND RESULTS</Text>
+        <Text style={{fontFamily: 'FredokaOne_400Regular', fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>The Winning Meme is...</Text>
+        <View style={{justifyContent: 'flex-end' ,alignItems: 'center', backgroundColor: 'lightblue', padding: 20, marginBottom: 10}}>
         <View style={{display:this.state.winMemeCap, alignItems: 'center', width: 300, alignSelf:'center'}}>
           {(roundMeme && roundMeme.length) ? (
             <Image
@@ -74,13 +75,14 @@ class RoundResults extends React.Component {
           <View style={{backgroundColor: 'white', width: '100%'}}>
             {
               (gameInputs && gameInputs.length && gameInputs[this.state.winningIndex]) ? (
-                <Text style={{textAlign: 'center'}}>{gameInputs[this.state.winningIndex].caption}</Text>
+                <Text style={{textAlign: 'center', fontSize: 20}}>{gameInputs[this.state.winningIndex].caption}</Text>
               ) : (null)
             }
           </View>
         </View>
-        <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>Round Memer: </Text>
-        <View style={{display: this.state.winMemer, backgroundColor: 'gold', height: 200, width: 200, borderRadius: 100, alignSelf: 'center', justifyContent: "center", alignItems: "center" }}>
+        </View>
+        {/* <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>Memer: </Text> */}
+        <View style={{display: this.state.winMemer, backgroundColor: 'lightblue', height: 200, width: 200, borderRadius: 100, alignSelf: 'center', justifyContent: "center", alignItems: "center" }}>
           {
             (gameUsers && gameUsers.length && gameInputs && gameInputs) ? (
             <>
@@ -98,7 +100,9 @@ class RoundResults extends React.Component {
                           style={styles.img}
                           source={{uri: user.imageURL}}
                         />
-                        <Text key={user.userId + "M"} style={{color: 'white'}}>{user.displayName.toUpperCase()}</Text>
+                        <View style={{ marginTop: 10, height: 30, paddingHorizontal: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center'}}>
+                        <Text key={user.userId + "M"} style={{color: 'blue'}}>{user.displayName.toUpperCase()}</Text>
+                        </View>
                       </>
                       )
                     }
@@ -129,14 +133,14 @@ const styles = StyleSheet.create({
     width: 300,
     height:350,
     resizeMode: 'contain',
-    borderWidth: 3,
-    borderColor: 'orange',
+    // borderWidth: 3,
+    // borderColor: 'orange',
   },
   img:{
     margin: 5,
     borderRadius: 100/2,
     borderWidth: 3,
-    borderColor: 'darkred',
+    borderColor: 'white',
     width: 100,
     height:100
   }

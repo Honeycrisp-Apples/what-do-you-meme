@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {View, SafeAreaView, Text, StyleSheet} from 'react-native'
+import {View, SafeAreaView, Text, StyleSheet, Image} from 'react-native'
 
 
 export function Honey (props){
@@ -11,6 +11,16 @@ export function Honey (props){
   return(
     <View style={styles.main}>
       <SafeAreaView style={styles.safe}>
+        <Image
+          source={require('../assets/images/logo_fill.png')}
+          style={
+            {
+              height: 100,
+              width: 100,
+              alignSelf: 'center'
+            }
+          }
+        />
         <Text style={styles.text}>HONEY</Text>
         <Text style={styles.text}>CRISP</Text>
         <Text style={styles.text}>GAMES</Text>

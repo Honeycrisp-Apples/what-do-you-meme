@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, Image, StyleSheet, Button } from 'react-native';
+import { SafeAreaView, View, Text, Image, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
 import Fire from '../../constants/Fire';
 import { FormButton } from '../../components/Reusables';
 import {IconButton} from 'react-native-paper'
@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import  { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import SendFriendRequests from '../../utilities/SendFriendRequest';
-
+import {CustomAlert} from '../CustomAlerts'
 export default function WinningScreen (props) {
   // constructor(props){
   //   super(props)
@@ -17,6 +17,9 @@ export default function WinningScreen (props) {
   //     players: []
   //   }
   // }
+
+  const [friReq, setFriReq] = useState(false)
+  const { width, height } = Dimensions.get('window');
   const navigation = useNavigation();
   const [winningUser, setWinUser] = useState({})
   const [players, setPlayers] = useState([])
@@ -110,10 +113,18 @@ export default function WinningScreen (props) {
             (winner && winner.imageURL && winner.displayName)?(
               <>
             <Image
-            style={styles.img}
+            style={{
+              margin: 5,
+              borderRadius: 100/2,
+              borderWidth: 3,
+              borderColor: 'blue',
+              width: 100,
+              height:100}}
             source={{uri: winner.imageURL}}
             />
-            <Text style={{color: 'white'}}>{winner.displayName || "HI"}</Text>
+            <View style={{ marginTop: 5, height: 30, paddingHorizontal: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center'}}>
+            <Text style={{color: 'blue', fontSize: 20}}>{winner.displayName || "HI"}</Text>
+            </View>
             </>
             ): null
           }
@@ -127,14 +138,16 @@ export default function WinningScreen (props) {
                 let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
                 let user = await firebase.firestore().collection('users').doc(`${winner.userId}`).get()
                 await SendFriendRequests(user, currentUser)
-                alert("Friend request sent!")
+
+                setFriReq(true)
+                // alert("Friend request sent!")
               }}
               />
             )
             : null
           }
-        </View>
-        <Text style={{fontFamily: 'FredokaOne_400Regular' , fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>PRIZED MEME: </Text>
+        </View >
+        <Text style={{marginTop: 20,fontFamily: 'FredokaOne_400Regular' , fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>PRIZED MEME: </Text>
         <View style={{alignItems: 'center', width: 300, alignSelf:'center'}}>
           {
             (theMeme && theMeme.length) ? (
@@ -153,31 +166,50 @@ export default function WinningScreen (props) {
           losers.map((player)=>{
             return(
               <View key={player.userId}
-              style={{height: 100, width: 100, backgroundColor: "white", flexDirection: "row", alignItems: 'center', width: "100%", justifyContent: 'center', marginVertical: 5}}>
+              style={{height: 100, width: 100, backgroundColor: "white", flexDirection: "row", alignItems: 'center', width: "100%", justifyContent: 'center'}}>
                 <Image
                 style={styles.img}
                 source={{uri: `${player.imageURL}`}}
                 />
-                <IconButton
-                icon="account-plus"
-                size={20}
-                color="blue"
-                onPress={async () => {
-                  let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
-                  let user = await firebase.firestore().collection('users').doc(`${player.userId}`).get()
-                  await SendFriendRequests(user, currentUser)
-                  alert("Friend request sent!")
-                }}
-                />
-                <Button title={'add friend'}></Button>
+                {
+                  (player.userId !== Fire.shared.getUID())?
+                  (<IconButton
+                      icon="account-plus"
+                      size={20}
+                      color="blue"
+                      onPress={async () => {
+                        let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+                        let user = await firebase.firestore().collection('users').doc(`${player.userId}`).get()
+                        await SendFriendRequests(user, currentUser)
+                        setFriReq(true)
+                        // alert("Friend request sent!")
+                      }}
+                      />) : null
+                }
+                <Text style={{fontSize: 20, color: 'blue'}}>{player.displayName}</Text>
               </View>
             )
           })
           ): null
         }
+
       </View>
         {/* <FormButton title={'game lobby'} style={{marginTop: 'auto'}} colorValue={'white'} modeValue={'contained'} onPress={()=> this.props.navigation.navigate("GameLobby")}/> */}
       </SafeAreaView>
+      {
+          friReq ? (
+            <TouchableOpacity
+            style={{position: 'absolute',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: height,
+            width: width}}
+            onPress={()=> setFriReq(false)}>
+              <CustomAlert visible={true} title={"Friend Request Sent!"} message={"Look at you being all social!"}/>
+            </TouchableOpacity>
+          ): null
+        }
       </View>
     )
   }
@@ -198,12 +230,12 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 100/2,
     borderWidth: 3,
-    borderColor: 'darkred',
+    borderColor: 'blue',
     width: 70,
     height:70
   },
   players:{
-    marginTop: 30,
+    marginTop: 10,
     // flexDirection: 'row',
     justifyContent: 'center'
   },

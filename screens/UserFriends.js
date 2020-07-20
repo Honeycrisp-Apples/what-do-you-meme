@@ -44,13 +44,14 @@ export default function UserFriends({ navigation }) {
 	} else if (value) {
 		return (
 			<SafeAreaView style={{flex: 1}}>
-				<View style={{backgroundColor: 'rgb(0, 122, 255)',
-		padding: 20,
-		borderRadius: 20,
-		flexDirection: 'row',
-		justifyContent: 'flex-start',
-		margin: 20}}>
-					<Text style={{ fontFamily: 'FredokaOne_400Regular' , color: 'white', fontSize: 50, textAlign: 'center'}}>YOUR FRIENDS</Text>
+				<View
+				style={{backgroundColor: 'rgb(0, 122, 255)',
+				padding: 20,
+				borderRadius: 20,
+				flexDirection: 'row',
+				justifyContent: 'flex-start',
+				margin: 20, marginTop: 0}}>
+					<Text style={{width: '100%', fontFamily: 'FredokaOne_400Regular' , color: 'white', fontSize: 50, textAlign: 'center'}}>YOUR FRIENDS</Text>
 				</View>
 				<ScrollView contentContainerStyle={styles.friends}>
 					{value.data().friends.length && valueC ? (

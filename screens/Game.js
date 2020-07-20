@@ -58,7 +58,7 @@ export default class Game extends React.Component {
     } else {
       switch (this.state.screen) {
         case 0:
-          this.setState({ screen: this.state.screen + 1, timer: 35000 });
+          this.setState({ screen: this.state.screen + 1, timer: 15 });
           break;
         case 1:
           this.setState({ screen: this.state.screen + 1, timer: 15 });
@@ -69,12 +69,12 @@ export default class Game extends React.Component {
         case 2:
           this.setState({
             screen: this.state.screen + 1,
-            timer: 15,
+            timer: 10,
             rounds: this.state.rounds + 1,
           });
           break;
         case 3:
-          if (this.state.rounds === 3) {
+          if (this.state.rounds === 1) {
             this.setState({
               screen: this.state.screen + 1,
               timer: 0,
