@@ -58,7 +58,7 @@ export default class Game extends React.Component {
     } else {
       switch (this.state.screen) {
         case 0:
-          this.setState({ screen: this.state.screen + 1, timer: 35 });
+          this.setState({ screen: this.state.screen + 1, timer: 35000 });
           break;
         case 1:
           this.setState({ screen: this.state.screen + 1, timer: 15 });

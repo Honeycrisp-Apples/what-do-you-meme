@@ -45,6 +45,7 @@ import 'firebase/firestore';
 import { decode, encode } from 'base-64';
 import { Intro } from './screens/Intro';
 import {Honey} from './screens/Honey'
+import {LoadingMemer} from './screens/LoadingMemer'
 import {
   useFonts,
   FredokaOne_400Regular,
@@ -130,7 +131,8 @@ export default function App() {
 
 
 	if (loading) {
-		return <Text>Initialising User...</Text>;
+		// return <Text>Initialising User...</Text>;
+		return <LoadingMemer/>
 	}
 	if (error) {
 		return <Text>Error: {error}</Text>;
@@ -145,6 +147,7 @@ export default function App() {
 							{/* <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
 							<Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} /> */}
 							<Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
+							<Stack.Screen options={{ headerShown: false }} name="LoadingMemer" component={LoadingMemer} />
 							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
 							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
 							<Stack.Screen options={{ headerShown: false }} name="PickAvatar" component={PickAvatar} />
@@ -199,6 +202,7 @@ export default function App() {
 				<ReactReduxFirebaseProvider {...rrfProps}>
 					<NavigationContainer>
 						<LoginStack.Navigator>
+							{/* <LoginStack.Screen options={{ headerShown: false }} name="LoadingMemer" component={LoadingMemer} /> */}
 							<LoginStack.Screen options={{ headerShown: false }} name="Honey" component={Honey} />
 							<LoginStack.Screen options={{ headerShown: false }} name="Intro" component={Intro} />
 							{/* <LoginStack.Screen options={{ headerShown: false }} name="Login" component={Login} /> */}

@@ -9,6 +9,7 @@ import { Card } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import {FormButton} from '../components/Reusables'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {LoadingMemer} from './LoadingMemer'
 
 import axios from 'axios'
 // type Props = {
@@ -286,7 +287,8 @@ export default function Welcome(props) {
   const [userData, userL, userE] = useDocument(firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`))
 
   if (loading) {
-    return <Text>I'm loading</Text>;
+    // return <Text>I'm loading</Text>;
+    return <LoadingMemer/>
   }
   if (error) {
     return <Text>You Messed Up!!</Text>;
@@ -368,7 +370,8 @@ export default function Welcome(props) {
       </SafeAreaView>
     );
   }
-  return <Text>Umm... how?</Text>;
+  // return <Text>Umm... how?</Text>;
+  return <LoadingMemer/>
   // }
 }
 const styles = StyleSheet.create({

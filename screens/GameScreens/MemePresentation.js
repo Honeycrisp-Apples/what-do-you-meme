@@ -150,10 +150,11 @@ export default function MemePresentation (props){
       // clearInputs(props.GID)
       const {roundMeme} = props
     return(
-    <SafeAreaView style={{backgroundColor: 'darkred', flex:1}}>
-      <Text style={{fontSize: 50, color: 'white', textAlign: 'center'}}>ROUND {`${props.roundNum}`}</Text>
-      <Text style={{fontSize: 20, color: 'white', textAlign: 'center', marginBottom: 10}}>Here we go...</Text>
-      <View style={{justifyContent: 'flex-end' ,alignItems: 'center'}}>
+      <View style={{flex: 1, backgroundColor: 'lightblue'}}>
+    <SafeAreaView style={{ flex:1}}>
+      <Text style={{fontFamily: 'FredokaOne_400Regular', fontSize: 50, color: 'blue', textAlign: 'center', padding: 10}}>ROUND {`${props.roundNum}`}</Text>
+      <Text style={{fontFamily: 'FredokaOne_400Regular', fontSize: 30, color: 'white', textAlign: 'center', marginBottom: 20}}>Here we go!</Text>
+      <View style={{justifyContent: 'flex-end' ,alignItems: 'center', backgroundColor: 'blue', padding: 20}}>
         {
         // roundMeme && roundMeme.length &&
         // value && value.data() && value.data().currentMeme && value.data().currentMeme.length &&
@@ -185,7 +186,9 @@ export default function MemePresentation (props){
                     style={styles.img}
                     source={{uri:`${user.imageURL}`}}
                     />
-                    <Text style={{fontSize: 20, color: 'white'}}>{`${user.displayName}` || "Mario"}</Text>
+                    <View style={{ marginTop: 10, height: 30, paddingHorizontal: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center'}}>
+                      <Text style={{fontSize: 20, color: 'blue'}}>{`${user.displayName}` || "Mario"}</Text>
+                    </View>
                   </View>
                 )
               }
@@ -195,6 +198,7 @@ export default function MemePresentation (props){
       </View>
       {/* <FormButton title={'next page'} colorValue={'white'} modeValue={'contained'} onPress={()=>props.navigation.navigate('CaptionInput', {gameID: props.route.params.gameID})}/> */}
     </SafeAreaView>
+      </View>
     )
   }
   return <Text style={{fontSize: 50}}>Hello, MP</Text>
@@ -218,7 +222,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 100/2,
     borderWidth: 3,
-    borderColor: 'darkred',
+    borderColor: 'blue',
     width: 100,
     height:100
   }
