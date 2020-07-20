@@ -94,7 +94,7 @@ class VotingScreen extends React.Component {
                     return(
                       <View key={ind} style={styles.captionToVote}>
                         <View style={{marginLeft: 5, flex: 1}}>
-                          <Text style={{fontSize: 20, textAlign: 'center'}}>{input.caption}</Text>
+                          <Text style={{fontSize: 20, textAlign: 'center'}}>Caption: {input.caption}</Text>
                           {/* <TouchableOpacity title={"vote"} mode={'contained'} color={'darkred'} style={styles.votebtn}
                           onPress={()=> alert("Feature not developed yet.")}
                           >
@@ -160,6 +160,9 @@ const styles = StyleSheet.create({
   },
   startVote: {
     // flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'darkred',
     margin: 10,
     padding: 10,

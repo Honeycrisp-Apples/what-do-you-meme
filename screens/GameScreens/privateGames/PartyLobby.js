@@ -8,15 +8,13 @@ import React, { useState, useEffect } from 'react';
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {firestoreConnect} from 'react-redux-firebase'
-
+import {IconButton} from 'react-native-paper'
 
 export function PartyLobby (props){
 
   const [value, loading, error] = useDocument(
     firebase.firestore().collection('partyGames').doc(`${props.route.params.gameID}`)
   );
-
-
 
   const startGame = async () => {
     console.log("Hit me!!!!!!")
@@ -48,9 +46,29 @@ export function PartyLobby (props){
           source={{uri: "https://images.pexels.com/photos/936048/pexels-photo-936048.jpeg?cs=srgb&dl=five-women-laughing-936048.jpg&fm=jpg://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}}
           imageStyle={{opacity:0.3}}>
       <SafeAreaView style={{ flex: 1}}>
-        <Text style={{ color: 'white' }}>
-        {/* { value && value.data() && `Number of Players: ${value.data().numUsers}`} */}
-        </Text>
+        {/* {
+          (hostID === Fire.shared.getUID()) ? (
+              <IconButton
+							style={{
+								marginLeft: 'auto',
+								// position: 'absolute',
+								// top: 10,
+								// right: 10,
+								// zIndex: 1
+							}}
+							icon="close-circle"
+							size={36}
+							color="white"
+							onPress={async() => {
+                props.navigation.goBack().then(()=>firebase.firestore().collection('partyGames').doc(`${props.route.params.gameID}`).delete())
+              }}
+						/>
+          ) : null
+
+        } */}
+        {/* <Text style={{ color: 'white' }}>
+        { value && value.data() && `Number of Players: ${value.data().numUsers}`}
+        </Text> */}
         <Text style={{ fontSize: 50, color: 'white', textAlign: 'center', fontFamily: "FredokaOne_400Regular", }}>
           Party Lobby!
         </Text>
@@ -92,7 +110,10 @@ export function PartyLobby (props){
         {
           (value && value.data() && value.data().numUsers > 2 && (Fire.shared.getUID() === hostID)) ? (
             <FormButton title={'start game'} colorValue={"rgb(0,122,255)"} modeValue={'contained'} onPress={() => startGame()}/>
-          ) : (<Text style={{ fontSize: 30, color: 'white', textAlign: 'center', fontFamily: "FredokaOne_400Regular", }}>Waiting for Users....</Text>)
+          ) : (
+          // <Text style={{ fontSize: 30, color: 'white', textAlign: 'center', fontFamily: "FredokaOne_400Regular", }}>Waiting for Memers....</Text>
+          null
+          )
         }
         </View>
       </SafeAreaView>

@@ -132,7 +132,7 @@ export default function WinningScreen (props) {
             (winner && (winner.userId !== Fire.shared.getUID())) ? (
               <IconButton
               icon="account-plus"
-              size={40}
+              size={20}
               color="white"
               onPress={async () => {
                 let currentUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()

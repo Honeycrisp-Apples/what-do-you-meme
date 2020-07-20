@@ -3,7 +3,7 @@ import {FormButton, FormInput} from '../../../components/Reusables'
 import {SafeAreaView, View, Text, Image, StyleSheet} from 'react-native';
 import firebase from 'firebase'
 import Fire from "../../../constants/Fire"
-
+import {IconButton} from 'react-native-paper'
 export function JoinParty(props){
  const [code, setCode] = useState("")
 
@@ -28,15 +28,28 @@ export function JoinParty(props){
     return response
   }
   return(
-    <View>
-      <SafeAreaView>
-        <Text>Enter the Room Code Here!</Text>
+    <View style={{flex: 1, backgroundColor: '#694fad', justifyContent: 'center' }}>
+      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+      <IconButton
+							style={{
+								marginLeft: 'auto',
+								position: 'absolute',
+								top: 10,
+								right: 10,
+								zIndex: 1
+							}}
+							icon="close-circle"
+							size={36}
+							color="white"
+							onPress={() => props.navigation.goBack()}
+						/>
+        <Text style={{color: 'white', fontFamily: 'FredokaOne_400Regular', textAlign: 'center', fontSize: 40, marginHorizontal: 24}}>Enter the Room Code Here!</Text>
         <FormInput
         labelName={'ROOM CODE'}
         value={code}
         onChangeText={(codeValue)=> setCode(codeValue)}
         />
-        <FormButton title={"Find Room"} onPress={
+        <FormButton title={"Find Room"} colorValue={'white'} modeValue={"contained"} onPress={
           async () => {
             //logic to find room
             console.log("Code: ", code)

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Button, View, Image, ScrollView } from 'react-native';
+import { Text, Button, View, Image, ScrollView,  TouchableHighlight  } from 'react-native';
 import { AcceptFriendRequest, DeclineFriendRequest } from '../utilities/RecieveFriendRequest';
 import Fire from '../constants/Fire';
 import firebase from 'firebase';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { LoadingMemer } from './LoadingMemer';
 import { FormButton } from '../components/Reusables';
-import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
+import { TouchableOpacity,} from 'react-native-gesture-handler';
 
 export default function FriendRequests({ navigation }) {
 	// const [ me, setme ] = useState();
@@ -56,7 +56,11 @@ export default function FriendRequests({ navigation }) {
 							</View>
 							<View style={{flex: 1, height: '100%'}}>
 								<Text style={{fontSize: 30, color: 'white', textAlign: 'center', width: '100%', marginTop: 'auto', marginBottom: 'auto'}}>{req.name}</Text>
-								<TouchableHighlight style={{backgroundColor: 'green', marginHorizontal: 5, borderRadius: 10, marginBottom: 5}} title={'Accept'} modeValue={'contained'} colorValue={'green'} onPress={() => AcceptFriendRequest(req, value)}><Text style={{fontSize: 20, textAlign: 'center', color: 'white', paddingVertical: 5, }}>Accept</Text></TouchableHighlight>
+
+								<Button style={{backgroundColor: 'green', marginHorizontal: 5, borderRadius: 10, marginBottom: 5}} title={'Accept'} modeValue={'contained'} colorValue={'green'} onPress={() => AcceptFriendRequest(req, value)}>
+									<Text style={{fontSize: 20, textAlign: 'center', color: 'white', paddingVertical: 5, }}>Accept</Text>
+									</Button>
+
 								<TouchableHighlight style={{backgroundColor: 'white', marginHorizontal: 5, borderRadius: 10, marginBottom: 5}} title={'Decline'} modeValue={'contained'} colorValue={'white'} onPress={() => DeclineFriendRequest(req, value)}>
 								<Text style={{fontSize: 20, textAlign: 'center', color: 'black', paddingVertical: 5, }}>Decline</Text>
 								</TouchableHighlight>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground, Alert, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Fire from '../constants/Fire';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase';
@@ -301,8 +301,10 @@ export default function Welcome(props) {
   if (user && userData) {
     console.log("userData:", userData.data())
     return (
-      <View style={styles.welcome}>
-      <SafeAreaView style={styles.welcome}>
+      <KeyboardAvoidingView style={styles.welcome} behavior={Platform.OS == "ios" ? "padding" : "height"}
+      // keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
+      >
+      {/* <SafeAreaView style={styles.welcome}> */}
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
         >
@@ -357,7 +359,7 @@ export default function Welcome(props) {
         <FormButton title={'create a room'} colorValue={"purple"} modeValue={'contained'} onPress={() => makeParty()}/>
         <FormButton title={'join a room'} colorValue={"blue"} modeValue={'contained'} onPress={() => props.navigation.navigate("JoinParty")}/>
         <FormButton  title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
-        <FormButton  title={'temp'} colorValue={"yellow"} modeValue={'contained'} onPress={() => props.navigation.navigate("GameLobby", {gameID: "e7Xp0HYrHEIxKBLOXYr8"})}/>
+        {/* <FormButton  title={'temp'} colorValue={"yellow"} modeValue={'contained'} onPress={() => props.navigation.navigate("GameLobby", {gameID: "e7Xp0HYrHEIxKBLOXYr8"})}/> */}
         </View>
         {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}
@@ -401,8 +403,8 @@ export default function Welcome(props) {
           </TouchableOpacity>
         ): null
         }
-      </SafeAreaView>
-      </View>
+      {/* </SafeAreaView> */}
+      </KeyboardAvoidingView>
     );
   }
   // return <Text>Umm... how?</Text>;
@@ -412,11 +414,12 @@ export default function Welcome(props) {
 const styles = StyleSheet.create({
   welcome:{
     flex: 1,
-    backgroundColor: '#f1f1f1'
-
+    backgroundColor: '#f1f1f1',
+    justifyContent: 'flex-end'
   },
   scrollContainer: {
     height: height2,
+
   },
   card: {
     backgroundColor: 'blue',
