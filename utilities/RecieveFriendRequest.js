@@ -2,20 +2,26 @@ import React from 'react';
 import firebase from 'firebase';
 
 export async function AcceptFriendRequest(request, currentUser) {
-	// let newFriend = {
-	// 	userId: request.userID,
-	// 	imageURL: request.picture,
-	// 	displayName: request.name
-	// };
-
-	let newFriend = await firebase.firestore().collection('users').doc(`${request.userID}`).get();
-	await currentUser.ref.update({
-		friends: firebase.firestore.FieldValue.arrayUnion(newFriend.data())
+	let newFriend = {
+		userId: request.userID,
+		imageURL: request.picture,
+		displayName: request.name
+	};
+	let current = {}
+	if(currentUser.data()){
+		current = {
+			userId: currentUser.ref.id,
+			imageURL: currentUser.data().imageURL,
+			displayName: currentUser.data().displayName
+		}
+	}
+	console.log("Current:", current)
+	await firebase.firestore().collection('users').doc(`${request.userID}`).update({
+		friends: firebase.firestore.FieldValue.arrayUnion(current)
 	});
-	await newFriend.ref.update({
-		friends: firebase.firestore.FieldValue.arrayUnion(currentUser.data())
-	});
+	console.log("Hit me!")
 	await currentUser.ref.update({
+		friends: firebase.firestore.FieldValue.arrayUnion(newFriend),
 		requests: firebase.firestore.FieldValue.arrayRemove(request)
 	});
 }

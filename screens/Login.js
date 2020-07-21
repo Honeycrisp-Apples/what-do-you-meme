@@ -75,48 +75,35 @@ export default class Login extends React.Component{
         <View style={styles.overlay}></View>
         <ScrollView onPress={Keyboard.dismiss} contentContainerStyle={{height: '100%', flexGrow: 1, justifyContent: 'center', zIndex: 5
       }}>
-          <Text style={{fontSize: 24, color: 'white', alignSelf: 'center'}}>Welcome Back!</Text>
-          <FormInput
-          // style={styles.inputs}
-          labelName={'EMAIL'}
-          // placeholder={'EMAIL'}
-          // placeholderTextColor= 'green'
-          // label={'email'}
-          // name='email'
-          // borderColor={'blue'}
-          value={this.state.email}
-          onChangeText={(email)=> this.setState({email})}
-          />
-          <FormInput
-          // style={styles.inputs}
-          labelName={'PASSWORD'}
-          secureTextEntry={true}
-          value={this.state.password}
-          onChangeText={(password)=> this.setState({password})}
-          />
-          <FormButton
-          title="Login"
-          modeValue='contained'
-          // disabled
-          // colorValue={'orange'}
-          uppercase={true}
-          onPress={() => this.loggin()}
-          />
-          <FormButton
-          title="Signup Here"
-          modeValue='text'
-          colorValue={'white'}
-          uppercase={true}
-          onPress={() => this.props.navigation.navigate("SignUp")}
-          />
-          <FormButton
-          title="Meme API"
-          modeValue='contained'
-          // colorValue={''}
-          // theme={{colors: {text: 'white', primary: 'darkred'}}}
-          uppercase={true}
-          onPress={() => this.props.navigation.navigate("Memes")}
-          />
+          <Text style={{ fontFamily: 'FredokaOne_400Regular' , alignSelf: 'center', color: 'white', fontSize: 100, textAlign: 'center',}}>MEMER</Text>
+          <Card style={styles.card}>
+            <Text style={{fontSize: 30, color: 'white', alignSelf: 'center', fontFamily: "FredokaOne_400Regular", marginBottom: 30}}>WELCOME BACK</Text>
+            <FormInput
+            labelName={'EMAIL'}
+            value={this.state.email}
+            onChangeText={(email)=> this.setState({email})}
+            />
+            <FormInput
+            labelName={'PASSWORD'}
+            secureTextEntry={true}
+            value={this.state.password}
+            onChangeText={(password)=> this.setState({password})}
+            />
+            <FormButton
+            title="Login"
+            modeValue='contained'
+            colorValue={'blue'}
+            uppercase={true}
+            onPress={() => this.loggin()}
+            />
+            <FormButton
+            title="Signup Here"
+            modeValue='text'
+            colorValue={'white'}
+            uppercase={true}
+            onPress={() => this.props.navigation.navigate("SignUp")}
+            />
+          </Card>
         </ScrollView>
       </SafeAreaView>
     )
@@ -135,7 +122,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     // zIndex: 7,
-    backgroundColor: 'rgba(255,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,255,0.3)',
     height: height,
     position: "absolute",
     top: 0,
@@ -149,13 +136,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   card: {
-    // backgroundColor: 'blue',
-    height: '100%',
+    backgroundColor: 'rgba(0,0,139, 0.7)',
+    // height: '100%',
     margin: 10,
+    paddingVertical: 40
     // flex: 1,
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "flex-end"
+    // flexGrow: 1,
+    // justifyContent: "center",
+    // alignItems: "flex-end"
   },
   inputs: {
     backgroundColor: "white",

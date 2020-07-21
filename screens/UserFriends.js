@@ -43,16 +43,22 @@ export default function UserFriends({ navigation }) {
 		return <Text>Collection: Loading...</Text>;
 	} else if (value) {
 		return (
-			<SafeAreaView>
+			<SafeAreaView style={{flex: 1}}>
+				<View
+				style={{backgroundColor: 'rgb(0, 122, 255)',
+				padding: 20,
+				borderRadius: 20,
+				flexDirection: 'row',
+				justifyContent: 'flex-start',
+				margin: 20, marginTop: 0}}>
+					<Text style={{width: '100%', fontFamily: 'FredokaOne_400Regular' , color: 'white', fontSize: 50, textAlign: 'center'}}>YOUR FRIENDS</Text>
+				</View>
 				<ScrollView contentContainerStyle={styles.friends}>
 					{value.data().friends.length && valueC ? (
 						value.data().friends.map((friend, index) => {
 							//find cleaner way to do this... maybe useEffect?
 							// const found = valueC.docs.filter((doc) => doc.id === friend.userId)[0];
 							// console.log('Found?:', found?.data().imageURL);
-							{
-								/* change imageurl to avatar above   ^^^^^^ */
-							}
 
 							return (
 								<View key={index} style={styles.friendCont}>
@@ -62,82 +68,42 @@ export default function UserFriends({ navigation }) {
 										source={{ uri: `${friend.imageURL}` }}
 									/>
 									{/* change imageurl to avatar above ^^^^^^ */}
+									<View style={{ marginTop: 10, height: 30, paddingHorizontal: 5, borderRadius: 5, backgroundColor: 'blue'}}>
 
 									<Text
 										style={{
 											marginTop: 5,
-											color: 'orange',
+											color: 'white',
 											textAlign: 'center'
 										}}
-									>
+										>
 										{`${friend.displayName}`}
 									</Text>
+										</View>
 								</View>
 							);
 						})
 					) : (
-						<Text>Such a sad and lonely road... Let&apos;s change that!</Text>
+						// <View>
+
+							<Text style={{fontFamily: 'FredokaOne_400Regular' , color: '#c1c1c1', fontSize: 40, textAlign: 'center'}}>Such a sad and lonely road... Let&apos;s change that by playing some games!</Text>
+					//  </View>
 					)}
-					{/* <View style={styles.friendCont}>
-              <Image
-              style={styles.img}
-              source={require('../assets/images/icon.png')}
-              />
-              <Text style={{marginTop: 5, color: 'orange'}}>FRIEND NAME</Text>
-            </View>
-            <View style={styles.friendCont}>
-              <Image
-              style={styles.img}
-              source={require('../assets/images/icon.png')}
-              />
-              <Text style={{marginTop: 5, color: 'orange'}}>FRIEND NAME</Text>
-            </View>
-            <View style={styles.friendCont}>
-              <Image
-              style={styles.img}
-              source={require('../assets/images/icon.png')}
-              />
-              <Text style={{marginTop: 5, color: 'orange'}}>FRIEND NAME</Text>
-            </View>
-            <View style={styles.friendCont}>
-              <Image
-              style={styles.img}
-              source={require('../assets/images/icon.png')}
-              />
-              <Text style={{marginTop: 5, color: 'orange'}}>FRIEND NAME</Text>
-            </View>
-            <View style={styles.friendCont}>
-              <Image
-              style={styles.img}
-              source={require('../assets/images/icon.png')}
-              />
-              <Text style={{marginTop: 5, color: 'orange'}}>FRIEND NAME</Text>
-            </View> */}
 				</ScrollView>
-				<FormButton
+				{/* <FormButton
 					modeValue={'contained'}
 					title={'Search for Friends!'}
 					onPress={() => navigation.navigate('SearchFriends')}
-				/>
+				/> */}
+				<View style={{marginTop: "auto"}}>
+
 				<FormButton
+					colorValue={"blue"}
 					modeValue={'contained'}
 					title={'Check for Friend Requests'}
 					onPress={() => navigation.navigate('FriendRequests')}
 				/>
-				{/* <FormButton
-          modeValue={'contained'}
-          title={'To UserMain'}
-          onPress={()=> this.props.navigation.navigate("UserMain")}
-          />
-          <FormButton
-          modeValue={'contained'}
-          title={'To Awards'}
-          onPress={()=> this.props.navigation.navigate("UserAwards")}
-          /> */}
-				{/* <Button
-          title={'To Friends'}
-          onPress={()=> this.props.navigation.navigate("UserFriends")}
-          ></Button> */}
+				</View>
 			</SafeAreaView>
 		);
 	}

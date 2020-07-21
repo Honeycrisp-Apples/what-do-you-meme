@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useState} from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import firebase, { storage } from 'firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -30,6 +30,8 @@ import RoundResults from './screens/GameScreens/RoundResults';
 import VotingScreen from './screens/GameScreens/VotingScreen';
 import WinningScreen from './screens/GameScreens/WinningScreen';
 import Game from './screens/Game';
+import { PartyLobby } from './screens/GameScreens/privateGames/PartyLobby';
+import { JoinParty } from './screens/GameScreens/privateGames/JoinParty';
 
 //needed for react/redux/firestore connection
 import { Provider } from 'react-redux';
@@ -41,6 +43,20 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { decode, encode } from 'base-64';
+import { Intro } from './screens/Intro';
+import {Honey} from './screens/Honey'
+import {LoadingMemer} from './screens/LoadingMemer'
+import {
+  useFonts,
+  FredokaOne_400Regular,
+  // ZillaSlabHighlight_700Bold,
+} from '@expo-google-fonts/dev';
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+
+
+
+
 if (!global.btoa) {
 	global.btoa = encode;
 }
@@ -48,6 +64,13 @@ if (!global.btoa) {
 if (!global.atob) {
 	global.atob = decode;
 }
+
+const fetchFonts = () => {
+	return Font.loadAsync({
+		'FredokaOne_400Regular': require('./assets/fonts/FredokaOne-Regular.ttf'),
+		'ZillaSlabHighlight_700Bold': require('./assets/fonts/ZillaSlabHighlight-Bold.ttf'),
+	});
+};
 
 //function defining normal stack and function defining tab stack and combine those
 //V4 bottom stack navigation
@@ -62,6 +85,10 @@ export default function App() {
 		dispatch: store.dispatch,
 		createFirestoreInstance // <- needed if using firestore
 	};
+
+	const [dataLoaded, setDataLoaded] = useState(false)
+
+
 
 	const [ user, loading, error ] = useAuthState(firebase.auth());
 	// const isLoadingComplete = useCachedResources();
@@ -92,8 +119,21 @@ export default function App() {
 	// 	SignUp: { screen: SignUp },
 	// 	Welcome: { screen: Welcome }
 	// });
+
+	if(!dataLoaded){
+		return (
+			<AppLoading
+				startAsync={fetchFonts}
+				onFinish={()=> setDataLoaded(true)}
+			/>
+		)
+	}
+
+
+
 	if (loading) {
-		return <Text>Initialising User...</Text>;
+		// return <Text>Initialising User...</Text>;
+		return <LoadingMemer/>
 	}
 	if (error) {
 		return <Text>Error: {error}</Text>;
@@ -108,6 +148,7 @@ export default function App() {
 							{/* <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
 							<Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} /> */}
 							<Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
+							<Stack.Screen options={{ headerShown: false }} name="LoadingMemer" component={LoadingMemer} />
 							<Stack.Screen options={{ headerShown: false }} name="Memes" component={Memes} />
 							<Stack.Screen options={{ headerShown: false }} name="UserPages" component={UserTabs} />
 							<Stack.Screen options={{ headerShown: false }} name="PickAvatar" component={PickAvatar} />
@@ -122,6 +163,8 @@ export default function App() {
 								component={FriendRequests}
 							/>
 							<Stack.Screen options={{ headerShown: false }} name="GameLobby" component={GameLobby} />
+							<Stack.Screen options={{ headerShown: false }} name="PartyLobby" component={PartyLobby} />
+							<Stack.Screen options={{ headerShown: false }} name="JoinParty" component={JoinParty} />
 							<Stack.Screen options={{ headerShown: false }} name="GameComp" component={Game} />
 							<Stack.Screen
 								options={{ headerShown: false }}
@@ -160,7 +203,10 @@ export default function App() {
 				<ReactReduxFirebaseProvider {...rrfProps}>
 					<NavigationContainer>
 						<LoginStack.Navigator>
-							<LoginStack.Screen options={{ headerShown: false }} name="Login" component={Login} />
+							{/* <LoginStack.Screen options={{ headerShown: false }} name="LoadingMemer" component={LoadingMemer} /> */}
+							<LoginStack.Screen options={{ headerShown: false }} name="Honey" component={Honey} />
+							<LoginStack.Screen options={{ headerShown: false }} name="Intro" component={Intro} />
+							{/* <LoginStack.Screen options={{ headerShown: false }} name="Login" component={Login} /> */}
 							<LoginStack.Screen options={{ headerShown: false }} name="SignUp" component={SignUp} />
 						</LoginStack.Navigator>
 					</NavigationContainer>
@@ -190,3 +236,4 @@ export default function App() {
 	// console.log('this is the logic:', logic());
 	// return logic();
 }
+// }

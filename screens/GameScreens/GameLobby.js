@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native';
 import Fire from '../../constants/Fire';
 import { FormButton } from '../../components/Reusables';
 import * as firebase from 'firebase';
@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {firestoreConnect} from 'react-redux-firebase'
+const { width, height } = Dimensions.get('window');
 
 export default function GameLobby(props) {
   const { navigation, route, gameUsers, game } = props
@@ -85,7 +86,7 @@ export default function GameLobby(props) {
   const startGame = () => {
     // game.playing = true
     // navigation.navigate("MemePresentation", {gameID: route.params.gameID})
-    navigation.navigate("GameComp", {gameID: route.params.gameID})
+    navigation.navigate("GameComp", {gameID: route.params.gameID, whichGame: 'game'})
   }
   // if(game && game.numUsers === 2){
     if(value && value.data() && value.data().numUsers === 3){
@@ -124,15 +125,19 @@ export default function GameLobby(props) {
   } else if (value) {
     console.log('value', value.data());
   return (
+    <View style={{backgroundColor: 'blue', flex: 1}}>
+      <ImageBackground style={styles.image}
+          source={{uri: "https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}}
+          imageStyle={{opacity:0.5}}>
     <SafeAreaView style={styles.lobby}>
       <Text style={{ color: 'white' }}>
        {/* { game && `Number of Players: ${game.numUsers}`} */}
-       { value && value.data() && `Number of Players: ${value.data().numUsers}`}
+       {/* { value && value.data() && `Number of Players: ${value.data().numUsers}`} */}
       </Text>
-      <Text style={{ fontSize: 50, color: 'white', textAlign: 'center' }}>
+      <Text style={{ fontFamily: 'FredokaOne_400Regular', fontSize: 50, color: 'white', textAlign: 'center' }}>
         Game Lobby!
       </Text>
-      <Text style={{ fontSize: 20, color: 'white', textAlign: 'center' }}>
+      <Text style={{fontFamily: 'FredokaOne_400Regular', fontSize: 20, color: 'white', textAlign: 'center' }}>
         {/* {
         game &&
         game.playing ? "Starting Game!" : "Waiting for Memers..."
@@ -156,9 +161,9 @@ export default function GameLobby(props) {
                   uri: `${user.imageURL}`
                 }}
               />
-              <View style={{ marginLeft: 5 }}>
-                <Text style={{ fontSize: 20 }}>{user.displayName}</Text>
-                <Text style={{ fontSize: 10 }}>MEMER POINTS: {user.points}</Text>
+              <View style={{ marginLeft: 20, flex: 1 }}>
+                <Text style={{ fontSize: 30 }}>{user.displayName}</Text>
+                <Text style={{ fontSize: 15 , color: 'blue'}}>MEMER POINTS: {user.points}</Text>
               </View>
             </View>
           )
@@ -178,6 +183,8 @@ export default function GameLobby(props) {
         onPress={() => navigation.navigate('MemePresentation')}
       /> */}
     </SafeAreaView>
+    </ImageBackground>
+    </View>
   );
 }
 return <Text style={{fontSize: 50}}>Hello, GL</Text>
@@ -186,7 +193,7 @@ return <Text style={{fontSize: 50}}>Hello, GL</Text>
 const styles = StyleSheet.create({
   lobby: {
     flex: 1,
-    backgroundColor: 'blue',
+    // backgroundColor: 'blue',
   },
   user: {
     flexDirection: 'row',
@@ -194,13 +201,24 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 10,
+
+    height: height * .25,
+    alignItems: 'center',
+    opacity: 0.9
   },
   userimg: {
-    borderRadius: 50 / 2,
+    borderRadius: 50,
     borderWidth: 3,
-    borderColor: 'darkred',
-    width: 50,
-    height: 50,
+    borderColor: 'blue',
+    width: 100,
+    height: 100,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    // backgroundColor: "rgba(255,0,0,0.3)"
+    // opacity: 0.7
   },
 });
 

@@ -92,7 +92,7 @@ class CaptionInput extends React.Component {
     // make a new input caption value
     //update gameDoc inputs array
     if(myInput.caption){
-      await firebase.firestore().collection('game').doc(`${gameID}`).update({
+      await firebase.firestore().collection(`${this.props.gameType}`).doc(`${gameID}`).update({
         inputs: firebase.firestore.FieldValue.arrayUnion(myInput)
       })
     }
@@ -130,11 +130,15 @@ class CaptionInput extends React.Component {
     const {roundMeme} = this.props
     // if(!navigation.isFocused()) {return null}
       return(
+        <View style={{flex: 1, backgroundColor: 'blue'}}>
+
+
         <SafeAreaView style={styles.panel}>
           <ScrollView contentContainerStyle={styles.panel} onPress={Keyboard.dismiss}>
 
-          <Text style={{fontSize: 45, color: 'white', textAlign: 'center', marginVertical: 10}}>MAKE YOUR CAPTION</Text>
-          <View style={{justifyContent: 'flex-end' ,alignItems: 'center', marginBottom: 10}}>
+          <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 45, color: 'white', textAlign: 'center', marginVertical: 10}}>MAKE YOUR CAPTION</Text>
+          <View style={{justifyContent: 'flex-end' ,alignItems: 'center', backgroundColor: 'lightblue', padding: 20, marginBottom: 10}}>
+          <View style={{justifyContent: 'flex-end' ,alignItems: 'center', width: "100%"}}>
             {
               (roundMeme && roundMeme.length) ? (
                 <Image
@@ -146,7 +150,9 @@ class CaptionInput extends React.Component {
             <View style={{position: 'absolute', width: 300, height: 350, backgroundColor: 'rgba(249,166,2,0.5)', borderWidth: 3, borderColor: 'orange'}}>
               <Text style={{color: 'white', fontSize: 30, textAlign: 'center'}}>{(this.state.caption) || ""}</Text>
             </View>
-            <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
+
+          </View>
+          <View style={{display:`${this.state.display}` ,position: 'absolute',alignSelf: "flex-end",flexDirection: 'row', justifyContent:'flex-end' ,alignItems: 'center'}}>
               <View style={{backgroundColor:"gold", height: 80, width: 80, borderRadius: 40, justifyContent:'center', marginRight: 50}}>
               <Text style={{color: 'white', textAlign: 'center', fontSize: 25}}>{this.state.count}</Text>
               </View>
@@ -170,6 +176,7 @@ class CaptionInput extends React.Component {
           {/* <Text>Time before page change: {this.state.count}</Text> */}
           </ScrollView>
         </SafeAreaView>
+        </View>
       )
   }
 }
@@ -177,7 +184,7 @@ class CaptionInput extends React.Component {
 const styles = StyleSheet.create({
   panel:{
     flex: 1,
-    backgroundColor: 'darkred'
+    // backgroundColor: 'darkred'
   },
   memeimg:{
     width: 300,
@@ -200,7 +207,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("Here's the state from redux: ", state)
   // let ID = ownProps.route.params.gameID
   let ID = ownProps.GID
-  let games = state.firestore.data.game
+  let games = (ownProps.gameType === "game") ? state.firestore.data.game : state.firestore.data.partyGames
   let game = games ? games[ID] : null
 
   return(
@@ -217,6 +224,6 @@ export default compose(
   connect(mapStateToProps),
   firestoreConnect((props) => [
     // { collection: 'game', doc: props.route.params.gameID}
-    { collection: 'game', doc: props.GID}
+    { collection: props.gameType, doc: props.GID}
   ])
 )(CaptionInput)

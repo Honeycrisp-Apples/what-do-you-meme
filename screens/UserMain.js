@@ -36,35 +36,41 @@ export default function UserMain({ navigation }) {
 		return <Text>Collection: Loading...</Text>;
 	} else if (value) {
 		return (
+			<View style={{backgroundColor: 'rgb(0, 122, 255)', flex: 1}}>
+
+
 			<SafeAreaView style={styles.background}>
-				<ScrollView contentContainerStyle={{ flex: 1 }}>
 					<Card style={styles.card}>
+				<ScrollView contentContainerStyle={{ flex: 1 }}>
 						<IconButton
 							style={{
 								marginLeft: 'auto',
 								position: 'absolute',
 								top: 10,
-								right: 0,
+								right: 10,
 								zIndex: 1
 							}}
 							icon="close-circle"
 							size={36}
-							color="orange"
+							color="white"
 							onPress={() => navigation.navigate('Welcome')}
 						/>
 						<View style={styles.topPart}>
 							<View style={styles.imgCont}>
-								<Image style={styles.img} source={{ uri: `${value.data().avatar}` }} />
+								<Image style={styles.img} source={{ uri: `${value.data().imageURL}` }} />
 								{/* change imageurl to avatar above                       ^^^^^^ */}
 								<TouchableOpacity
 									style={{ marginTop: 5 }}
-									onPress={() => navigation.navigate('PickAvatar')}
+									onPress={() => (
+										alert("Functionality not available yet.")
+										// navigation.navigate('PickAvatar')
+										)}
 								>
 									<Text
 										style={{
 											fontSize: 10,
 											textAlign: 'center',
-											color: 'darkred'
+											color: 'white'
 										}}
 									>
 										Change Picture
@@ -73,10 +79,10 @@ export default function UserMain({ navigation }) {
 							</View>
 
 							<View style={styles.nameCont}>
-								<Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+								<Text style={{ fontSize: 30, marginBottom: 5, fontWeight: 'bold', color: 'white' }}>
 									{value.data().displayName.toUpperCase()}
 								</Text>
-								<Text style={{ fontSize: 16 }}>{`Memer Points: ${value.data().points}`}</Text>
+								<Text style={{ fontSize: 16, fontFamily: 'FredokaOne_400Regular', color: 'white' }}>{`MEMER POINTS: ${value.data().points}`}</Text>
 							</View>
 						</View>
 
@@ -95,7 +101,7 @@ export default function UserMain({ navigation }) {
             }}
           /> */}
 							<View style={styles.underlined}>
-								<Text style={{ fontSize: 16, marginBottom: 3 }}>Earned Memes: </Text>
+								<Text style={{ fontSize: 20, marginBottom: 3, fontFamily: 'FredokaOne_400Regular' , color: 'rgb(0,122,255)'}}>EARNED MEMES: </Text>
 							</View>
 
 							<View style={styles.memeCont}>
@@ -106,7 +112,7 @@ export default function UserMain({ navigation }) {
 											<Image key={index} style={styles.memes} source={{ uri: meme }} />
 										))
 								) : (
-									<Text>You gotta start playing some games!</Text>
+									<Text style={{ marginTop: 50, fontFamily: 'FredokaOne_400Regular' , color: '#c1c1c1', fontSize: 40, textAlign: 'center'}}>You gotta start playing some games!</Text>
 								)}
 
 								{/* <Image
@@ -143,9 +149,10 @@ export default function UserMain({ navigation }) {
               modeValue={'contained'}
               onPress={() => this.props.navigation.navigate('Welcome')}
             />*/}
-					</Card>
 				</ScrollView>
+					</Card>
 			</SafeAreaView>
+			</View>
 		);
 	}
 }
@@ -159,19 +166,22 @@ export default function UserMain({ navigation }) {
 
 const styles = StyleSheet.create({
 	background: {
-		backgroundColor: 'darkred',
+		// backgroundColor: 'darkred',
 		flex: 1
 	},
 	card: {
-		marginTop: 20,
+		// marginTop: 20,
 		// marginTop: 50,
-		marginHorizontal: 5,
+		// marginHorizontal: 5,
 		// borderTopEndRadius: 10,
 		flex: 1,
 		flexGrow: 1
 	},
 	topPart: {
 		// flex:1,
+		backgroundColor: 'rgb(0, 122, 255)',
+		padding: 20,
+		borderRadius: 20,
 		flexDirection: 'row',
 		justifyContent: 'flex-start',
 		margin: 20
@@ -182,7 +192,7 @@ const styles = StyleSheet.create({
 	img: {
 		borderRadius: 100 / 2,
 		borderWidth: 3,
-		borderColor: 'darkred',
+		borderColor: 'white',
 		width: 100,
 		height: 100
 	},
@@ -194,7 +204,7 @@ const styles = StyleSheet.create({
 	underlined: {
 		// borderWidth: 10,
 		// height: 50,
-		borderBottomColor: 'darkred',
+		borderBottomColor: 'blue',
 		// borderEndWidth: 10,
 		borderBottomWidth: 3,
 		marginHorizontal: 24

@@ -2,10 +2,22 @@ import React from 'react';
 import { StyleSheet, Dimensions, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import Textarea from 'react-native-textarea'
+import {
+  useFonts,
+  FredokaOne_400Regular,
+  ZillaSlabHighlight_700Bold,
+} from '@expo-google-fonts/dev';
 
 const { width, height } = Dimensions.get('screen');
 
 export function FormInput({ labelName, ...rest }) {
+  let [fontsLoaded] = useFonts({
+    FredokaOne_400Regular,
+    ZillaSlabHighlight_700Bold,
+  });
+  if (!fontsLoaded) {
+    return null
+  } else {
   return (
     <TextInput
       label={labelName}
@@ -15,27 +27,38 @@ export function FormInput({ labelName, ...rest }) {
       // numberOfLines={4}
       mode={'flat'}
       // mode={'outlined'}
-      selectionColor={'darkred'}
-      underlineColor={'darkred'}
-      theme={{colors: {primary: 'red'}}}
+      // fontFamily={'FredokaOne_400Regular'}
+      selectionColor={'blue'}
+      underlineColor={'blue'}
+      theme={{colors: {primary: 'blue'}}}
       // outline={false}
       {...rest}
     />
   );
+  }
 }
 
 export function FormButton({ title, modeValue, colorValue='darkred', ...rest }) {
-  return (
-    <Button
+  // let [fontsLoaded] = useFonts({
+  //   FredokaOne_400Regular,
+  //   ZillaSlabHighlight_700Bold,
+  // });
+  // if (!fontsLoaded) {
+  //   return null
+  // } else {
+    return (
+      <Button
       mode={modeValue}
       {...rest}
       style={styles.button}
       contentStyle={styles.buttonContainer}
       color={colorValue}
-    >
+      labelStyle={styles.buttonText}
+      >
       {title}
-    </Button>
-  );
+      </Button>
+    );
+  // }
 }
 
 export function FormTextArea({ labelName, modeValue, ...rest }) {
@@ -67,6 +90,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     textAlignVertical: 'top',
     backgroundColor: '#fff',
+    fontFamily: "FredokaOne_400Regular"
     // color: 'darkred'
   },
   textarea:{
@@ -77,6 +101,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button: {
+    borderWidth: 3,
+    borderColor: 'white',
     marginTop: 10,
     // backgroundColor: 'darkred',
     marginHorizontal: 24
@@ -89,5 +115,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'darkred',
     color: 'white'
     // height: 24
+  },
+  buttonText:{
+    fontFamily: "FredokaOne_400Regular"
   }
 });

@@ -1,5 +1,6 @@
-import React from 'react';
-import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Fire from '../constants/Fire';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase';
@@ -8,7 +9,9 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { Card } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import {FormButton} from '../components/Reusables'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+// import { TouchableOpacity } from 'react-native-gesture-handler';
+import {LoadingMemer} from './LoadingMemer'
+import {CustomAlert} from './CustomAlerts'
 
 import axios from 'axios'
 // type Props = {
@@ -19,10 +22,12 @@ import axios from 'axios'
 //   user: any,
 //   ready: boolean
 // }
-const { width } = Dimensions.get('window');
-const height = width * 0.8;
+const { width, height } = Dimensions.get('window');
+const height2 = width * 0.8;
 
 export default function Welcome(props) {
+  const [master, setMaster] = useState(false)
+  const [notYet, setNotYet] = useState(false)
   // state = {
   //   // user: this.props.navigation.state.params.username
   //   user: Fire.shared.getUser(),
@@ -39,8 +44,8 @@ export default function Welcome(props) {
 
   const data = [
     { title: "Best Caption", link: "GameLobby", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"},
-    { title: "Ultimate Memer", link: "", image:"https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"},
-    { title: "More Game Modes Coming Soon", link: "", image:"https://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
+    { title: "Ultimate Memer", link: "masterOpen", image:"https://vignette.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png/revision/latest?cb=20150206140125"},
+    { title: "More Game Modes Coming Soon", link: "notYetOpen", image:"https://images.unsplash.com/photo-1505744768106-34d8c47a1327?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80://tedideas.files.wordpress.com/2015/03/science_of_laughter_sophie_scott_ted.jpg?w=1200"}
   ]
 
   const _renderItem = ({item, index}) => {
@@ -50,8 +55,10 @@ export default function Welcome(props) {
         // </View>
         <Card style={styles.card}
          onPress={()=> {
-           if(item.link) return addUserToGame()
-           else {return alert("New Game Mode Coming Soon")}
+           if(item.link === "GameLobby") return addUserToGame()
+          //  else {return Alert.alert("Not A Master Memer!","You must earn more memes to unlock!")}
+          else if(item.link === 'masterOpen') return setMaster("flex")
+          else if (item.link === "notYetOpen") return setNotYet("flex")
          }
         }
         >
@@ -59,7 +66,7 @@ export default function Welcome(props) {
           style={styles.image} source={{uri: item.image}}
           imageStyle={{opacity:0.5, borderRadius: 3}}
           >
-          <Text style={{fontSize: 30, textAlign: 'center' , color: 'white'}}>{((item.title)|| "Hi there").toUpperCase()}</Text>
+          <Text style={{fontSize: 30, textAlign: 'center' , color: 'white', fontFamily: 'FredokaOne_400Regular'}}>{((item.title)|| "Hi there").toUpperCase()}</Text>
           </ImageBackground>
         </Card>
     );
@@ -91,9 +98,72 @@ export default function Welcome(props) {
   const goToGame = (thing, thingID) => {
     props.navigation.navigate('GameLobby', {gameID: thingID});
   };
+  const goToParty = (thing, thingID) => {
+    props.navigation.navigate("PartyLobby", {gameID: thingID})
+  }
 
-  // console.log('game', game.data());
+  const makeParty = async () => {
+    const theUser = await firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`).get()
+    const newUser = await { userId: Fire.shared.getUID(), wins: 0, wonMemes: [],
+      displayName: theUser.data().displayName, imageURL: theUser.data().imageURL, points: theUser.data().points
+    };
 
+    firebase
+      .firestore()
+      .collection('partyGames')
+      .doc()
+      .set(
+        {
+          users: [newUser],
+          currentMeme: 'https://i.imgflip.com/1w7ygt.jpg',
+          endMode: false,
+          gameId: "",
+          gameMode: 'regular',
+          gotUsers: false,
+          hostID: Fire.shared.getUID(),
+          partyID: '',
+          inputs:[],
+          numUsers: 1,
+          playing: false,
+          winningMeme: '',
+          roundMemes: [],
+          timeStamp: Fire.shared.getTime(),
+        },
+        { merge: true }
+      )
+      .then(() => {
+        firebase
+          .firestore()
+          .collection('partyGames')
+          .orderBy('timeStamp', 'desc')
+          .limit(1)
+          .get()
+          .then(async (query) => {
+            let thing2 = query.docs[0];
+
+            // await thing2.ref.update({
+            //   gameId: thing2.ref.id,
+            // });
+
+            const shuffle = (arr) => arr.sort(() => 0.5 - Math.random());
+            axios.get('https://api.imgflip.com/get_memes').then((memeData) => {
+              let shuffledMemes = shuffle(memeData.data.data.memes);
+              thing2.ref.update({
+                gameId: thing2.ref.id,
+                roundMemes: [shuffledMemes[0].url,shuffledMemes[1].url,shuffledMemes[2].url],
+                winningMeme: shuffledMemes[3].url,
+                partyID: thing2.ref.id.split("").slice(0,4).join('')
+              }).catch((error) => console.log(error));});
+            return thing2;
+            // goToGame(thing2);
+          })
+          .then((thing2) => {
+            //pass the game id as well
+            goToParty(thing2, thing2.ref.id);
+            console.log('thing2', thing2);
+          });
+      });
+  }
   //visit game Id later
   const makeNewGame = (newUser, newInput) => {
     firebase
@@ -223,7 +293,8 @@ export default function Welcome(props) {
   const [userData, userL, userE] = useDocument(firebase.firestore().collection('users').doc(`${Fire.shared.getUID()}`))
 
   if (loading) {
-    return <Text>I'm loading</Text>;
+    // return <Text>I'm loading</Text>;
+    return <LoadingMemer/>
   }
   if (error) {
     return <Text>You Messed Up!!</Text>;
@@ -231,6 +302,9 @@ export default function Welcome(props) {
   if (user && userData) {
     console.log("userData:", userData.data())
     return (
+
+      <View style={styles.welcome}>
+
       <SafeAreaView style={styles.welcome}>
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
@@ -246,7 +320,7 @@ export default function Welcome(props) {
               <Text style={{fontSize: 20, marginLeft: 5}}>{user.displayName.toUpperCase()}</Text>
               }
 
-              <Text style={{fontSize: 10, marginLeft: 'auto', marginRight: 10}}>MEMER POINTS: {`${userData.data().points}`}</Text>
+              <Text style={{fontSize: 15, marginLeft: 'auto', marginRight: 10,}}>MEMER POINTS: {`${userData.data().points}`}</Text>
 
         </TouchableOpacity>
 
@@ -270,15 +344,24 @@ export default function Welcome(props) {
             </Card>
           </ScrollView>
         </View> */}
+        <View style={{marginBottom: 20}}>
+
         <Carousel
+        layout={'default'}
               // ref={(c) => { this._carousel = c; }}
               data={data}
               renderItem={_renderItem}
               sliderWidth={width}
               itemWidth={width - 100}
         />
-        <FormButton title={'create a room'} colorValue={"orange"} modeValue={'contained'} onPress={() => alert("Functionality not available yet.")}/>
-        <FormButton title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
+        </View>
+        <View style={{marginTop: 'auto', marginBottom: 20}}>
+
+        <FormButton title={'create a room'} colorValue={"purple"} modeValue={'contained'} onPress={() => makeParty()}/>
+        <FormButton title={'join a room'} colorValue={"blue"} modeValue={'contained'} onPress={() => props.navigation.navigate("JoinParty")}/>
+        <FormButton  title={'logout'} colorValue={"white"} modeValue={'contained'} onPress={() => getout()}/>
+        {/* <FormButton  title={'temp'} colorValue={"yellow"} modeValue={'contained'} onPress={() => props.navigation.navigate("GameLobby", {gameID: "e7Xp0HYrHEIxKBLOXYr8"})}/> */}
+        </View>
         {/* <Button title={'Join Game'} onPress={() => addUserToGame()}></Button> */}
         {/* <Button title={'LOGOUT'} onPress={() => getout()}></Button> */}
         {/* <Button
@@ -292,26 +375,59 @@ export default function Welcome(props) {
           title={'To Game'}
           onPress={() => props.navigation.navigate('GameLobby')}
         ></Button> */}
+        {
+          master ? (
+            <TouchableOpacity
+            style={{position: 'absolute',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: height,
+            width: width}}
+            onPress={()=> setMaster(false)}>
+              <CustomAlert visible={master} title={"Not A Master Memer!"} message={"You have to play more games and earn more memes to unlock."}/>
+            </TouchableOpacity>
+          ): null
+        }
 
+        {
+        notYet ? (
+          <TouchableOpacity
+            style={{position: 'absolute',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: height,
+            width: width}}
+            onPress={()=> setNotYet(false)}>
+          <CustomAlert visible={notYet} title={"Coming Soon!"} message={"There's so many games that are coming your way!"}/>
+          </TouchableOpacity>
+        ): null
+        }
       </SafeAreaView>
+
+      </View>
+
     );
   }
-  return <Text>Umm... how?</Text>;
+  // return <Text>Umm... how?</Text>;
+  return <LoadingMemer/>
   // }
 }
 const styles = StyleSheet.create({
   welcome:{
     flex: 1,
-    backgroundColor: 'darkred'
-
+    backgroundColor: '#f1f1f1',
+    justifyContent: 'center'
   },
   scrollContainer: {
-    height,
+    height: height2,
+
   },
   card: {
-    backgroundColor: 'black',
+    backgroundColor: 'blue',
     width: width - 100,
-    height: height,
+    height: height2,
     // marginLeft: 25,
     // marginRight: 25
     // backgroundColor: 'blue',
@@ -327,19 +443,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   userimg:{
     borderRadius: 50/2,
     borderWidth: 3,
-    borderColor: 'darkred',
+    borderColor: 'blue',
     width: 50,
     height:50
   },
   image: {
     borderRadius: 5,
     width: width - 100,
-    height: height,
+    height: height2,
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",

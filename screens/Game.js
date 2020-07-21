@@ -15,7 +15,7 @@ export default class Game extends React.Component {
     this.state = {
       timer: null,
       screen: 0,
-      rounds: 0,
+      rounds: 1,
       intervalState: null,
       curMeme: "",
       game: {}
@@ -27,7 +27,7 @@ export default class Game extends React.Component {
     this.startGame()
   }
   async startGame() {
-    let theGame = await firebase.firestore().collection('game').doc(`${this.props.route.params.gameID}`).get()
+    let theGame = await firebase.firestore().collection(`${this.props.route.params.whichGame}`).doc(`${this.props.route.params.gameID}`).get()
     this.setState({ timer: 10, screen: 0, game: theGame.data()});
     this.setState({ curMeme: this.state.game.roundMemes[0]})
     this.startInterval(60);
@@ -44,13 +44,13 @@ export default class Game extends React.Component {
       }, 1000),
     });
   }
-  async clearInputs(gameID){
-    await firebase.firestore().collection('game').doc(`${gameID}`).update(
-      {
-        inputs: []
-      }
-    )
-  }
+  // async clearInputs(gameID){
+  //   await firebase.firestore().collection('game').doc(`${gameID}`).update(
+  //     {
+  //       inputs: []
+  //     }
+  //   )
+  // }
   checkGame(timer) {
     console.log('checking game');
     if (timer > 0) {
@@ -69,19 +69,18 @@ export default class Game extends React.Component {
         case 2:
           this.setState({
             screen: this.state.screen + 1,
-            timer: 15,
+            timer: 10,
             rounds: this.state.rounds + 1,
           });
           break;
         case 3:
-          if (this.state.rounds === 3) {
+          if (this.state.rounds === 4) {
             this.setState({
               screen: this.state.screen + 1,
               timer: 0,
             });
           } else {
-            this.setState({ screen: 0, timer: 15 , curMeme: this.state.game.roundMemes[this.state.rounds]});
-
+            this.setState({ screen: 0, timer: 15 , curMeme: this.state.game.roundMemes[this.state.rounds - 1]});
           }
           break;
 
@@ -94,8 +93,10 @@ export default class Game extends React.Component {
   // have a state for memes, setState of current meme and pass it down to MemePresentation, CaptionInput, Voting Screen, Round Results
   //redux firebase needed for anyplace where user is updating object
   render() {
-    const {gameID} = this.props.route.params
+    const {gameID, whichGame} = this.props.route.params
     const roundMeme = this.state.curMeme
+    // const roundMeme = "https://i.imgflip.com/25w3.jpg"
+    const roundNum = this.state.rounds
     // if(this.state.screen === 0){
     //   this.clearInputs(gameID)
     // }
@@ -108,15 +109,23 @@ export default class Game extends React.Component {
         //   <GameLobby />
         // ) :
         this.state.screen === 0 ? (
-          <MemePresentation roundMeme={roundMeme} GID={gameID}/>
+          <MemePresentation  roundNum={roundNum}
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 1 ? (
-          <CaptionInput roundMeme={roundMeme} GID={gameID}/>
+          <CaptionInput
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 2 ? (
-          <VotingScreen roundMeme={roundMeme} GID={gameID}/>
+          <VotingScreen
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 3 ? (
-          <RoundResults roundMeme={roundMeme} GID={gameID}/>
+          <RoundResults
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : (
-          <WinningScreen GID={gameID} />
+          <WinningScreen GID={gameID} gameType={whichGame} />
         )
       // }
       // </View>
