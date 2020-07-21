@@ -38,7 +38,7 @@ export default function FriendRequests({ navigation }) {
 	} else if (value) {
 		return (
 			<View style={{flex: 1, backgroundColor: "lightblue", paddingTop: 20}}>
-				<FormButton title="Back to Profile" modeValue={'contained'} colorValue={'blue'} onPress={() => navigation.goBack()} />
+				<FormButton title="Back to Profile" modeValue={'contained'} colorValue={'blue'} onPress={() => navigation.goBack()}/>
 			<ScrollView  scrollEnabled={true} contentContainerStyle={{ flex: 1, alignItems: 'center', marginTop: 10}}>
 				{value && value.data() && value.data().requests && value.data().requests.length ? (
 					value.data().requests.map((req) => (
@@ -57,9 +57,9 @@ export default function FriendRequests({ navigation }) {
 							<View style={{flex: 1, height: '100%'}}>
 								<Text style={{fontSize: 30, color: 'white', textAlign: 'center', width: '100%', marginTop: 'auto', marginBottom: 'auto'}}>{req.name}</Text>
 
-								<Button style={{backgroundColor: 'green', marginHorizontal: 5, borderRadius: 10, marginBottom: 5}} title={'Accept'} modeValue={'contained'} colorValue={'green'} onPress={() => AcceptFriendRequest(req, value)}>
-									<Text style={{fontSize: 20, textAlign: 'center', color: 'white', paddingVertical: 5, }}>Accept</Text>
-									</Button>
+								<TouchableHighlight style={{backgroundColor: 'green', marginHorizontal: 5, borderRadius: 10, marginBottom: 5}} onPress={() => AcceptFriendRequest(req, value)}>
+									<Text style={{fontSize: 20, textAlign: 'center', color: 'white', paddingVertical: 5}}>Accept</Text>
+								</TouchableHighlight>
 
 								<TouchableHighlight style={{backgroundColor: 'white', marginHorizontal: 5, borderRadius: 10, marginBottom: 5}} title={'Decline'} modeValue={'contained'} colorValue={'white'} onPress={() => DeclineFriendRequest(req, value)}>
 								<Text style={{fontSize: 20, textAlign: 'center', color: 'black', paddingVertical: 5, }}>Decline</Text>

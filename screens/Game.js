@@ -15,7 +15,7 @@ export default class Game extends React.Component {
     this.state = {
       timer: null,
       screen: 0,
-      rounds: 0,
+      rounds: 1,
       intervalState: null,
       curMeme: "",
       game: {}
@@ -74,14 +74,13 @@ export default class Game extends React.Component {
           });
           break;
         case 3:
-          if (this.state.rounds === 1) {
+          if (this.state.rounds === 4) {
             this.setState({
               screen: this.state.screen + 1,
               timer: 0,
             });
           } else {
-            this.setState({ screen: 0, timer: 15 , curMeme: this.state.game.roundMemes[this.state.rounds]});
-
+            this.setState({ screen: 0, timer: 15 , curMeme: this.state.game.roundMemes[this.state.rounds - 1]});
           }
           break;
 
@@ -96,6 +95,7 @@ export default class Game extends React.Component {
   render() {
     const {gameID, whichGame} = this.props.route.params
     const roundMeme = this.state.curMeme
+    // const roundMeme = "https://i.imgflip.com/25w3.jpg"
     const roundNum = this.state.rounds
     // if(this.state.screen === 0){
     //   this.clearInputs(gameID)
@@ -109,13 +109,21 @@ export default class Game extends React.Component {
         //   <GameLobby />
         // ) :
         this.state.screen === 0 ? (
-          <MemePresentation  roundNum={roundNum} roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
+          <MemePresentation  roundNum={roundNum}
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 1 ? (
-          <CaptionInput roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
+          <CaptionInput
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 2 ? (
-          <VotingScreen roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
+          <VotingScreen
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : this.state.screen === 3 ? (
-          <RoundResults roundMeme={roundMeme} GID={gameID} gameType={whichGame}/>
+          <RoundResults
+          roundMeme={roundMeme}
+          GID={gameID} gameType={whichGame}/>
         ) : (
           <WinningScreen GID={gameID} gameType={whichGame} />
         )

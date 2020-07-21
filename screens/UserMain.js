@@ -40,8 +40,8 @@ export default function UserMain({ navigation }) {
 
 
 			<SafeAreaView style={styles.background}>
-				<ScrollView contentContainerStyle={{ flex: 1 }}>
 					<Card style={styles.card}>
+				<ScrollView contentContainerStyle={{ flex: 1 }}>
 						<IconButton
 							style={{
 								marginLeft: 'auto',
@@ -149,8 +149,8 @@ export default function UserMain({ navigation }) {
               modeValue={'contained'}
               onPress={() => this.props.navigation.navigate('Welcome')}
             />*/}
-					</Card>
 				</ScrollView>
+					</Card>
 			</SafeAreaView>
 			</View>
 		);

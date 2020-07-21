@@ -74,7 +74,7 @@ class VotingScreen extends React.Component {
           </View> */}
           {
               this.state.voted ? (
-              <View style={{flex: 1, backgroundColor: 'darkred'}}>
+              <View style={{flex: 1, backgroundColor: 'darkred', justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 50, color: 'white', textAlign: 'center'}}>You&apos;ve casted your vote!! Good luck!</Text>
                 <Text style={{fontFamily: 'FredokaOne_400Regular',fontSize: 20, color: 'white', textAlign: 'center'}}>Time Left: {this.state.count}</Text>
               </View>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   startVote: {
     // flexDirection: 'row',
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'darkred',

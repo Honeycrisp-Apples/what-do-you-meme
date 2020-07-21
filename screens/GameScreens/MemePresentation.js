@@ -210,8 +210,8 @@ const styles = StyleSheet.create({
     width: 300,
     height:350,
     resizeMode: 'contain',
-    borderWidth: 3,
-    borderColor: 'gold',
+    // borderWidth: 3,
+    // borderColor: 'gold',
   },
   players:{
     marginTop: 30,

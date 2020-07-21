@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, Button, View, ScrollView, Dimensions, StyleSheet, Image, ImageBackground, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Fire from '../constants/Fire';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase';
@@ -301,10 +302,17 @@ export default function Welcome(props) {
   if (user && userData) {
     console.log("userData:", userData.data())
     return (
-      <KeyboardAvoidingView style={styles.welcome} behavior={Platform.OS == "ios" ? "padding" : "height"}
-      // keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
-      >
-      {/* <SafeAreaView style={styles.welcome}> */}
+      <KeyboardAwareScrollView
+      style={{ backgroundColor: '#4c69a5' }}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={styles.welcome}
+      scrollEnabled={false}
+    >
+      <View style={styles.welcome}>
+       {/* <KeyboardAvoidingView style={styles.welcome} behavior={Platform.OS == "ios" ? "padding" : "height"}
+       // keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
+       > */}
+      <SafeAreaView style={styles.welcome}>
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
         >
@@ -403,8 +411,10 @@ export default function Welcome(props) {
           </TouchableOpacity>
         ): null
         }
-      {/* </SafeAreaView> */}
-      </KeyboardAvoidingView>
+      </SafeAreaView>
+      {/* </KeyboardAvoidingView> */}
+      </View>
+      </KeyboardAwareScrollView>
     );
   }
   // return <Text>Umm... how?</Text>;
