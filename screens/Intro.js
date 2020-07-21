@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
-import {View, SafeAreaView, Text, ScrollView, StyleSheet, Dimensions} from 'react-native'
+import {View, SafeAreaView, Text, ScrollView, StyleSheet, Dimensions, KeyboardAvoidingView, Platform} from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {FormButton, FormInput} from '../components/Reusables'
 import {AppLoading} from 'expo'
 import { Video } from 'expo-av';
@@ -61,6 +62,15 @@ export function Intro (props){
     return <AppLoading />;
   } else {
     return(
+      <KeyboardAwareScrollView
+      style={{ backgroundColor: '#4c69a5' }}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={{flex: 1}}
+      scrollEnabled={false}
+      >
+       {/* <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS == "ios" ? "padding" : "height"}
+       // keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
+       > */}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'blue' }}>
         <Video
           source={require("../assets/video/video-1.mp4")}
@@ -123,6 +133,8 @@ export function Intro (props){
           </ScrollView>
         </SafeAreaView>
       </View>
+           {/* </KeyboardAvoidingView> */}
+       </KeyboardAwareScrollView>
     )
   }
 }

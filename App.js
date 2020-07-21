@@ -56,6 +56,7 @@ import * as Font from 'expo-font';
 
 
 
+
 if (!global.btoa) {
 	global.btoa = encode;
 }

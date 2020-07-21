@@ -1,5 +1,6 @@
 import React from 'react'
 import {ScrollView, Keyboard, SafeAreaView, Text, StyleSheet, Button, TextInput} from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {Card} from 'react-native-paper'
 import {FormButton, FormInput} from '../components/Reusables'
 import Fire from '../constants/Fire'
@@ -91,6 +92,12 @@ export default class SignUp extends React.Component{
   // onChangeText = (key: string) => (val: string) => this.setState({[key] : val})
   render(){
     return (
+      <KeyboardAwareScrollView
+      style={{ backgroundColor: '#4c69a5' }}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={{flex: 1}}
+      scrollEnabled={false}
+      >
       <SafeAreaView style={styles.container}>
         <ScrollView  contentContainerStyle={styles.card}
         // onPress={Keyboard.dismiss}
@@ -150,6 +157,7 @@ export default class SignUp extends React.Component{
           />
         </ScrollView>
       </SafeAreaView>
+      </KeyboardAwareScrollView>
     )
   }
 }

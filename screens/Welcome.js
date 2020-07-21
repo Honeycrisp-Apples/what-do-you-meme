@@ -302,16 +302,9 @@ export default function Welcome(props) {
   if (user && userData) {
     console.log("userData:", userData.data())
     return (
-      <KeyboardAwareScrollView
-      style={{ backgroundColor: '#4c69a5' }}
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      contentContainerStyle={styles.welcome}
-      scrollEnabled={false}
-    >
+
       <View style={styles.welcome}>
-       {/* <KeyboardAvoidingView style={styles.welcome} behavior={Platform.OS == "ios" ? "padding" : "height"}
-       // keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
-       > */}
+
       <SafeAreaView style={styles.welcome}>
         <TouchableOpacity style={styles.mainUser}
         onPress={() => props.navigation.navigate('UserPages')}
@@ -412,9 +405,9 @@ export default function Welcome(props) {
         ): null
         }
       </SafeAreaView>
-      {/* </KeyboardAvoidingView> */}
+
       </View>
-      </KeyboardAwareScrollView>
+
     );
   }
   // return <Text>Umm... how?</Text>;
@@ -425,7 +418,7 @@ const styles = StyleSheet.create({
   welcome:{
     flex: 1,
     backgroundColor: '#f1f1f1',
-    justifyContent: 'flex-end'
+    justifyContent: 'center'
   },
   scrollContainer: {
     height: height2,
